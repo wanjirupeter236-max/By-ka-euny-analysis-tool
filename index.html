@@ -2,13 +2,7 @@
 <html>
 <head>
 <title>BY KA EUNY ANALYSIS TOOL</title>
-<style>
-body{background:#0f172a;color:#e2e8f0;font-family:Arial;text-align:center;padding:20px}
-h1{color:#38bdf8}
-.card{background:#1e293b;padding:20px;border-radius:12px;margin:20px auto;max-width:400px}
-.signal{font-size:28px;font-weight:bold;padding:15px;border-radius:8px;margin:10px 0}
-.BUY{background:#16a34a}.SELL{background:#dc2626}.WAIT{background:#64748b}
-</style>
+<style>body{background:#0f172a;color:#e2e8f0;font-family:Arial;text-align:center;padding:20px}h1{color:#38bdf8}.card{background:#1e293b;padding:20px;border-radius:12px;margin:20px auto;max-width:400px}.signal{font-size:28px;font-weight:bold;padding:15px;border-radius:8px;margin:10px 0}.BUY{background:#16a34a}.SELL{background:#dc2626}.WAIT{background:#64748b}</style>
 </head>
 <body>
 <h1>BY KA EUNY ANALYSIS TOOL</h1>
@@ -19,7 +13,6 @@ h1{color:#38bdf8}
 <p>RSI: <span id="rsi">--</span> | Price: <span id="price">--</span></p>
 </div>
 <script>
-// TUMIA APP_ID YA PUBLIC YA DERIV - HII HAIZUI
 const APP_ID='1089';
 let ws;let candles=[];
 ws=new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
