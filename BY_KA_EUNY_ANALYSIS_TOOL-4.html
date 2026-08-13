@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BY KA EUNY ANALYSIS TOOL</title>
+<style>
+body{font-family:Arial,sans-serif;background:#101522;color:#fff;margin:0;padding:16px}
+.card{background:#182033;border-radius:14px;padding:16px;margin:10px 0}
+h1{font-size:22px;margin:0 0 8px}.muted{color:#aab4ca}
+.row{display:flex;gap:8px;flex-wrap:wrap}.pill{padding:10px 12px;background:#25304a;border-radius:10px}
+button{border:0;border-radius:10px;padding:11px 14px;font-weight:bold;cursor:pointer}
+input{padding:11px;border-radius:10px;border:1px solid #39445d;background:#0e1422;color:white;width:100px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.digit{text-align:center;background:#26314a;padding:10px;border-radius:9px}
+.signal{font-size:20px;font-weight:bold}.good{color:#66e3a4}.warn{color:#ffd166}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>BY KA EUNY ANALYSIS TOOL</h1>
+<div class="muted">Demo analysis dashboard • not a guaranteed prediction</div>
+</div>
+
+<div class="card">
+<h3>Add recent digits</h3>
+<div class="row">
+<input id="digits" placeholder="e.g. 721904">
+<button onclick="addDigits()">ADD</button>
+<button onclick="clearData()">CLEAR</button>
+</div>
+<p class="muted">Enter digits 0–9 from your Deriv history. The tool analyzes the data you provide.</p>
+</div>
+
+<div class="card">
+<h3>Digit Frequency</h3>
+<div id="freq" class="grid"></div>
+</div>
+
+<div class="card">
+<h3>Market Analysis</h3>
+<div class="row">
+<div class="pill">Over 1: <b id="over1">0%</b></div>
+<div class="pill">Over 2: <b id="over2">0%</b></div>
+<div class="pill">Over 3: <b id="over3">0%</b></div>
+<div class="pill">Under 8: <b id="under8">0%</b></div>
+<div class="pill">Under 7: <b id="under7">0%</b></div>
+<div class="pill">Even: <b id="even">0%</b></div>
+<div class="pill">Odd: <b id="odd">0%</b></div>
+</div>
+</div>
+
+<div class="card">
+<h3>Analysis Signal</h3>
+<div id="signal" class="signal warn">WAIT — add at least 10 digits</div>
+<p id="reason" class="muted"></p>
+</div>
+
+<div class="card">
+<h3>Recent Digits</h3>
+<div id="history" class="row"></div>
+</div>
+
+<script>
+let data=JSON.parse(localStorage.getItem("eunyDigits")||"[]");
+function pct(n,d){return d?Math.round(n/d*100):0}
+function render(){
+ let n=data.length, f=Array(10).fill(0);
+ data.forEach(x=>f[x]++);
+ document.getElementById("freq").innerHTML=f.map((x,i)=>`<div class="digit"><b>${i}</b><br>${x} (${pct(x,n)}%)</div>`).join("");
+ const over=k=>pct(data.filter(x=>x>k).length,n);
+ const under=k=>pct(data.filter(x=>x<k).length,n);
+ document.getElementById("over1").textContent=over(1)+"%";
+ document.getElementById("over2").textContent=over(2)+"%";
+ document.getElementById("over3").textContent=over(3)+"%";
+ document.getElementById("under8").textContent=under(8)+"%";
+ document.getElementById("under7").textContent=under(7)+"%";
+ document.getElementById("even").textContent=pct(data.filter(x=>x%2===0).length,n)+"%";
+ document.getElementById("odd").textContent=pct(data.filter(x=>x%2).length,n)+"%";
+ document.getElementById("history").innerHTML=data.slice(-40).reverse().map(x=>`<span class="pill">${x}</span>`).join("");
+ let sig=document.getElementById("signal"), reason=document.getElementById("reason");
+ if(n<10){sig.textContent="WAIT — add at least 10 digits";sig.className="signal warn";reason.textContent="More history is needed for a basic statistical reading.";return}
+ let even=pct(data.filter(x=>x%2===0).length,n), odd=100-even;
+ let over3=over(3), under7=under(7);
+ if(over3>=60){sig.textContent="OVER 3 BIAS";sig.className="signal good";reason.textContent=`Digits above 3 appeared ${over3}% of the supplied history.`}
+ else if(under7>=60){sig.textContent="UNDER 7 BIAS";sig.className="signal good";reason.textContent=`Digits below 7 appeared ${under7}% of the supplied history.`}
+ else if(even>=60){sig.textContent="EVEN BIAS";sig.className="signal good";reason.textContent=`Even digits appeared ${even}% of the supplied history.`}
+ else if(odd>=60){sig.textContent="ODD BIAS";sig.className="signal good";reason.textContent=`Odd digits appeared ${odd}% of the supplied history.`}
+ else {sig.textContent="NO CLEAR BIAS";sig.className="signal warn";reason.textContent="The supplied sample is relatively balanced; WAIT is safer than forcing a signal."}
+ localStorage.setItem("eunyDigits",JSON.stringify(data));
+}
+function addDigits(){
+ let s=document.getElementById("digits").value.replace(/[^0-9]/g,"");
+ if(!s)return;
+ data=data.concat([...s].map(Number)).slice(-500);
+ document.getElementById("digits").value="";render();
+}
+function clearData(){data=[];localStorage.removeItem("eunyDigits");render()}
+render();
+</script>
+</body>
+</html>
