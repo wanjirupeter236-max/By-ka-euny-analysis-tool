@@ -2,100 +2,83 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BY KA EUNY ANALYSIS TOOL</title>
 <style>
-body{font-family:Arial,sans-serif;background:#101522;color:#fff;margin:0;padding:16px}
-.card{background:#182033;border-radius:14px;padding:16px;margin:10px 0}
-h1{font-size:22px;margin:0 0 8px}.muted{color:#aab4ca}
-.row{display:flex;gap:8px;flex-wrap:wrap}.pill{padding:10px 12px;background:#25304a;border-radius:10px}
-button{border:0;border-radius:10px;padding:11px 14px;font-weight:bold;cursor:pointer}
-input{padding:11px;border-radius:10px;border:1px solid #39445d;background:#0e1422;color:white;width:100px}
-.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.digit{text-align:center;background:#26314a;padding:10px;border-radius:9px}
-.signal{font-size:20px;font-weight:bold}.good{color:#66e3a4}.warn{color:#ffd166}
+body{font-family:Arial, sans-serif; background:#0f172a; color:#fff; text-align:center; padding:20px}
+.card{background:#182033; border-radius:15px; padding:20px; margin:10px auto; max-width:400px}
+h1{color:#38bdf8}
+.signal{font-size:28px; font-weight:bold; padding:20px; border-radius:10px; margin-top:15px}
+.BUY{background:#16a34a}
+.SELL{background:#dc2626}
+.WAIT{background:#64748b}
 </style>
 </head>
 <body>
-<div class="card">
 <h1>BY KA EUNY ANALYSIS TOOL</h1>
-<div class="muted">Demo analysis dashboard • not a guaranteed prediction</div>
-</div>
-
 <div class="card">
-<h3>Add recent digits</h3>
-<div class="row">
-<input id="digits" placeholder="e.g. 721904">
-<button onclick="addDigits()">ADD</button>
-<button onclick="clearData()">CLEAR</button>
-</div>
-<p class="muted">Enter digits 0–9 from your Deriv history. The tool analyzes the data you provide.</p>
-</div>
-
-<div class="card">
-<h3>Digit Frequency</h3>
-<div id="freq" class="grid"></div>
-</div>
-
-<div class="card">
-<h3>Market Analysis</h3>
-<div class="row">
-<div class="pill">Over 1: <b id="over1">0%</b></div>
-<div class="pill">Over 2: <b id="over2">0%</b></div>
-<div class="pill">Over 3: <b id="over3">0%</b></div>
-<div class="pill">Under 8: <b id="under8">0%</b></div>
-<div class="pill">Under 7: <b id="under7">0%</b></div>
-<div class="pill">Even: <b id="even">0%</b></div>
-<div class="pill">Odd: <b id="odd">0%</b></div>
-</div>
-</div>
-
-<div class="card">
-<h3>Analysis Signal</h3>
-<div id="signal" class="signal warn">WAIT — add at least 10 digits</div>
-<p id="reason" class="muted"></p>
-</div>
-
-<div class="card">
-<h3>Recent Digits</h3>
-<div id="history" class="row"></div>
+  <h3>Volatility 75 Index - 1M</h3>
+  <div id="status">Connecting to Deriv...</div>
+  <div id="signal" class="signal WAIT">WAITING</div>
+  <p>RSI: <span id="rsi">--</span> | EMA50: <span id="ema50">--</span></p>
 </div>
 
 <script>
-let data=JSON.parse(localStorage.getItem("eunyDigits")||"[]");
-function pct(n,d){return d?Math.round(n/d*100):0}
-function render(){
- let n=data.length, f=Array(10).fill(0);
- data.forEach(x=>f[x]++);
- document.getElementById("freq").innerHTML=f.map((x,i)=>`<div class="digit"><b>${i}</b><br>${x} (${pct(x,n)}%)</div>`).join("");
- const over=k=>pct(data.filter(x=>x>k).length,n);
- const under=k=>pct(data.filter(x=>x<k).length,n);
- document.getElementById("over1").textContent=over(1)+"%";
- document.getElementById("over2").textContent=over(2)+"%";
- document.getElementById("over3").textContent=over(3)+"%";
- document.getElementById("under8").textContent=under(8)+"%";
- document.getElementById("under7").textContent=under(7)+"%";
- document.getElementById("even").textContent=pct(data.filter(x=>x%2===0).length,n)+"%";
- document.getElementById("odd").textContent=pct(data.filter(x=>x%2).length,n)+"%";
- document.getElementById("history").innerHTML=data.slice(-40).reverse().map(x=>`<span class="pill">${x}</span>`).join("");
- let sig=document.getElementById("signal"), reason=document.getElementById("reason");
- if(n<10){sig.textContent="WAIT — add at least 10 digits";sig.className="signal warn";reason.textContent="More history is needed for a basic statistical reading.";return}
- let even=pct(data.filter(x=>x%2===0).length,n), odd=100-even;
- let over3=over(3), under7=under(7);
- if(over3>=60){sig.textContent="OVER 3 BIAS";sig.className="signal good";reason.textContent=`Digits above 3 appeared ${over3}% of the supplied history.`}
- else if(under7>=60){sig.textContent="UNDER 7 BIAS";sig.className="signal good";reason.textContent=`Digits below 7 appeared ${under7}% of the supplied history.`}
- else if(even>=60){sig.textContent="EVEN BIAS";sig.className="signal good";reason.textContent=`Even digits appeared ${even}% of the supplied history.`}
- else if(odd>=60){sig.textContent="ODD BIAS";sig.className="signal good";reason.textContent=`Odd digits appeared ${odd}% of the supplied history.`}
- else {sig.textContent="NO CLEAR BIAS";sig.className="signal warn";reason.textContent="The supplied sample is relatively balanced; WAIT is safer than forcing a signal."}
- localStorage.setItem("eunyDigits",JSON.stringify(data));
+const ws = new WebSocket("wss://ws.binaryws.com/websockets/v3?app_id=1089");
+let candles = [];
+
+ws.onopen = () => {
+  document.getElementById("status").innerText = "Connected. Loading candles...";
+  ws.send(JSON.stringify({ticks_history: "R_75", count: 200, granularity: 60, style: "candles"}));
+};
+
+ws.onmessage = (msg) => {
+  const data = JSON.parse(msg.data);
+  if(data.candles){
+    candles = data.candles;
+    calculate();
+  }
+};
+
+function rsi(data, period=14){
+  let gains=0, losses=0;
+  for(let i=1; i<=period; i++){
+    let diff = data[i] - data[i-1];
+    if(diff>0) gains+=diff; else losses-=diff;
+  }
+  let rs = gains/losses;
+  return 100 - (100/(1+rs));
 }
-function addDigits(){
- let s=document.getElementById("digits").value.replace(/[^0-9]/g,"");
- if(!s)return;
- data=data.concat([...s].map(Number)).slice(-500);
- document.getElementById("digits").value="";render();
+
+function ema(data, period){
+  let k = 2/(period+1);
+  let ema = data[0];
+  for(let i=1; i<data.length; i++) ema = data[i]*k + ema*(1-k);
+  return ema;
 }
-function clearData(){data=[];localStorage.removeItem("eunyDigits");render()}
-render();
+
+function calculate(){
+  let closes = candles.map(c=>c.close);
+  let rsiVal = rsi(closes, 14).toFixed(2);
+  let ema50Val = ema(closes, 50).toFixed(2);
+  let lastPrice = closes[closes.length-1];
+
+  document.getElementById("rsi").innerText = rsiVal;
+  document.getElementById("ema50").innerText = ema50Val;
+  document.getElementById("status").innerText = "Live";
+
+  let signalBox = document.getElementById("signal");
+  if(rsiVal < 30 && lastPrice > ema50Val){
+    signalBox.className = "signal BUY";
+    signalBox.innerText = "BUY SIGNAL";
+  } else if(rsiVal > 70 && lastPrice < ema50Val){
+    signalBox.className = "signal SELL"; 
+    signalBox.innerText = "SELL SIGNAL";
+  } else {
+    signalBox.className = "signal WAIT";
+    signalBox.innerText = "WAIT";
+  }
+}
 </script>
 </body>
 </html>
