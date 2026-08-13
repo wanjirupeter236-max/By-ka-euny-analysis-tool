@@ -8,26 +8,23 @@ h1{color:#38bdf8}
 .card{background:#1e293b;padding:20px;border-radius:12px;margin:20px auto;max-width:400px}
 .signal{font-size:28px;font-weight:bold;padding:15px;border-radius:8px;margin:10px 0}
 .BUY{background:#16a34a}.SELL{background:#dc2626}.WAIT{background:#64748b}
-button{background:#38bdf8;color:#0f172a;border:none;padding:12px 25px;border-radius:8px;font-weight:bold;font-size:16px}
 </style>
 </head>
 <body>
 <h1>BY KA EUNY ANALYSIS TOOL</h1>
 <div class="card">
 <h3>Volatility 75 Index - 1M</h3>
-<button onclick="login()">Login with Deriv</button>
-<div id="status">Bonyeza Login kuanza</div>
+<div id="status">Connecting...</div>
 <div id="signal" class="signal WAIT">WAIT</div>
 <p>RSI: <span id="rsi">--</span> | Price: <span id="price">--</span></p>
 </div>
 <script>
-const APP_ID='346Fu3sx0dtDikmKRP1S5';let ws;let candles=[];
-function login(){window.location.href=`https://oauth.deriv.com/oauth2/authorize?app_id=${APP_ID}`}
-const params=new URLSearchParams(window.location.search);const token=params.get('token1');
-if(token){document.getElementById('status').innerText='Connecting...';connect(token)}
-function connect(token){ws=new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
-ws.onopen=()=>{ws.send(JSON.stringify({authorize:token}));ws.send(JSON.stringify({ticks:"R_75",subscribe:1}))};
-ws.onmessage=(msg)=>{const data=JSON.parse(msg.data);if(data.authorize){document.getElementById('status').innerText='Connected!'}
+// TUMIA APP_ID YA PUBLIC YA DERIV - HII HAIZUI
+const APP_ID='1089';
+let ws;let candles=[];
+ws=new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
+ws.onopen=()=>{ws.send(JSON.stringify({ticks:"R_75",subscribe:1}));document.getElementById('status').innerText='Connected!'};
+ws.onmessage=(msg)=>{const data=JSON.parse(msg.data);
 if(data.tick){const price=parseFloat(data.tick.quote);document.getElementById('price').innerText=price.toFixed(2);
 candles.push(price);if(candles.length>14)candles.shift();if(candles.length>=14){const rsi=calcRSI(candles);
 document.getElementById('rsi').innerText=rsi.toFixed(2);const s=document.getElementById('signal');
