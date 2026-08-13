@@ -1,29 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>BY KA EUNY ANALYSIS TOOL</title>
-<style>body{background:#0f172a;color:#e2e8f0;font-family:Arial;text-align:center;padding:20px}h1{color:#38bdf8}.card{background:#1e293b;padding:20px;border-radius:12px;margin:20px auto;max-width:400px}.signal{font-size:28px;font-weight:bold;padding:15px;border-radius:8px;margin:10px 0}.BUY{background:#16a34a}.SELL{background:#dc2626}.WAIT{background:#64748b}</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BY KA EUNY Analysis Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+    }
+
+    .box {
+      max-width: 500px;
+      margin: auto;
+      background: #1d1d1d;
+      padding: 25px;
+      border-radius: 15px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    input, button {
+      width: 90%;
+      padding: 14px;
+      margin: 8px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      background: #00c853;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+  </style>
 </head>
+
 <body>
-<h1>BY KA EUNY ANALYSIS TOOL</h1>
-<div class="card">
-<h3>Volatility 75 Index - 1M</h3>
-<div id="status">Connecting...</div>
-<div id="signal" class="signal WAIT">WAIT</div>
-<p>RSI: <span id="rsi">--</span> | Price: <span id="price">--</span></p>
-</div>
-<script>
-const APP_ID='1089';
-let ws;let candles=[];
-ws=new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
-ws.onopen=()=>{ws.send(JSON.stringify({ticks:"R_75",subscribe:1}));document.getElementById('status').innerText='Connected!'};
-ws.onmessage=(msg)=>{const data=JSON.parse(msg.data);
-if(data.tick){const price=parseFloat(data.tick.quote);document.getElementById('price').innerText=price.toFixed(2);
-candles.push(price);if(candles.length>14)candles.shift();if(candles.length>=14){const rsi=calcRSI(candles);
-document.getElementById('rsi').innerText=rsi.toFixed(2);const s=document.getElementById('signal');
-if(rsi<30){s.className='signal BUY';s.innerText='BUY'}else if(rsi>70){s.className='signal SELL';s.innerText='SELL'}
-else{s.className='signal WAIT';s.innerText='WAIT'}}}}};
-function calcRSI(p){let g=0,l=0;for(let i=1;i<p.length;i++){const d=p[i]-p[i-1];if(d>0)g+=d;else l-=d}const rs=g/(l||1);return 100-(100/(1+rs))}
-</script>
+  <div class="box">
+    <h1>BY KA EUNY</h1>
+    <h2>Analysis Tool</h2>
+
+    <p>Enter the last digit:</p>
+
+    <input id="digit" type="number" min="0" max="9" placeholder="0 - 9">
+
+    <button onclick="analyze()">ANALYZE</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function analyze() {
+      const digit = Number(document.getElementById("digit").value);
+      const result = document.getElementById("result");
+
+      if (isNaN(digit) || digit < 0 || digit > 9) {
+        result.innerHTML = "Enter a digit from 0 to 9";
+        return;
+      }
+
+      if (digit >= 5) {
+        result.innerHTML = "OVER";
+      } else {
+        result.innerHTML = "UNDER";
+      }
+    }
+  </script>
 </body>
 </html>
