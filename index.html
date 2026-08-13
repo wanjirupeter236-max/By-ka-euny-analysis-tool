@@ -18,68 +18,31 @@ h1{color:#38bdf8}
 <h1>BY KA EUNY ANALYSIS TOOL</h1>
 <div class="card">
   <h3>Volatility 75 Index - 1M</h3>
-  <div id="status">Connecting to Deriv...</div>
+  <div id="status">Connecting...</div>
   <div id="signal" class="signal WAIT">WAITING</div>
-  <p>RSI: <span id="rsi">--</span> | EMA50: <span id="ema50">--</span></p>
+  <p>RSI: <span id="rsi">--</span> | Price: <span id="price">--</span></p>
 </div>
 
 <script>
-const ws = new WebSocket("wss://ws.binaryws.com/websockets/v3?app_id=1089");
+let ws;
 let candles = [];
 
-ws.onopen = () => {
-  document.getElementById("status").innerText = "Connected. Loading candles...";
-  ws.send(JSON.stringify({ticks_history: "R_75", count: 200, granularity: 60, style: "candles"}));
-};
+function connect(){
+  ws = new WebSocket("wss://ws.binaryws.com/websockets/v3?app_id=1089");
+  
+  ws.onopen = () => {
+    document.getElementById("status").innerText = "Connected. Requesting data...";
+    ws.send(JSON.stringify({ticks_history: "R_75", count: 100, granularity: 60, style: "candles"}));
+    setInterval(()=> ws.send(JSON.stringify({ping:1})), 30000);
+  };
 
-ws.onmessage = (msg) => {
-  const data = JSON.parse(msg.data);
-  if(data.msg_type === "history"){
-    candles = data.history.candles;
-    document.getElementById("status").innerText = "Live";
-    calculate();
-  }
-};
+  ws.onmessage = (msg) => {
+    const data = JSON.parse(msg.data);
+    if(data.msg_type === "history"){
+      candles = data.history.candles;
+      document.getElementById("status").innerText = "Live";
+      calculate();
+    }
+    if(data.msg_type === "tick"){
+      document.getElementById("price").innerText = data.tick.quote;
 
-function rsi(data, period=14){
-  let gains=0, losses=0;
-  for(let i=1; i<=period; i++){
-    let diff = data[i] - data[i-1];
-    if(diff>0) gains+=diff; else losses-=diff;
-  }
-  if(losses === 0) return 100;
-  let rs = gains/losses;
-  return 100 - (100/(1+rs));
-}
-
-function ema(data, period){
-  let k = 2/(period+1);
-  let ema = data[0];
-  for(let i=1; i<data.length; i++) ema = data[i]*k + ema*(1-k);
-  return ema;
-}
-
-function calculate(){
-  let closes = candles.map(c=>c.close);
-  let rsiVal = rsi(closes, 14).toFixed(2);
-  let ema50Val = ema(closes, 50).toFixed(2);
-  let lastPrice = closes[closes.length-1];
-
-  document.getElementById("rsi").innerText = rsiVal;
-  document.getElementById("ema50").innerText = ema50Val;
-
-  let signalBox = document.getElementById("signal");
-  if(rsiVal < 30 && lastPrice > ema50Val){
-    signalBox.className = "signal BUY";
-    signalBox.innerText = "BUY SIGNAL";
-  } else if(rsiVal > 70 && lastPrice < ema50Val){
-    signalBox.className = "signal SELL"; 
-    signalBox.innerText = "SELL SIGNAL";
-  } else {
-    signalBox.className = "signal WAIT";
-    signalBox.innerText = "WAIT";
-  }
-}
-</script>
-</body>
-</html>
