@@ -1,86 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BY KA EUNY ANALYSIS TOOL</title>
 <style>
-    body {background:#0f172a; color:#e2e8f0; font-family:Arial; text-align:center; padding:20px;}
-    h1 {color:#38bdf8;}
-  .card {background:#1e293b; padding:20px; border-radius:12px; margin:20px auto; max-width:400px;}
-  .signal {font-size:28px; font-weight:bold; padding:15px; border-radius:8px; margin:10px 0;}
-  .BUY {background:#16a34a;}
-  .SELL {background:#dc2626;}
-  .WAIT {background:#64748b;}
-    button {background:#38bdf8; color:#0f172a; border:none; padding:12px 25px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:16px;}
+body{background:#0f172a;color:#e2e8f0;font-family:Arial;text-align:center;padding:20px}
+h1{color:#38bdf8}
+.card{background:#1e293b;padding:20px;border-radius:12px;margin:20px auto;max-width:400px}
+.signal{font-size:28px;font-weight:bold;padding:15px;border-radius:8px;margin:10px 0}
+.BUY{background:#16a34a}.SELL{background:#dc2626}.WAIT{background:#64748b}
+button{background:#38bdf8;color:#0f172a;border:none;padding:12px 25px;border-radius:8px;font-weight:bold;font-size:16px}
 </style>
 </head>
 <body>
 <h1>BY KA EUNY ANALYSIS TOOL</h1>
 <div class="card">
-    <h3>Volatility 75 Index - 1M</h3>
-    <button onclick="login()">Login with Deriv</button>
-    <div id="status">Bonyeza Login kuanza</div>
-    <div id="signal" class="signal WAIT">WAIT</div>
-    <p>RSI: <span id="rsi">--</span> | Price: <span id="price">--</span></p>
+<h3>Volatility 75 Index - 1M</h3>
+<button onclick="login()">Login with Deriv</button>
+<div id="status">Bonyeza Login kuanza</div>
+<div id="signal" class="signal WAIT">WAIT</div>
+<p>RSI: <span id="rsi">--</span> | Price: <span id="price">--</span></p>
 </div>
-
 <script>
-const APP_ID = '346Fu3sx0dtDikmKRP1S5';
-let ws;
-let candles = [];
-
-function login() {
-    const loginUrl = `https://oauth.deriv.com/oauth2/authorize?app_id=${APP_ID}&l=en&brand=deriv`;
-    window.location.href = loginUrl;
-}
-
-// Check token in URL after login
-const params = new URLSearchParams(window.location.search);
-const token = params.get('token1');
-
-if(token){
-    document.getElementById('status').innerText = 'Logged in! Connecting...';
-    connect(token);
-}
-
-function connect(token) {
-    ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
-    
-    ws.onopen = () => {
-        ws.send(JSON.stringify({authorize: token}));
-        ws.send(JSON.stringify({ticks: "R_75", subscribe: 1}));
-    };
-    
-    ws.onmessage = (msg) => {
-        const data = JSON.parse(msg.data);
-        if(data.authorize){document.getElementById('status').innerText = 'Connected!';}
-        if(data.tick){
-            const price = parseFloat(data.tick.quote);
-            document.getElementById('price').innerText = price.toFixed(2);
-            candles.push(price);
-            if(candles.length > 14) candles.shift();
-            if(candles.length >= 14){
-                const rsi = calcRSI(candles);
-                document.getElementById('rsi').innerText = rsi.toFixed(2);
-                const signalDiv = document.getElementById('signal');
-                if(rsi < 30){signalDiv.className = 'signal BUY'; signalDiv.innerText = 'BUY';} 
-                else if(rsi > 70){signalDiv.className = 'signal SELL'; signalDiv.innerText = 'SELL';} 
-                else {signalDiv.className = 'signal WAIT'; signalDiv.innerText = 'WAIT';}
-            }
-        }
-    };
-}
-
-function calcRSI(prices){
-    let gains = 0, losses = 0;
-    for(let i=1; i<prices.length; i++){
-        const diff = prices[i] - prices[i-1];
-        if(diff > 0) gains += diff; else losses -= diff;
-    }
-    const rs = gains / (losses || 1);
-    return 100 - (100 / (1 + rs));
-}
+const APP_ID='346Fu3sx0dtDikmKRP1S5';let ws;let candles=[];
+function login(){window.location.href=`https://oauth.deriv.com/oauth2/authorize?app_id=${APP_ID}`}
+const params=new URLSearchParams(window.location.search);const token=params.get('token1');
+if(token){document.getElementById('status').innerText='Connecting...';connect(token)}
+function connect(token){ws=new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
+ws.onopen=()=>{ws.send(JSON.stringify({authorize:token}));ws.send(JSON.stringify({ticks:"R_75",subscribe:1}))};
+ws.onmessage=(msg)=>{const data=JSON.parse(msg.data);if(data.authorize){document.getElementById('status').innerText='Connected!'}
+if(data.tick){const price=parseFloat(data.tick.quote);document.getElementById('price').innerText=price.toFixed(2);
+candles.push(price);if(candles.length>14)candles.shift();if(candles.length>=14){const rsi=calcRSI(candles);
+document.getElementById('rsi').innerText=rsi.toFixed(2);const s=document.getElementById('signal');
+if(rsi<30){s.className='signal BUY';s.innerText='BUY'}else if(rsi>70){s.className='signal SELL';s.innerText='SELL'}
+else{s.className='signal WAIT';s.innerText='WAIT'}}}}};
+function calcRSI(p){let g=0,l=0;for(let i=1;i<p.length;i++){const d=p[i]-p[i-1];if(d>0)g+=d;else l-=d}const rs=g/(l||1);return 100-(100/(1+rs))}
 </script>
 </body>
 </html>
