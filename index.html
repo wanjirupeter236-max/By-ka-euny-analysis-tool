@@ -2,918 +2,143 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BY KA EUNY Analysis Tool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KE LIVE BOT</title>
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#070b14;
-  color:#eef3ff
-}
-header{
-  padding:16px;
-  background:linear-gradient(135deg,#111a2d,#07101f);
-  border-bottom:1px solid #24314d;
-  position:sticky;
-  top:0;
-  z-index:5
-}
-h1{margin:0;font-size:20px}
-.sub{color:#8fa3c7;font-size:12px;margin-top:5px}
-#status{
-  float:right;
-  font-size:12px;
-  padding:6px 9px;
-  border-radius:12px;
-  background:#38200e;
-  color:#ffbd70
-}
-#status.ok{
-  background:#0d3323;
-  color:#65f0aa
-}
-main{
-  padding:12px;
-  max-width:1100px;
-  margin:auto
-}
-.toolbar{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:12px
-}
-button,select{
-  background:#111a2d;
-  color:#fff;
-  border:1px solid #2c3c5c;
-  border-radius:8px;
-  padding:9px
-}
-button{cursor:pointer}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:10px
-}
-.card{
-  background:#0e1525;
-  border:1px solid #202d47;
-  border-radius:12px;
-  padding:12px;
-  box-shadow:0 6px 18px #0004
-}
-.card h3{
-  margin:0 0 8px;
-  font-size:15px
-}
-.price{
-  font-size:24px;
-  font-weight:700
-}
-.muted{
-  color:#8fa3c7;
-  font-size:12px
-}
-.row{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  margin:7px 0;
-  font-size:13px
-}
-.badge{
-  padding:3px 7px;
-  border-radius:8px;
-  background:#18233a
-}
-.up{color:#57e7a3}
-.down{color:#ff7d8a}
-canvas{
-  width:100%;
-  height:110px;
-  background:#080d18;
-  border-radius:8px;
-  margin-top:8px
-}
-#contracts{margin-top:12px}
-.contract{
-  display:inline-block;
-  margin:4px;
-  padding:7px 9px;
-  border-radius:8px;
-  background:#16213a;
-  color:#bcd0f3;
-  font-size:12px
-}
-.warning{
-  color:#ffd28a;
-  font-size:12px;
-  margin:8px 0
-}
+body{background:#0a0f1e;color:#fff;font-family:Arial;margin:0;padding:15px}
+.card{background:#111827;border:2px solid #2563eb;border-radius:15px;padding:15px;margin:10px 0}
+h1{text-align:center;color:#facc15}
+label{font-size:14px;color:#94a3b8}
+select,button,input{width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #2563eb;font-size:15px;font-weight:bold;background:#1f2937;color:#fff;box-sizing:border-box}
+.btn-scan{background:linear-gradient(90deg,#06b6d4,#3b82f6);color:#fff;border:none}
+.scan-box{background:#000;border-radius:10px;padding:10px;height:150px;overflow:hidden;position:relative;border:1px solid #00ff00}
+.matrix{font-family:monospace;color:#00ff00;font-size:10px;line-height:11px}
+.line{position:absolute;top:50%;width:100%;height:2px;background:#00ff00;box-shadow:0 0 10px #00ff00}
+.progress{background:#1f2937;height:8px;border-radius:5px;margin:10px 0}
+.bar{height:8px;background:#06b6d4;border-radius:5px;width:0%;transition:width 0.1s}
+.status{text-align:center;margin:8px 0;font-weight:bold}
+.status.ok{color:#22c55e}.status.bad{color:#dc2626}
+.result{text-align:center;font-size:22px;font-weight:bold;margin:15px 0;padding:15px;border-radius:10px}
 </style>
 </head>
-
 <body>
 
-<header>
-  <span id="status">CONNECTING…</span>
-  <h1>BY KA EUNY Analysis Tool</h1>
-  <div class="sub">
-    LIVE DERIV VOLATILITY • RSI • DIGITS • CONTRACT TYPES
-  </div>
-</header>
+<h1>👑 KE LIVE BOT</h1>
+<p style="text-align:center;color:#94a3b8">BY KA EUNY • LIVE DATA</p>
 
-<main>
+<div class="card">
+  <p class="status bad" id="connStatus">● Connecting...</p>
+  <label>1. Select Volatility</label>
+  <select id="market"></select>
 
-<div class="toolbar">
+  <label>2. Select Contract</label>
+  <select id="contract">
+    <option value="MATCH">Matches</option>
+    <option value="DIFF">Differs</option>
+    <option value="OVER">Over</option>
+    <option value="UNDER">Under</option>
+    <option value="EVEN">Even</option>
+    <option value="ODD">Odd</option>
+  </select>
 
-<select id="symbolSelect">
-<option>Loading volatility indices…</option>
-</select>
-
-<button id="refresh">
-Refresh Markets
-</button>
-
-<button id="pause">
-Pause
-</button>
-
+  <label id="dLabel" style="display:none">3. Target Digit for Over/Under</label>
+  <input type="number" id="digit" value="5" min="0" max="9" style="display:none">
 </div>
 
-<div class="warning">
-Market data is live from Deriv's public WebSocket.
-Analysis is informational and does not guarantee a winning trade.
+<div class="card">
+  <h3>🔍 LIVE MATRIX SCANNER</h3>
+  <div class="scan-box"><div id="matrix" class="matrix"></div><div class="line"></div></div>
+  <div class="progress"><div id="bar" class="bar"></div></div>
+  <p class="status" id="scanText">Waiting for data...</p>
+  <button class="btn-scan" onclick="startScan()">⚡ SCAN & GET SIGNAL</button>
 </div>
 
-<div id="cards" class="grid"></div>
-
-<div id="contracts" class="card">
-
-<h3>Available Contract Types</h3>
-
-<div id="contractList" class="muted">
-Select a volatility index.
-</div>
-
-</div>
-
-</main>
+<div id="resultBox" class="result" style="display:none"></div>
 
 <script>
-
-const WS_URL =
-"wss://api.derivws.com/trading/v1/options/ws/public";
-
-let ws;
-let markets=[];
-let selected="";
-let paused=false;
-
-const state={};
-
-const $=id=>document.getElementById(id);
-
-function setStatus(text,ok=false){
-
-  $("status").textContent=text;
-
-  $("status").className=ok ? "ok" : "";
-
-}
-
-function send(data){
-
-  if(ws && ws.readyState===1){
-
-    ws.send(JSON.stringify(data));
-
-  }
-
-}
+const APP_ID='61548'; // APP ID YA LIVE
+let ws;let digits=[];let scanning=false;let currentSymbol="R_100";
 
 function connect(){
-
-  setStatus("CONNECTING…");
-
-  try{
-
-    ws=new WebSocket(WS_URL);
-
-  }catch(e){
-
-    setStatus("ERROR");
-
-    return;
-
-  }
+  ws=new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
 
   ws.onopen=()=>{
-
-    setStatus("LIVE",true);
-
-    loadMarkets();
-
+    document.getElementById('connStatus').className='status ok';
+    document.getElementById('connStatus').innerText='● Connected to Deriv LIVE';
+    ws.send(JSON.stringify({active_symbols:"brief"}));
+    ws.send(JSON.stringify({ticks:currentSymbol,subscribe:1}));
   };
 
-  ws.onclose=()=>{
-
-    setStatus("DISCONNECTED");
-
-    setTimeout(connect,2500);
-
-  };
-
-  ws.onerror=()=>{
-
-    setStatus("CONNECTION ERROR");
-
-  };
-
-  ws.onmessage=e=>{
-
-    handle(JSON.parse(e.data));
-
-  };
-
-}
-
-function loadMarkets(){
-
-  send({
-
-    active_symbols:"full",
-
-    req_id:1
-
-  });
-
-}
-
-function handle(d){
-
-  if(d.error){
-
-    console.warn(d.error);
-
-    return;
-
+  ws.onclose=()=>{ // IKIWA INAKATIKA IJIRUDIE
+    document.getElementById('connStatus').className='status bad';
+    document.getElementById('connStatus').innerText='● Disconnected. Reconnecting...';
+    setTimeout(connect,3000);
   }
 
-  if(d.msg_type==="active_symbols"){
-
-    const arr=d.active_symbols || [];
-
-    markets=arr.filter(x=>{
-
-      const s=x.underlying_symbol || x.symbol || "";
-
-      const n=(
-        x.underlying_symbol_name ||
-        x.display_name ||
-        x.name ||
-        ""
-      ).toLowerCase();
-
-      return s && (
-
-        n.includes("volatility") ||
-
-        /^1HZ\d+V$/.test(s) ||
-
-        /^R_\d+/.test(s)
-
-      );
-
-    });
-
-    const map=new Map();
-
-    markets.forEach(x=>{
-
-      map.set(
-        x.underlying_symbol || x.symbol,
-        x
-      );
-
-    });
-
-    markets=[...map.values()];
-
-    const sel=$("symbolSelect");
-
-    sel.innerHTML="";
-
-    markets.sort((a,b)=>
-
-      (a.underlying_symbol || a.symbol)
-      .localeCompare(
-        b.underlying_symbol || b.symbol
-      )
-
-    );
-
-    markets.forEach((m,i)=>{
-
-      const s=
-        m.underlying_symbol ||
-        m.symbol;
-
-      const n=
-        m.underlying_symbol_name ||
-        m.display_name ||
-        s;
-
-      const o=
-        document.createElement("option");
-
-      o.value=s;
-
-      o.textContent=
-        `${n} (${s})`;
-
-      sel.appendChild(o);
-
-      if(i===0){
-
-        selected=s;
-
+  ws.onmessage=(msg)=>{
+    const data=JSON.parse(msg.data);
+    if(data.active_symbols){
+      const sel=document.getElementById('market');
+      sel.innerHTML='';
+      data.active_symbols.filter(s=>s.symbol.startsWith('R_')).forEach(s=>{
+        sel.innerHTML+=`<option value="${s.symbol}">${s.display_name}</option>`
+      });
+      sel.value=currentSymbol;
+      sel.onchange=e=>{
+        currentSymbol=e.target.value;
+        ws.send(JSON.stringify({forget_all:"ticks"}));
+        ws.send(JSON.stringify({ticks:currentSymbol,subscribe:1}));
+        digits=[];
       }
-
-      if(!state[s]){
-
-        state[s]={
-
-          ticks:[],
-
-          digits:Array(10).fill(0),
-
-          last:null,
-
-          pip:m.pip_size
-
-        };
-
-      }
-
-      subscribe(s);
-
-    });
-
-    if(markets.length){
-
-      sel.value=selected;
-
     }
-
-    render();
-
-    loadContracts(selected);
-
-  }
-
-  if(d.msg_type==="tick"){
-
-    const t=d.tick || {};
-
-    const s=t.symbol;
-
-    const q=Number(t.quote);
-
-    if(!s || !Number.isFinite(q)){
-
-      return;
-
+    if(data.tick){
+      const digit=parseInt(data.tick.quote.toString().slice(-1));
+      digits.push(digit);
+      if(digits.length>500)digits.shift();
+      document.getElementById('scanText').innerText=`Receiving LIVE data... ${digits.length} ticks`;
     }
-
-    if(!state[s]){
-
-      state[s]={
-
-        ticks:[],
-
-        digits:Array(10).fill(0),
-
-        last:null,
-
-        pip:t.pip_size
-
-      };
-
-    }
-
-    const st=state[s];
-
-    st.last=q;
-
-    st.ticks.push(q);
-
-    if(st.ticks.length>120){
-
-      st.ticks.shift();
-
-    }
-
-    const str=String(q).replace(".","");
-
-    const digit=Number(str.slice(-1));
-
-    if(Number.isInteger(digit)){
-
-      st.digits[digit]++;
-
-    }
-
-    render();
-
   }
-
-  if(d.msg_type==="contracts_for"){
-
-    const list=
-      d.contracts_for?.available || [];
-
-    $("contractList").innerHTML=
-
-      list.length
-
-      ?
-
-      list.map(c=>{
-
-        const name=
-
-          c.contract_type ||
-
-          c.display_name ||
-
-          c.contract_category ||
-
-          "Contract";
-
-        return `
-
-        <span class="contract">
-
-        ${escapeHtml(name)}
-
-        </span>
-
-        `;
-
-      }).join("")
-
-      :
-
-      "No contract metadata returned.";
-
-  }
-
 }
-
-function escapeHtml(s){
-
-  return String(s).replace(
-
-    /[&<>"']/g,
-
-    m=>
-
-      ({
-
-        "&":"&amp;",
-
-        "<":"&lt;",
-
-        ">":"&gt;",
-
-        '"':"&quot;",
-
-        "'":"&#039;"
-
-      }[m])
-
-  );
-
-}
-
-function subscribe(s){
-
-  send({
-
-    ticks:s,
-
-    subscribe:1
-
-  });
-
-}
-
-function loadContracts(s){
-
-  if(s){
-
-    send({
-
-      contracts_for:s,
-
-      req_id:20
-
-    });
-
-  }
-
-}
-
-function rsi(a,p=14){
-
-  if(a.length<p+1){
-
-    return null;
-
-  }
-
-  let g=0;
-
-  let l=0;
-
-  for(
-
-    let i=a.length-p;
-
-    i<a.length;
-
-    i++
-
-  ){
-
-    let d=a[i]-a[i-1];
-
-    if(d>0){
-
-      g+=d;
-
-    }else{
-
-      l-=d;
-
-    }
-
-  }
-
-  if(l===0){
-
-    return 100;
-
-  }
-
-  return 100-(100/(1+g/l));
-
-}
-
-function render(){
-
-  if(paused){
-
-    return;
-
-  }
-
-  const sel=$("symbolSelect");
-
-  if(!selected && sel.value){
-
-    selected=sel.value;
-
-  }
-
-  const s=selected || sel.value;
-
-  const st=state[s];
-
-  if(!st){
-
-    $("cards").innerHTML="";
-
-    return;
-
-  }
-
-  const arr=st.ticks;
-
-  const q=st.last;
-
-  const rr=rsi(arr);
-
-  const prev=
-    arr.length>1
-    ? arr[arr.length-2]
-    : null;
-
-  const trend=
-
-    prev==null
-    ? "—"
-    : q>prev
-      ? "UP"
-      : "DOWN";
-
-  const max=Math.max(
-    ...(st.digits || [0]),
-    1
-  );
-
-  const hottest=
-    (st.digits || [])
-    .indexOf(
-      Math.max(...st.digits)
-    );
-
-  $("cards").innerHTML=`
-
-  <div class="card">
-
-    <h3>${escapeHtml(s)}</h3>
-
-    <div class="price">
-
-      ${q==null ? "—" : q}
-
-    </div>
-
-    <div class="row">
-
-      <span class="muted">
-        Ticks loaded
-      </span>
-
-      <b>${arr.length}</b>
-
-    </div>
-
-    <div class="row">
-
-      <span class="muted">
-        Last movement
-      </span>
-
-      <b class="${
-        trend==="UP"
-        ? "up"
-        : "down"
-      }">
-
-        ${trend}
-
-      </b>
-
-    </div>
-
-    <canvas id="chart"></canvas>
-
-  </div>
-
-
-  <div class="card">
-
-    <h3>RSI (14)</h3>
-
-    <div class="price">
-
-      ${
-        rr==null
-        ? "—"
-        : rr.toFixed(2)
-      }
-
-    </div>
-
-    <div class="row">
-
-      <span class="muted">
-        Below 30
-      </span>
-
-      <b>
-
-        ${
-          rr!=null && rr<30
-          ? "YES"
-          : "NO"
-        }
-
-      </b>
-
-    </div>
-
-    <div class="row">
-
-      <span class="muted">
-        Above 70
-      </span>
-
-      <b>
-
-        ${
-          rr!=null && rr>70
-          ? "YES"
-          : "NO"
-        }
-
-      </b>
-
-    </div>
-
-    <div class="muted">
-
-      RSI is calculated from
-      incoming live ticks.
-
-    </div>
-
-  </div>
-
-
-  <div class="card">
-
-    <h3>Last Digit</h3>
-
-    <div class="price">
-
-      ${
-        q==null
-        ? "—"
-        : String(q)
-          .replace(".","")
-          .slice(-1)
-      }
-
-    </div>
-
-    <div class="row">
-
-      <span class="muted">
-        Most frequent digit
-      </span>
-
-      <b>${hottest}</b>
-
-    </div>
-
-    <div class="row">
-
-      <span class="muted">
-        Even / Odd
-      </span>
-
-      <b>
-
-        ${
-          q==null
-          ? "—"
-          :
-          (
-            Number(
-              String(q)
-              .replace(".","")
-              .slice(-1)
-            ) % 2 === 0
-            ? "EVEN"
-            : "ODD"
-          )
-        }
-
-      </b>
-
-    </div>
-
-    <div class="muted">
-
-      Sample counts:
-
-      ${
-        (st.digits || [])
-        .map(
-          (v,i)=>i+":"+v
-        )
-        .join(" • ")
-      }
-
-    </div>
-
-  </div>
-
-  `;
-
-  drawChart(arr);
-
-}
-
-function drawChart(a){
-
-  const c=$("chart");
-
-  if(!c){
-
-    return;
-
-  }
-
-  const ctx=c.getContext("2d");
-
-  const d=devicePixelRatio || 1;
-
-  const w=c.clientWidth*d;
-
-  const h=c.clientHeight*d;
-
-  c.width=w;
-
-  c.height=h;
-
-  if(a.length<2){
-
-    return;
-
-  }
-
-  const mn=Math.min(...a);
-
-  const mx=Math.max(...a);
-
-  const span=mx-mn || 1;
-
-  ctx.beginPath();
-
-  a.forEach((v,i)=>{
-
-    const x=
-      i/(a.length-1)*w;
-
-    const y=
-      h-
-      (v-mn)/span*
-      (h-14)-7;
-
-    if(i){
-
-      ctx.lineTo(x,y);
-
-    }else{
-
-      ctx.moveTo(x,y);
-
-    }
-
-  });
-
-  ctx.strokeStyle="#69b7ff";
-
-  ctx.lineWidth=2*d;
-
-  ctx.stroke();
-
-}
-
-$("symbolSelect").onchange=e=>{
-
-  selected=e.target.value;
-
-  loadContracts(selected);
-
-  render();
-
-};
-
-$("refresh").onclick=()=>{
-
-  loadMarkets();
-
-};
-
-$("pause").onclick=()=>{
-
-  paused=!paused;
-
-  $("pause").textContent=
-    paused
-    ? "Resume"
-    : "Pause";
-
-  if(!paused){
-
-    render();
-
-  }
-
-};
-
 connect();
 
-</script>
+document.getElementById('contract').onchange=e=>{
+  const val=e.target.value;
+  document.getElementById('dLabel').style.display = (val==='OVER'||val==='UNDER')? 'block' : 'none';
+  document.getElementById('digit').style.display = (val==='OVER'||val==='UNDER')? 'block' : 'none';
+}
 
+function startScan(){
+  if(scanning || digits.length<50){alert('Subiri data ijaze kwanza. Hii ni LIVE inachukua 1min');return}
+  scanning=true; let i=0;
+  const matrix=document.getElementById('matrix'); const bar=document.getElementById('bar'); const txt=document.getElementById('scanText');
+  matrix.innerHTML='';
+  const interval=setInterval(()=>{
+    i+=2; bar.style.width=i+'%';
+    matrix.innerHTML+=Math.random().toString(16).substring(2,8)+'<br>';
+    txt.innerText=`Scanning LIVE Market... ${5-Math.floor(i/20)}s`;
+    if(i>=100){
+      clearInterval(interval); scanning=false; txt.innerText='Scan Complete ✅'; genSignal();
+    }
+  },50);
+}
+
+function genSignal(){
+  const type=document.getElementById('contract').value;
+  const targetDigit=parseInt(document.getElementById('digit').value);
+  const counts=[0,0,0,0,0,0,0,0,0,0]; digits.forEach(d=>counts[d]++);
+
+  let signalText=''; let color='';
+  if(type==='MATCH'){let s=counts.indexOf(Math.max(...counts)); signalText=`MATCH ${s}`; color='#16a34a';}
+  if(type==='DIFF'){let s=counts.indexOf(Math.min(...counts)); signalText=`DIFFERS ${s}`; color='#dc2626';}
+  if(type==='OVER'){let t=counts.slice(targetDigit+1).reduce((a,b)=>a+b,0); signalText=`OVER ${targetDigit} - ${t} hits`; color='#16a34a';}
+  if(type==='UNDER'){let t=counts.slice(0,targetDigit).reduce((a,b)=>a+b,0); signalText=`UNDER ${targetDigit} - ${t} hits`; color='#dc2626';}
+  if(type==='EVEN'){let t=counts[0]+counts[2]+counts[4]+counts[6]+counts[8]; signalText=`EVEN - ${t} hits`; color='#16a34a';}
+  if(type==='ODD'){let t=counts[1]+counts[3]+counts[5]+counts[7]+counts[9]; signalText=`ODD - ${t} hits`; color='#dc2626';}
+
+  const box=document.getElementById('resultBox');
+  box.style.display='block'; box.style.background=color;
+  box.innerHTML=`🎯 LIVE SIGNAL: ${signalText}<br><small>${currentSymbol} - Last ${digits.length} ticks</small>`;
+}
+</script>
 </body>
 </html>
