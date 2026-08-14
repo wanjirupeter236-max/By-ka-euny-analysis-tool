@@ -2,147 +2,341 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>KA EUNY AUTO BOT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BY KA EUNY Analysis Tool</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#050912;color:#f4f7ff;font-family:Arial,sans-serif}
-.hero{min-height:100vh;background:linear-gradient(rgba(4,8,16,.82),rgba(4,8,16,.94)),url("wallpaper.png") center/cover fixed;padding:18px}
-.wrap{max-width:1050px;margin:auto}
-header{background:rgba(9,16,31,.9);border:1px solid #2a3a5b;border-radius:16px;padding:18px;text-align:center}
-h1{margin:0;font-size:28px;color:#ffd06a}.sub{color:#9db0d3;margin-top:6px;font-size:13px}
-.card{background:rgba(10,17,31,.94);border:1px solid #293958;border-radius:14px;padding:15px;margin-top:12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
-.big{font-size:26px;font-weight:bold}.muted{font-size:12px;color:#91a5c8}
-.good{color:#55efa0}.bad{color:#ff7887}.gold{color:#ffd06a}
-button,select,input{padding:12px;border-radius:9px;border:1px solid #3a4d70;background:#111b30;color:white;font-weight:bold}
-button{cursor:pointer;width:100%}.run{background:linear-gradient(90deg,#b57913,#e6a200)}.stop{background:#dc2626}
-.bar{display:flex;gap:10px}
-.status{float:right;padding:6px 10px;border-radius:15px;background:#0d3826;color:#68f0aa;font-size:12px}
-table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #283752;text-align:left;font-size:12px}
-#log{height:150px;overflow:auto;background:#000;border-radius:8px;padding:9px;font:12px monospace;white-space:pre-wrap}
-.pulse{animation:pulse 1s infinite}@keyframes pulse{0%{opacity:1}50%{opacity:0.5}100%{opacity:1}}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#06101d;
+  color:#fff;
+  min-height:100vh;
+}
+
+.container{
+  width:100%;
+  max-width:1100px;
+  margin:auto;
+  padding:15px;
+}
+
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,#09294a,#07111d);
+  border:1px solid #174b72;
+  border-radius:18px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 0 25px rgba(0,150,255,.12);
+}
+
+.header h1{
+  font-size:28px;
+  color:#29a9ff;
+  margin-bottom:7px;
+}
+
+.header p{
+  color:#9ebbd0;
+  font-size:14px;
+}
+
+/* CARDS */
+.card{
+  background:#0a1929;
+  border:1px solid #183a55;
+  border-radius:16px;
+  padding:16px;
+  margin-top:14px;
+}
+
+.card h2,
+.card h3{
+  margin-bottom:14px;
+  color:#4db8ff;
+}
+
+/* INPUTS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+
+label{
+  display:block;
+  font-size:13px;
+  color:#9dbbd0;
+  margin-bottom:6px;
+}
+
+input,
+select{
+  width:100%;
+  padding:12px;
+  background:#06111d;
+  color:#fff;
+  border:1px solid #28516d;
+  border-radius:10px;
+  outline:none;
+}
+
+input:focus,
+select:focus{
+  border-color:#20a7ff;
+}
+
+/* BUTTONS */
+.buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:13px;
+}
+
+button{
+  padding:13px;
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  background:#0877bd;
+}
+
+button:hover{
+  background:#0b96ed;
+}
+
+.stop{
+  background:#8c2632;
+}
+
+.stop:hover{
+  background:#b72d3d;
+}
+
+/* STATUS */
+.status{
+  margin-top:12px;
+  padding:11px;
+  border-radius:10px;
+  background:#07131f;
+  text-align:center;
+}
+
+.live{
+  color:#35ed91;
+}
+
+.offline{
+  color:#ffbd55;
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:#071521;
+  border:1px solid #18364d;
+  border-radius:12px;
+  padding:15px 8px;
+  text-align:center;
+}
+
+.stat small{
+  color:#91afc3;
+}
+
+.stat strong{
+  display:block;
+  font-size:23px;
+  margin-top:6px;
+  color:#fff;
+}
+
+/* DIGITS */
+.digits{
+  display:grid;
+  grid-template-columns:repeat(10,1fr);
+  gap:7px;
+}
+
+.digitBox{
+  background:#071521;
+  border:1px solid #18364d;
+  border-radius:10px;
+  padding:10px 4px;
+  text-align:center;
+}
+
+.digitBox span{
+  color:#7fa3ba;
+  font-size:12px;
+}
+
+.digitBox b{
+  display:block;
+  margin-top:5px;
+  font-size:16px;
+}
+
+/* SIGNALS */
+.signalGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.signal{
+  background:#071521;
+  border-radius:12px;
+  border:1px solid #193b53;
+  padding:14px;
+  text-align:center;
+}
+
+.signal b{
+  display:block;
+  margin-top:7px;
+  font-size:19px;
+  color:#40c5ff;
+}
+
+/* TABLE */
+.tableWrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,
+td{
+  padding:10px;
+  border-bottom:1px solid #193448;
+  text-align:center;
+  font-size:13px;
+}
+
+th{
+  color:#62c4ff;
+}
+
+.badge{
+  padding:4px 8px;
+  background:#123c59;
+  border-radius:7px;
+}
+
+/* NOTICE */
+.notice{
+  color:#9db8ca;
+  font-size:12px;
+  line-height:1.5;
+  margin-top:12px;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  color:#607f94;
+  padding:22px 0;
+  font-size:12px;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+
+  .header h1{
+    font-size:23px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .signalGrid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .digits{
+    grid-template-columns:repeat(5,1fr);
+  }
+
+  .buttons{
+    grid-template-columns:1fr;
+  }
+}
 </style>
 </head>
+
 <body>
-<div class="hero">
-<div class="wrap">
 
-<header>
-<span id="conn" class="status pulse">CONNECTING...</span>
-<h1>KA EUNY AUTO BOT</h1>
-<div class="sub">AUTO FINDS BEST MARKET • AUTO TRADES DEMO • DISCIPLINE WINS</div>
-</header>
+<div class="container">
 
-<div class="card">
-<h3>🤖 AUTO RUN SETTINGS</h3>
-<div class="bar">
-<select id="mode">
-<option value="OVER">OVER</option>
-<option value="UNDER">UNDER</option>
-<option value="EVEN">EVEN</option>
-<option value="ODD">ODD</option>
-<option value="MATCH">MATCH</option>
-<option value="DIFF">DIFF</option>
-</select>
-<select id="target"><option>0</option><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select>
-<input id="stake" type="number" min=".35" step=".01" value="1" placeholder="Stake">
-</div>
-<div class="bar" style="margin-top:10px">
-<button id="run" class="run">▶ RUN BOT - FIND & TRADE</button>
-<button id="stop" class="stop">■ STOP BOT</button>
-</div>
-<p id="state" class="gold">IDLE — Click RUN to start auto scan</p>
-</div>
+  <!-- HEADER -->
+  <div class="header">
+    <h1>BY KA EUNY ANALYSIS TOOL</h1>
+    <p>Live Deriv Digit Analysis Dashboard</p>
+  </div>
 
-<div class="grid">
-<div class="card"><div class="muted">Selected Market</div><div id="market" class="big">—</div></div>
-<div class="card"><div class="muted">RSI (14)</div><div id="rsi" class="big">—</div></div>
-<div class="card"><div class="muted">Last Digit</div><div id="last" class="big">—</div></div>
-<div class="card"><div class="muted">Market Score</div><div id="score" class="big">—</div></div>
-</div>
+  <!-- CONNECTION -->
+  <div class="card">
 
-<div class="card">
-<h3>💰 DEMO RESULTS</h3>
-<div class="grid">
-<div><div class="muted">Total Stake</div><div id="totalStake" class="big">0.00 USD</div></div>
-<div><div class="muted">Total Payout</div><div id="payout" class="big">0.00 USD</div></div>
-<div><div class="muted">Wins</div><div id="wins" class="big good">0</div></div>
-<div><div class="muted">Losses</div><div id="losses" class="big bad">0</div></div>
-<div><div class="muted">Runs</div><div id="runs" class="big">0</div></div>
-<div><div class="muted">P/L</div><div id="pl" class="big gold">0.00 USD</div></div>
-</div>
-</div>
+    <h3>Deriv Live Connection</h3>
 
-<div class="card">
-<h3>📊 TOP 10 MARKETS LIVE</h3>
-<table><thead><tr><th>Market</th><th>RSI</th><th>Price</th><th>Digit</th><th>Score</th></tr></thead>
-<tbody id="rows"><tr><td colspan="5">Collecting live ticks…</td></tr></tbody></table>
-</div>
+    <div class="grid">
 
-<div class="card">
-<h3>📒 BOT JOURNAL</h3>
-<div id="log">Bot Ready.</div>
-</div>
+      <div>
+        <label>Deriv App ID</label>
+        <input
+          id="appId"
+          type="text"
+          placeholder="Enter App ID"
+          value="1089">
+      </div>
 
-</div>
-</div>
+      <div>
+        <label>Market</label>
 
-<script>
-const WS="wss://api.derivws.com/trading/v1/options/ws/public";
-let ws,markets={},running=false,scanner=null,bot=null;
-let stats={runs:0,wins:0,losses:0,stake:0,payout:0,pl:0};
-const $=id=>document.getElementById(id);
+        <select id="symbol">
 
-function log(x){$("log").textContent=new Date().toLocaleTimeString()+" "+x+"\n"+$("log").textContent}
-function send(x){if(ws&&ws.readyState===1)ws.send(JSON.stringify(x))}
-function rsi(a,p=14){
- if(a.length<p+1)return null;
- let g=0,l=0;
- for(let i=a.length-p;i<a.length;i++){let d=a[i]-a[i-1];if(d>0)g+=d;else l-=d}
- return l?100-100/(1+g/l):100;
-}
-function connect(){
- ws=new WebSocket(WS);
- ws.onopen=()=>{$("conn").textContent="LIVE";$("conn").classList.remove("pulse");send({active_symbols:"full"})};
- ws.onclose=()=>{$("conn").textContent="OFFLINE";$("conn").classList.add("pulse");setTimeout(connect,3000)};
- ws.onmessage=e=>handle(JSON.parse(e.data));
-}
-function handle(d){
- if(d.error)return;
- if(d.msg_type==="active_symbols"){
-  (d.active_symbols||[]).filter(x=>{
-   let s=x.underlying_symbol||x.symbol||"";
-   let n=(x.underlying_symbol_name||x.display_name||"").toLowerCase();
-   return s&&(n.includes("volatility")||/^R_\d+/.test(s));
-  }).forEach(x=>{
-   let s=x.underlying_symbol||x.symbol;
-   if(!markets[s])markets[s]={ticks:[],digits:Array(10).fill(0)};
-   send({ticks:s,subscribe:1});
-  });
-  log("Found volatility markets. Collecting data...");
- }
- if(d.msg_type==="tick"){
-  let t=d.tick||{},s=t.symbol,q=Number(t.quote);
-  if(!markets[s]||!Number.isFinite(q))return;
-  let m=markets[s];m.last=q;m.ticks.push(q);
-  if(m.ticks.length>200)m.ticks.shift();
-  let z=Number(String(q).replace(".","").slice(-1));
-  if(Number.isInteger(z))m.digits[z]++;
-  render();
- }
-}
-function score(m){
- if(m.ticks.length<30)return null;
- let r=rsi(m.ticks),s=0;
- if(r<30||r>70)s+=40;else if(r<40||r>60)s+=20;
- let n=m.digits.reduce((a,b)=>a+b,0),mx=Math.max(...m.digits);
- if(n)s+=Math.min(40,mx/n*60);
- return Math.round(s);
-}
-function best(){
- return Object.entries(markets).map(([s,m])=>({s,m,sc:score(m),r:rsi(m.ticks)}))
-.filter(x=>x.sc!==null).sort((a,b)=>b.sc-a.sc)[0];
-}
-function render(){
- let a=Object.entries(markets
+          <option value="R_10">
+            Volatility 10 Index
+          </option>
+
+          <option value="R_25">
+            Volatility 25 Index
+          </option>
+
+          <option value="R_50">
+            Volatility 50 Index
+          </option>
+
+          <option value="R_75">
+            Volatility 75 Index
+          </option>
+
+          <option value="R_100">
+            Volatility 100 Index
+          </option>
+
+          <option value="1HZ10V">
+            Volatility 10 (1s)
+          </option>
+
+          <option value="1HZ25V">
+            Volatility 25 (1
