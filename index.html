@@ -1,570 +1,310 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>BY KA EUNY RSI Analysis Tool</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BY KA EUNY Live RSI</title>
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;
- background:#020617;
- color:#fff;
- font-family:Arial,sans-serif;
-}
-.app{max-width:1200px;margin:auto;padding:15px}
-.header{
- text-align:center;
- padding:20px;
- border:1px solid #147cff;
- border-radius:20px;
- background:linear-gradient(135deg,#071b40,#10001d);
- box-shadow:0 0 30px #087cff55;
-}
-.logo{
- font-size:42px;
- font-weight:bold;
- color:#ffd43b;
-}
-.brand{
- font-size:30px;
- font-weight:900;
- color:#ffd43b;
-}
-.sub{color:#aebbd0;margin-top:5px}
-
-.nav{
- display:grid;
- grid-template-columns:repeat(5,1fr);
- gap:10px;
- margin:15px 0;
-}
-.nav button{
- padding:13px;
- border-radius:12px;
- border:1px solid #147cff;
- background:#071a3d;
- color:white;
- font-weight:bold;
-}
-
-.grid{
- display:grid;
- grid-template-columns:250px 1fr 250px;
- gap:14px;
-}
-.card{
- background:#07111f;
- border:1px solid #0877ff;
- border-radius:16px;
- padding:16px;
- margin-bottom:14px;
- box-shadow:0 0 20px #0066ff30;
-}
-h3{margin-top:0}
-
-label{
- display:block;
- color:#9fb0c9;
- margin:10px 0 6px;
- font-size:13px;
-}
-
-input,select{
- width:100%;
- padding:14px;
- border-radius:10px;
- background:#020617;
- color:#fff;
- border:1px solid #1954a0;
- font-size:16px;
-}
-
-.btn{
- width:100%;
- margin-top:12px;
- padding:15px;
- border:0;
- border-radius:12px;
- background:linear-gradient(90deg,#00e676,#00aaff);
- color:#001;
- font-weight:bold;
- font-size:16px;
-}
-
-.chart{
- height:250px;
- background:
- repeating-linear-gradient(0deg,#07111f 0 39px,#10213a 40px),
- repeating-linear-gradient(90deg,transparent 0 59px,#10213a 60px);
- border-radius:12px;
- overflow:hidden;
-}
-
-canvas{
- width:100%;
- height:100%;
-}
-
-.signal{
- text-align:center;
- padding:22px;
- border-radius:15px;
- background:#031c12;
- border:1px solid #00e676;
-}
-.signal strong{
- display:block;
- font-size:40px;
- color:#00ff80;
-}
-.over{color:#00ff80}
-.under{color:#ff4567}
-.even{color:#ffb300}
-.odd{color:#c65cff}
-
-.bar{
- height:12px;
- background:#172033;
- border-radius:20px;
- overflow:hidden;
-}
-.bar span{
- display:block;
- height:100%;
- width:50%;
- background:linear-gradient(90deg,#00e676,#00aaff);
-}
-
-.stats{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px;
-}
-.stat{
- background:#020617;
- padding:15px;
- border-radius:12px;
- text-align:center;
-}
-.stat b{
- display:block;
- font-size:23px;
- margin-top:5px;
-}
-
-.history div{
- display:flex;
- justify-content:space-between;
- padding:10px;
- border-bottom:1px solid #182337;
-}
-
-.footer{
- text-align:center;
- color:#71809a;
- padding:20px;
- font-size:12px;
-}
-
-@media(max-width:850px){
- .grid{grid-template-columns:1fr}
- .nav{grid-template-columns:repeat(2,1fr)}
-}
+body{margin:0;background:#020617;color:white;font-family:Arial;padding:15px}
+.box{max-width:900px;margin:auto}
+header{padding:25px;text-align:center;border:1px solid #087cff;border-radius:20px;background:#071a3d}
+.logo{font-size:45px;color:#ffd43b;font-weight:bold}
+h1{color:#ffd43b}
+.card{background:#07111f;border:1px solid #087cff;border-radius:15px;padding:15px;margin:15px 0}
+select{width:100%;padding:14px;background:#020617;color:white;border:1px solid #087cff;border-radius:10px}
+.signal{text-align:center;font-size:32px;font-weight:bold;padding:25px}
+.green{color:#00ff80}.red{color:#ff526d}.yellow{color:#ffd43b}
+table{width:100%;border-collapse:collapse}
+td,th{padding:10px;border-bottom:1px solid #1d3555;text-align:left}
+#status{color:#00ff80}
 </style>
 </head>
 
 <body>
+<div class="box">
 
-<div class="app">
-
-<div class="header">
+<header>
 <div class="logo">👑 KE</div>
-<div class="brand">BY KA EUNY</div>
-<div class="sub">RSI • SMART ANALYSIS • BETTER DECISIONS</div>
-</div>
-
-<div class="nav">
-<button>⌂ Dashboard</button>
-<button>〽 RSI Signal</button>
-<button>▦ Digits</button>
-<button>◉ Strategies</button>
-<button>◷ History</button>
-</div>
-
-<div class="grid">
-
-<!-- LEFT -->
-<section>
+<h1>BY KA EUNY</h1>
+<p>LIVE DERIV VOLATILITY • RSI • DIGITS</p>
+<p id="status">● Connecting...</p>
+</header>
 
 <div class="card">
-<h3>⚡ MARKET</h3>
-
-<label>Market</label>
-
-<select>
-<option>Volatility 75 (1s)</option>
-<option>Volatility 50 (1s)</option>
-<option>Volatility 100 (1s)</option>
+<h3>SELECT VOLATILITY</h3>
+<select id="market">
+<option>Loading...</option>
 </select>
-
-<label>Last Digit</label>
-
-<input id="digit"
-type="number"
-min="0"
-max="9"
-placeholder="0 - 9">
-
-<label>RSI (14)</label>
-
-<input id="rsi"
-type="number"
-min="0"
-max="100"
-value="58">
-
-<button class="btn"
-onclick="analyze()">
-⚡ GET RSI SIGNAL
-</button>
-
 </div>
 
 <div class="card">
-<h3>📊 RSI ZONES</h3>
-
-<p class="under">🔴 Overbought: 70–100</p>
-<p>🟡 Neutral: 30–70</p>
-<p class="over">🟢 Oversold: 0–30</p>
-
-</div>
-
-</section>
-
-<!-- CENTER -->
-<main>
-
-<div class="card">
-
-<h3>
-📈 LIVE CHART + RSI
-<span class="over">● LIVE</span>
-</h3>
-
-<div class="chart">
-<canvas id="chart"></canvas>
-</div>
-
+<h3>LIVE ANALYSIS</h3>
+<div>Price: <b id="price">--</b></div>
+<div>Last Digit: <b id="digit">--</b></div>
+<div>RSI(14): <b id="rsi">--</b></div>
+<div id="signal" class="signal yellow">WAITING</div>
 </div>
 
 <div class="card">
-
-<h3>🎯 CURRENT SIGNAL (RSI)</h3>
-
-<div class="signal">
-
-<strong id="signal">
-READY
-</strong>
-
-<span id="confidence">
-Enter RSI and digit to analyze
-</span>
-
-</div>
-
-<br>
-
-<div>Signal strength</div>
-
-<div class="bar">
-<span id="strength"></span>
-</div>
-
+<h3>ALL VOLATILITY MARKETS</h3>
+<table>
+<thead>
+<tr>
+<th>Market</th>
+<th>Price</th>
+<th>Digit</th>
+<th>RSI</th>
+</tr>
+</thead>
+<tbody id="list"></tbody>
+</table>
 </div>
 
 <div class="card">
-
-<h3>🔮 NEXT ANALYSIS</h3>
-
-<div class="stats">
-
-<div class="stat over">
-OVER
-<b id="over">--</b>
-</div>
-
-<div class="stat under">
-UNDER
-<b id="under">--</b>
-</div>
-
-<div class="stat even">
-EVEN
-<b id="even">--</b>
-</div>
-
-<div class="stat odd">
-ODD
-<b id="odd">--</b>
-</div>
-
-</div>
-
-</div>
-
-</main>
-
-<!-- RIGHT -->
-<aside>
-
-<div class="card">
-
-<h3>📊 RSI VALUES</h3>
-
-<p>
-RSI (14):
-<b id="rsiVal">58</b>
-</p>
-
-<p>
-Zone:
-<b id="zone">Neutral</b>
-</p>
-
-<p>
-Bias:
-<b id="bias">WAIT</b>
-</p>
-
-</div>
-
-<div class="card">
-
-<h3>🕘 RECENT ANALYSIS</h3>
-
-<div id="history">
-No analysis yet.
-</div>
-
-</div>
-
-<div class="card">
-
-<h3>💡 TIPS</h3>
-
-<p>◆ Confirm RSI before entering.</p>
-<p>◆ Avoid overtrading.</p>
-<p>◆ Use a clear strategy.</p>
-<p>◆ Past signals do not guarantee future results.</p>
-
-</div>
-
-</aside>
-
-</div>
-
-<div class="footer">
-© 2026 BY KA EUNY Analysis Tool
-<br>
-Powered by RSI • For analysis/education only
+<h3>LIVE DIGITS</h3>
+<div id="digits">Waiting for live data...</div>
 </div>
 
 </div>
 
 <script>
+let ws;
+let markets=[];
+let data={};
+let selected="";
 
-const history=[];
+function connect(){
 
-const canvas=document.getElementById("chart");
-const ctx=canvas.getContext("2d");
-
-function draw(){
-
-canvas.width=canvas.clientWidth*devicePixelRatio;
-canvas.height=canvas.clientHeight*devicePixelRatio;
-
-ctx.scale(devicePixelRatio,devicePixelRatio);
-
-const w=canvas.clientWidth;
-const h=canvas.clientHeight;
-
-ctx.clearRect(0,0,w,h);
-
-ctx.beginPath();
-
-for(let x=0;x<w;x+=8){
-
-let y=
-h*.52+
-Math.sin(x*.035)*38+
-Math.sin(x*.09)*13;
-
-if(x===0)
-ctx.moveTo(x,y);
-else
-ctx.lineTo(x,y);
-
-}
-
-ctx.strokeStyle="#00e676";
-ctx.lineWidth=2;
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(0,h*.30);
-ctx.lineTo(w,h*.30);
-ctx.strokeStyle="#ff456766";
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(0,h*.70);
-ctx.lineTo(w,h*.70);
-ctx.strokeStyle="#00e67666";
-ctx.stroke();
-
-}
-
-window.addEventListener("resize",draw);
-
-draw();
-
-
-function analyze(){
-
-const d=Number(
-document.getElementById("digit").value
+ws=new WebSocket(
+"wss://ws.binaryws.com/websockets/v3"
 );
 
-const r=Math.max(
-0,
-Math.min(
-100,
-Number(document.getElementById("rsi").value)
-)
+ws.onopen=function(){
+
+document.getElementById("status").innerText=
+"● CONNECTED — LIVE DERIV";
+
+ws.send(JSON.stringify({
+active_symbols:"brief",
+product_type:"basic"
+}));
+
+};
+
+ws.onmessage=function(e){
+
+let x=JSON.parse(e.data);
+
+if(x.msg_type==="active_symbols"){
+
+markets=x.active_symbols.filter(s=>
+(s.display_name||"")
+.toLowerCase()
+.includes("volatility")
 );
 
-if(!Number.isFinite(d)||d<0||d>9){
+let select=document.getElementById("market");
 
-alert("Enter a digit from 0 to 9.");
+select.innerHTML="";
 
-return;
-}
+markets.forEach((m,i)=>{
 
-let sig;
+let sym=m.symbol;
 
-if(r<30){
+data[sym]={
+name:m.display_name,
+prices:[],
+price:"--",
+digit:"--",
+rsi:"--"
+};
 
-sig="OVER";
+let option=document.createElement("option");
 
-}else if(r>70){
+option.value=sym;
+option.textContent=m.display_name;
 
-sig="UNDER";
+select.appendChild(option);
 
-}else if(d>=5){
+if(i===0)selected=sym;
 
-sig="OVER";
-
-}else{
-
-sig="UNDER";
-
-}
-
-let confidence=
-(r<30||r>70)
-?85
-:60;
-
-
-document.getElementById("signal")
-.textContent=sig;
-
-document.getElementById("confidence")
-.textContent=
-"RSI "+r.toFixed(1)+
-" • Confidence "+confidence+"%";
-
-
-document.getElementById("strength")
-.style.width=
-confidence+"%";
-
-
-document.getElementById("rsiVal")
-.textContent=r.toFixed(1);
-
-
-document.getElementById("zone")
-.textContent=
-r<30
-?"Oversold"
-:r>70
-?"Overbought"
-:"Neutral";
-
-
-document.getElementById("bias")
-.textContent=sig;
-
-
-document.getElementById("over")
-.textContent=
-(sig==="OVER"
-?confidence
-:100-confidence)+"%";
-
-
-document.getElementById("under")
-.textContent=
-(sig==="UNDER"
-?confidence
-:100-confidence)+"%";
-
-
-document.getElementById("even")
-.textContent=
-d%2===0
-?"65%"
-:"35%";
-
-
-document.getElementById("odd")
-.textContent=
-d%2
-?"65%"
-:"35%";
-
-
-history.unshift({
-d:d,
-r:r,
-sig:sig
 });
 
+select.value=selected;
 
-if(history.length>5)
-history.pop();
+select.onchange=function(){
+selected=this.value;
+showSelected();
+};
 
+markets.forEach(m=>{
 
-document.getElementById("history")
-.innerHTML=
-history.map(x=>
-`<div>
-<span>
-Digit ${x.d} • RSI ${x.r.toFixed(1)}
-</span>
-<b class="${x.sig.toLowerCase()}">
-${x.sig}
-</b>
-</div>`
-).join("");
+let sym=m.symbol;
+
+ws.send(JSON.stringify({
+ticks:sym,
+subscribe:1
+}));
+
+});
+
+render();
 
 }
+
+if(x.msg_type==="tick"){
+
+let sym=x.tick.symbol;
+
+if(!data[sym])return;
+
+let price=Number(x.tick.quote);
+
+data[sym].price=price;
+
+data[sym].prices.push(price);
+
+if(data[sym].prices.length>100)
+data[sym].prices.shift();
+
+let text=String(price);
+
+data[sym].digit=
+text.replace(/[^0-9]/g,"").slice(-1);
+
+data[sym].rsi=
+calcRSI(data[sym].prices,14);
+
+render();
+
+showSelected();
+
+}
+
+};
+
+ws.onclose=function(){
+
+document.getElementById("status").innerText=
+"● Disconnected — reconnecting...";
+
+setTimeout(connect,3000);
+
+};
+
+}
+
+function calcRSI(p,n){
+
+if(p.length<n+1)return "--";
+
+let gain=0;
+let loss=0;
+
+for(let i=p.length-n;i<p.length;i++){
+
+let change=p[i]-p[i-1];
+
+if(change>0)
+gain+=change;
+else
+loss-=change;
+
+}
+
+if(loss===0)return 100;
+
+return (
+100-
+(100/(1+(gain/loss)))
+).toFixed(2);
+
+}
+
+function getSignal(rsi){
+
+if(rsi==="--")
+return ["WAIT","yellow"];
+
+if(rsi<=30)
+return ["OVERSOLD","green"];
+
+if(rsi>=70)
+return ["OVERBOUGHT","red"];
+
+return ["NEUTRAL","yellow"];
+
+}
+
+function render(){
+
+let html="";
+
+markets.forEach(m=>{
+
+let d=data[m.symbol];
+
+if(!d)return;
+
+html+=`
+<tr>
+<td>${d.name}</td>
+<td>${d.price}</td>
+<td>${d.digit}</td>
+<td>${d.rsi}</td>
+</tr>
+`;
+
+});
+
+document.getElementById("list").innerHTML=html;
+
+}
+
+function showSelected(){
+
+let d=data[selected];
+
+if(!d)return;
+
+document.getElementById("price").innerText=d.price;
+document.getElementById("digit").innerText=d.digit;
+document.getElementById("rsi").innerText=d.rsi;
+
+let s=getSignal(d.rsi);
+
+let el=document.getElementById("signal");
+
+el.innerText=s[0];
+el.className="signal "+s[1];
+
+let digits="";
+
+for(let i=0;i<=9;i++){
+
+let active=
+String(d.digit)===String(i);
+
+digits+=`
+<span style="
+display:inline-block;
+padding:12px;
+margin:4px;
+border-radius:10px;
+background:${active?"#00aaff":"#111c2e"};
+font-weight:bold">
+${i}
+</span>`;
+
+}
+
+document.getElementById("digits").innerHTML=digits;
+
+}
+
+connect();
 
 </script>
 
 </body>
-</html>
+</html>scs
