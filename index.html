@@ -4,36 +4,297 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BY KA EUNY Analysis Tool</title>
+
 <style>
-body{background:#0f172a;color:#e2e8f0;font-family:Arial;text-align:center;padding:20px}
-h1{color:#38bdf8}
-.card{background:#1e293b;padding:20px;border-radius:12px;margin:20px auto;max-width:400px}
-.signal{font-size:28px;font-weight:bold;padding:15px;border-radius:8px;margin:10px 0}
-.BUY{background:#16a34a}.SELL{background:#dc2626}.WAIT{background:#64748b}
-img{width:80px;border-radius:50%;margin-bottom:10px}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#050505,#111827,#020617);
+  color:white;
+  min-height:100vh;
+  padding:20px;
+}
+
+.container{
+  max-width:600px;
+  margin:auto;
+}
+
+.header{
+  text-align:center;
+  padding:25px 10px;
+}
+
+.logo{
+  width:75px;
+  height:75px;
+  margin:auto;
+  border-radius:22px;
+  background:linear-gradient(135deg,#00ff88,#00aaff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  font-weight:bold;
+  color:#000;
+  box-shadow:0 0 30px #00ff8866;
+}
+
+h1{
+  margin-top:15px;
+  font-size:28px;
+}
+
+.subtitle{
+  color:#9ca3af;
+  margin-top:6px;
+}
+
+.card{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:20px;
+  margin-top:18px;
+  backdrop-filter:blur(12px);
+}
+
+label{
+  display:block;
+  margin-bottom:10px;
+  color:#d1d5db;
+}
+
+input{
+  width:100%;
+  padding:16px;
+  border-radius:12px;
+  border:1px solid #374151;
+  background:#030712;
+  color:white;
+  font-size:20px;
+  text-align:center;
+  outline:none;
+}
+
+button{
+  width:100%;
+  margin-top:14px;
+  padding:16px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(90deg,#00e676,#00b0ff);
+  color:#001;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+.result{
+  text-align:center;
+  padding:25px 10px;
+}
+
+.signal{
+  font-size:35px;
+  font-weight:bold;
+  margin:10px 0;
+}
+
+.over{
+  color:#00ff88;
+}
+
+.under{
+  color:#ff5252;
+}
+
+.neutral{
+  color:#ffd740;
+}
+
+.warning{
+  color:#9ca3af;
+  font-size:13px;
+  line-height:1.5;
+  margin-top:15px;
+  text-align:center;
+}
+
+.footer{
+  text-align:center;
+  color:#6b7280;
+  font-size:12px;
+  margin:25px 0;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.stat{
+  background:#030712;
+  padding:16px;
+  border-radius:14px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  font-size:24px;
+  margin-top:5px;
+}
 </style>
 </head>
+
 <body>
-<img src="https://i.imgur.com/8Km9tLL.png">
-<h1>BY KA EUNY ANALYSIS TOOL</h1>
-<div class="card">
-<h3>Volatility 75 Index - 1M</h3>
-<div id="status">Connecting...</div>
-<div id="signal" class="signal WAIT">WAIT</div>
-<p>RSI: <span id="rsi">--</span> | Price: <span id="price">--</span></p>
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">KE</div>
+    <h1>BY KA EUNY</h1>
+    <div class="subtitle">Advanced Analysis Tool</div>
+  </div>
+
+  <div class="card">
+
+    <label>Enter last digit</label>
+
+    <input
+      id="digit"
+      type="number"
+      min="0"
+      max="9"
+      placeholder="0 - 9"
+    >
+
+    <button onclick="analyze()">ANALYZE MARKET</button>
+
+    <div class="result">
+      <div id="signal" class="signal neutral">READY</div>
+      <div id="message">Enter a digit to begin analysis.</div>
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <div class="stats">
+
+      <div class="stat">
+        OVER
+        <strong id="overCount">0</strong>
+      </div>
+
+      <div class="stat">
+        UNDER
+        <strong id="underCount">0</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <h3>Recent Analysis</h3>
+
+    <div id="history" style="margin-top:15px;color:#9ca3af;">
+      No analysis yet.
+    </div>
+
+  </div>
+
+  <div class="warning">
+    ⚠️ This tool is for analysis and educational purposes only.
+    It does not guarantee trading results or profits.
+  </div>
+
+  <div class="footer">
+    © 2026 BY KA EUNY Analysis Tool
+  </div>
+
 </div>
+
 <script>
-const APP_ID='1089';
-let ws;let candles=[];
-ws=new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
-ws.onopen=()=>{ws.send(JSON.stringify({ticks:"R_75",subscribe:1}));document.getElementById('status').innerText='Connected!'};
-ws.onmessage=(msg)=>{const data=JSON.parse(msg.data);
-if(data.tick){const price=parseFloat(data.tick.quote);document.getElementById('price').innerText=price.toFixed(2);
-candles.push(price);if(candles.length>14)candles.shift();if(candles.length>=14){const rsi=calcRSI(candles);
-document.getElementById('rsi').innerText=rsi.toFixed(2);const s=document.getElementById('signal');
-if(rsi<30){s.className='signal BUY';s.innerText='BUY'}else if(rsi>70){s.className='signal SELL';s.innerText='SELL'}
-else{s.className='signal WAIT';s.innerText='WAIT'}}}}};
-function calcRSI(p){let g=0,l=0;for(let i=1;i<p.length;i++){const d=p[i]-p[i-1];if(d>0)g+=d;else l-=d}const rs=g/(l||1);return 100-(100/(1+rs))}
+
+let overCount = 0;
+let underCount = 0;
+let history = [];
+
+function analyze(){
+
+  const digitInput = document.getElementById("digit");
+  const signal = document.getElementById("signal");
+  const message = document.getElementById("message");
+  const historyBox = document.getElementById("history");
+
+  const digit = Number(digitInput.value);
+
+  if(
+    digitInput.value === "" ||
+    digit < 0 ||
+    digit > 9
+  ){
+    signal.className = "signal neutral";
+    signal.textContent = "INVALID";
+    message.textContent = "Please enter a number from 0 to 9.";
+    return;
+  }
+
+  let result;
+
+  if(digit >= 5){
+
+    result = "OVER";
+    overCount++;
+
+    signal.className = "signal over";
+    signal.textContent = "OVER";
+    message.textContent =
+      "Digit is 5 or higher.";
+
+  }else{
+
+    result = "UNDER";
+    underCount++;
+
+    signal.className = "signal under";
+    signal.textContent = "UNDER";
+    message.textContent =
+      "Digit is below 5.";
+  }
+
+  document.getElementById("overCount").textContent = overCount;
+  document.getElementById("underCount").textContent = underCount;
+
+  history.unshift(
+    "Digit " + digit + " → " + result
+  );
+
+  if(history.length > 5){
+    history.pop();
+  }
+
+  historyBox.innerHTML = history
+    .map(item => "<div style='padding:8px 0;border-bottom:1px solid #1f2937'>" + item + "</div>")
+    .join("");
+
+}
+
 </script>
+
 </body>
 </html>
