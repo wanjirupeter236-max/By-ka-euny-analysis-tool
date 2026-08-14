@@ -2,166 +2,197 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KE PRO SCANNER</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BY KA EUNY Analysis Tool</title>
 <style>
-body{background:#0a0f1e;color:#fff;font-family:Arial;margin:0;padding:15px}
-.card{background:#111827;border:2px solid #2563eb;border-radius:15px;padding:15px;margin:10px 0}
-h1{text-align:center;color:#facc15}
-label{font-size:14px;color:#94a3b8}
-select,button{width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #2563eb;font-size:15px;font-weight:bold;background:#1f2937;color:#fff}
-.btn-scan{background:linear-gradient(90deg,#06b6d4,#3b82f6);color:#fff;border:none}
-.scan-box{background:#000;border-radius:10px;padding:10px;height:160px;overflow:hidden;position:relative;border:1px solid #00ff00}
-.matrix{font-family:monospace;color:#00ff00;font-size:10px;line-height:11px}
-.line{position:absolute;top:50%;width:100%;height:2px;background:#00ff00;box-shadow:0 0 10px #00ff00}
-.progress{background:#1f2937;height:8px;border-radius:5px;margin:10px 0}
-.bar{height:8px;background:#06b6d4;border-radius:5px;width:0%;transition:width 0.1s}
-.status{text-align:center;color:#22c55e;margin:8px 0;font-weight:bold}
-.result{text-align:center;font-size:22px;font-weight:bold;margin:15px 0;padding:15px;border-radius:10px}
-.MATCH{background:#16a34a}.DIFF{background:#dc2626}
-.OVER{background:#16a34a}.UNDER{background:#dc2626}.EVEN{background:#16a34a}.ODD{background:#dc2626}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#070b14;
+  color:#eef3ff
+}
+header{
+  padding:16px;
+  background:linear-gradient(135deg,#111a2d,#07101f);
+  border-bottom:1px solid #24314d;
+  position:sticky;
+  top:0;
+  z-index:5
+}
+h1{margin:0;font-size:20px}
+.sub{color:#8fa3c7;font-size:12px;margin-top:5px}
+#status{
+  float:right;
+  font-size:12px;
+  padding:6px 9px;
+  border-radius:12px;
+  background:#38200e;
+  color:#ffbd70
+}
+#status.ok{
+  background:#0d3323;
+  color:#65f0aa
+}
+main{
+  padding:12px;
+  max-width:1100px;
+  margin:auto
+}
+.toolbar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px
+}
+button,select{
+  background:#111a2d;
+  color:#fff;
+  border:1px solid #2c3c5c;
+  border-radius:8px;
+  padding:9px
+}
+button{cursor:pointer}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:10px
+}
+.card{
+  background:#0e1525;
+  border:1px solid #202d47;
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 6px 18px #0004
+}
+.card h3{
+  margin:0 0 8px;
+  font-size:15px
+}
+.price{
+  font-size:24px;
+  font-weight:700
+}
+.muted{
+  color:#8fa3c7;
+  font-size:12px
+}
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin:7px 0;
+  font-size:13px
+}
+.badge{
+  padding:3px 7px;
+  border-radius:8px;
+  background:#18233a
+}
+.up{color:#57e7a3}
+.down{color:#ff7d8a}
+canvas{
+  width:100%;
+  height:110px;
+  background:#080d18;
+  border-radius:8px;
+  margin-top:8px
+}
+#contracts{margin-top:12px}
+.contract{
+  display:inline-block;
+  margin:4px;
+  padding:7px 9px;
+  border-radius:8px;
+  background:#16213a;
+  color:#bcd0f3;
+  font-size:12px
+}
+.warning{
+  color:#ffd28a;
+  font-size:12px;
+  margin:8px 0
+}
 </style>
 </head>
+
 <body>
 
-<h1>👑 KE PRO SCANNER</h1>
-<p style="text-align:center;color:#94a3b8">BY KA EUNY • LIVE DERIV DATA</p>
+<header>
+  <span id="status">CONNECTING…</span>
+  <h1>BY KA EUNY Analysis Tool</h1>
+  <div class="sub">
+    LIVE DERIV VOLATILITY • RSI • DIGITS • CONTRACT TYPES
+  </div>
+</header>
 
-<div class="card">
-  <label>1. Select Volatility Index</label>
-  <select id="market"></select>
+<main>
 
-  <label>2. Select Contract Type</label>
-  <select id="contract">
-    <option value="MATCH">Matches</option>
-    <option value="DIFF">Differs</option>
-    <option value="OVER">Over</option>
-    <option value="UNDER">Under</option>
-    <option value="EVEN">Even</option>
-    <option value="ODD">Odd</option>
-  </select>
+<div class="toolbar">
 
-  <label id="digitLabel" style="display:none">3. Target Digit</label>
-  <select id="digit" style="display:none">
-    <option value="0">0</option><option value="1">1</option><option value="2">2</option>
-    <option value="3">3</option><option value="4">4</option><option value="5">5</option>
-    <option value="6">6</option><option value="7">7</option><option value="8">8</option>
-    <option value="9">9</option>
-  </select>
+<select id="symbolSelect">
+<option>Loading volatility indices…</option>
+</select>
+
+<button id="refresh">
+Refresh Markets
+</button>
+
+<button id="pause">
+Pause
+</button>
+
 </div>
 
-<div class="card">
-  <h3>🔍 MATRIX DEEP SCANNER</h3>
-  <div class="scan-box"><div id="matrix" class="matrix"></div><div class="line"></div></div>
-  <div class="progress"><div id="bar" class="bar"></div></div>
-  <p class="status" id="status">Connecting to Deriv...</p>
-  <button class="btn-scan" onclick="startScan()">⚡ SCAN NOW</button>
+<div class="warning">
+Market data is live from Deriv's public WebSocket.
+Analysis is informational and does not guarantee a winning trade.
 </div>
 
-<div id="resultBox" class="result" style="display:none"></div>
+<div id="cards" class="grid"></div>
+
+<div id="contracts" class="card">
+
+<h3>Available Contract Types</h3>
+
+<div id="contractList" class="muted">
+Select a volatility index.
+</div>
+
+</div>
+
+</main>
 
 <script>
-const APP_ID='61548';
-let ws;let digits=[];let scanning=false;let currentSymbol="R_100";
 
-ws=new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
-ws.onopen=()=>{
-  document.getElementById('status').innerText='● Connected to Deriv';
-  ws.send(JSON.stringify({active_symbols:"brief",product_type:"basic"}));
-  ws.send(JSON.stringify({ticks:currentSymbol,subscribe:1}));
-};
+const WS_URL =
+"wss://api.derivws.com/trading/v1/options/ws/public";
 
-ws.onmessage=(msg)=>{
-  const data=JSON.parse(msg.data);
-  if(data.active_symbols){
-    const sel=document.getElementById('market');
-    sel.innerHTML='';
-    // WEKA VOLATILITY ZOTE ZA DERIV
-    data.active_symbols.filter(s=>s.symbol.startsWith('R_')).forEach(s=>{
-      sel.innerHTML+=`<option value="${s.symbol}">${s.display_name}</option>`
-    });
-    sel.value=currentSymbol;
-    sel.onchange=e=>{
-      currentSymbol=e.target.value;
-      ws.send(JSON.stringify({forget_all:"ticks"}));
-      ws.send(JSON.stringify({ticks:currentSymbol,subscribe:1}));
-      digits=[];
-    }
-  }
-  if(data.tick){
-    const digit=parseInt(data.tick.quote.toString().slice(-1));
-    digits.push(digit);
-    if(digits.length>300)digits.shift();
-  }
+let ws;
+let markets=[];
+let selected="";
+let paused=false;
+
+const state={};
+
+const $=id=>document.getElementById(id);
+
+function setStatus(text,ok=false){
+
+  $("status").textContent=text;
+
+  $("status").className=ok ? "ok" : "";
+
 }
 
-document.getElementById('contract').onchange=e=>{
-  const val=e.target.value;
-  document.getElementById('digitLabel').style.display = (val==='OVER'||val==='UNDER')? 'block' : 'none';
-  document.getElementById('digit').style.display = (val==='OVER'||val==='UNDER')? 'block' : 'none';
+function send(data){
+
+  if(ws && ws.readyState===1){
+
+    ws.send(JSON.stringify(data));
+
+  }
+
 }
 
-function startScan(){
-  if(scanning || digits.length<30){alert('Subiri data ijaze kwanza... 30s');return}
-  scanning=true;
-  let i=0;
-  const matrix=document.getElementById('matrix');
-  const bar=document.getElementById('bar');
-  const txt=document.getElementById('status');
-  matrix.innerHTML='';
-  const interval=setInterval(()=>{
-    i+=2;
-    bar.style.width=i+'%';
-    matrix.innerHTML+=Math.random().toString(16).substring(2,8)+'<br>';
-    txt.innerText=`Scanning... ${5-Math.floor(i/20)}s`;
-    if(i>=100){
-      clearInterval(interval);
-      scanning=false;
-      txt.innerText='Scan Complete ✅';
-      genSignal();
-    }
-  },50);
-}
-
-function genSignal(){
-  const type=document.getElementById('contract').value;
-  const targetDigit=parseInt(document.getElementById('digit').value);
-  const counts=[0,0,0,0,0,0,0,0,0,0];
-  digits.forEach(d=>counts[d]++);
-  
-  let signalText='';
-  let className='';
-
-  if(type==='MATCH'){
-    let sig=counts.indexOf(Math.max(...counts));
-    signalText=`MATCH ${sig}`; className='MATCH';
-  }
-  if(type==='DIFF'){
-    let sig=counts.indexOf(Math.min(...counts));
-    signalText=`DIFFERS ${sig}`; className='DIFF';
-  }
-  if(type==='OVER'){
-    let total=counts.slice(targetDigit+1).reduce((a,b)=>a+b,0);
-    signalText=`OVER ${targetDigit} - ${total} ticks`; className='OVER';
-  }
-  if(type==='UNDER'){
-    let total=counts.slice(0,targetDigit).reduce((a,b)=>a+b,0);
-    signalText=`UNDER ${targetDigit} - ${total} ticks`; className='UNDER';
-  }
-  if(type==='EVEN'){
-    let total=counts[0]+counts[2]+counts[4]+counts[6]+counts[8];
-    signalText=`EVEN - ${total} ticks`; className='EVEN';
-  }
-  if(type==='ODD'){
-    let total=counts[1]+counts[3]+counts[5]+counts[7]+counts[9];
-    signalText=`ODD - ${total} ticks`; className='ODD';
-  }
-  
-  const box=document.getElementById('resultBox');
-  box.style.display='block';
-  box.className=`result ${className}`;
-  box.innerHTML=`🎯 SIGNAL: ${signalText}<br><small>Based on last 300 ticks of ${currentSymbol}</small>`;
-}
-</script>
-</body>
-</html>
+function
