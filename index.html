@@ -2,143 +2,1490 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KE LIVE BOT FIXED</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BY KA EUNY Analysis Tool</title>
+
 <style>
-body{background:#0a0f1e;color:#fff;font-family:Arial;margin:0;padding:15px}
-.card{background:#111827;border:2px solid #2563eb;border-radius:15px;padding:15px;margin:10px 0}
-h1{text-align:center;color:#facc15}
-label{font-size:14px;color:#94a3b8}
-select,button,input{width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #2563eb;font-size:15px;font-weight:bold;background:#1f2937;color:#fff;box-sizing:border-box}
-.btn-scan{background:linear-gradient(90deg,#06b6d4,#3b82f6);color:#fff;border:none}
-.scan-box{background:#000;border-radius:10px;padding:10px;height:150px;overflow:hidden;position:relative;border:1px solid #00ff00}
-.matrix{font-family:monospace;color:#00ff00;font-size:10px;line-height:11px}
-.line{position:absolute;top:50%;width:100%;height:2px;background:#00ff00}
-.progress{background:#1f2937;height:8px;border-radius:5px;margin:10px 0}
-.bar{height:8px;background:#06b6d4;border-radius:5px;width:0%}
-.status{text-align:center;margin:8px 0;font-weight:bold}
-.status.ok{color:#22c55e}.status.bad{color:#dc2626}
-.result{text-align:center;font-size:22px;font-weight:bold;margin:15px 0;padding:15px;border-radius:10px}
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#070b14;
+ color:#eef3ff
+}
+
+header{
+ padding:16px;
+ background:linear-gradient(135deg,#111a2d,#07101f);
+ border-bottom:1px solid #24314d;
+ position:sticky;
+ top:0;
+ z-index:5
+}
+
+h1{
+ margin:0;
+ font-size:20px
+}
+
+.sub{
+ color:#8fa3c7;
+ font-size:12px;
+ margin-top:5px
+}
+
+#status{
+ float:right;
+ font-size:12px;
+ padding:6px 9px;
+ border-radius:12px;
+ background:#38200e;
+ color:#ffbd70
+}
+
+#status.ok{
+ background:#0d3323;
+ color:#65f0aa
+}
+
+main{
+ padding:12px;
+ max-width:1100px;
+ margin:auto
+}
+
+.toolbar{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+ margin-bottom:12px
+}
+
+button,select,input{
+ background:#111a2d;
+ color:#fff;
+ border:1px solid #2c3c5c;
+ border-radius:8px;
+ padding:9px
+}
+
+button{
+ cursor:pointer
+}
+
+.primary{
+ background:#a56b0b;
+ border-color:#f2b52e
+}
+
+.danger{
+ border-color:#7d2833;
+ color:#ff8893
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:10px
+}
+
+.card{
+ background:#0e1525;
+ border:1px solid #202d47;
+ border-radius:12px;
+ padding:12px;
+ box-shadow:0 6px 18px #0004;
+ margin-bottom:10px
+}
+
+.card h3{
+ margin:0 0 8px;
+ font-size:15px
+}
+
+.price{
+ font-size:24px;
+ font-weight:700
+}
+
+.muted{
+ color:#8fa3c7;
+ font-size:12px
+}
+
+.row{
+ display:flex;
+ justify-content:space-between;
+ gap:8px;
+ margin:7px 0;
+ font-size:13px
+}
+
+.up{
+ color:#57e7a3
+}
+
+.down{
+ color:#ff7d8a
+}
+
+canvas{
+ width:100%;
+ height:110px;
+ background:#080d18;
+ border-radius:8px;
+ margin-top:8px
+}
+
+.contract{
+ display:inline-block;
+ margin:4px;
+ padding:7px 9px;
+ border-radius:8px;
+ background:#16213a;
+ color:#bcd0f3;
+ font-size:12px
+}
+
+.warning{
+ color:#ffd28a;
+ font-size:12px;
+ margin:8px 0
+}
+
+.botgrid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+ gap:8px
+}
+
+.botbox{
+ background:#0a111e;
+ border:1px solid #253552;
+ border-radius:9px;
+ padding:10px
+}
+
+#journal{
+ height:120px;
+ overflow:auto;
+ background:#050a12;
+ padding:8px;
+ border-radius:8px;
+ font:12px monospace;
+ white-space:pre-wrap
+}
+
+.badge{
+ padding:4px 8px;
+ border-radius:10px;
+ background:#16233a
+}
+
+.running{
+ background:#0d3323;
+ color:#65f0aa
+}
+
+.stopped{
+ background:#3b1820;
+ color:#ff8c98
+}
 </style>
 </head>
+
 <body>
 
-<h1>👑 KE LIVE BOT V2</h1>
-<p style="text-align:center;color:#94a3b8">BY KA EUNY • LIVE DATA</p>
+<header>
+<span id="status">CONNECTING…</span>
 
-<div class="card">
-  <p class="status bad" id="connStatus">● Connecting...</p>
-  <label>1. Select Volatility</label>
-  <select id="market"><option>Loading markets...</option></select>
+<h1>BY KA EUNY Analysis Tool</h1>
 
-  <label>2. Select Contract</label>
-  <select id="contract">
-    <option value="MATCH">Matches</option>
-    <option value="DIFF">Differs</option>
-    <option value="OVER">Over</option>
-    <option value="UNDER">Under</option>
-    <option value="EVEN">Even</option>
-    <option value="ODD">Odd</option>
-  </select>
+<div class="sub">
+LIVE DERIV VOLATILITY • RSI • DIGITS • CONTRACT TYPES • DEMO BOT
+</div>
+</header>
 
-  <label id="dLabel" style="display:none">3. Target Digit for Over/Under</label>
-  <input type="number" id="digit" value="5" min="0" max="9" style="display:none">
+<main>
+
+<div class="toolbar">
+
+<select id="symbolSelect">
+<option>Loading volatility indices…</option>
+</select>
+
+<button id="refresh">
+Refresh Markets
+</button>
+
+<button id="pause">
+Pause
+</button>
+
 </div>
 
-<div class="card">
-  <h3>🔍 LIVE MATRIX SCANNER</h3>
-  <div class="scan-box"><div id="matrix" class="matrix"></div><div class="line"></div></div>
-  <div class="progress"><div id="bar" class="bar"></div></div>
-  <p class="status" id="scanText">Waiting for data...</p>
-  <button class="btn-scan" onclick="startScan()">⚡ SCAN & GET SIGNAL</button>
+<div class="warning">
+Live Deriv market data is shown below.
+The Bot Demo is a paper-trading simulator using live ticks;
+it does NOT place real Deriv contracts.
 </div>
 
-<div id="resultBox" class="result" style="display:none"></div>
+<div id="cards" class="grid"></div>
+
+
+<!-- BOT -->
+
+<div class="card">
+
+<h3>🤖 BOT DEMO</h3>
+
+<div class="botgrid">
+
+<div class="botbox">
+
+<label class="muted">
+Contract
+</label>
+
+<select id="botContract">
+
+<option>DIGITOVER</option>
+
+<option>DIGITUNDER</option>
+
+<option>DIGITMATCH</option>
+
+<option>DIGITDIFF</option>
+
+<option>DIGITEVEN</option>
+
+<option>DIGITODD</option>
+
+</select>
+
+</div>
+
+
+<div class="botbox">
+
+<label class="muted">
+Stake
+</label>
+
+<input
+id="stake"
+type="number"
+min="0.35"
+step="0.01"
+value="1">
+
+</div>
+
+
+<div class="botbox">
+
+<label class="muted">
+Signal
+</label>
+
+<select id="signal">
+
+<option value="trend">
+Trend + RSI
+</option>
+
+<option value="digit">
+Digit Frequency
+</option>
+
+<option value="evenodd">
+Even / Odd
+</option>
+
+</select>
+
+</div>
+
+
+<div class="botbox">
+
+<label class="muted">
+Max Runs
+</label>
+
+<input
+id="maxRuns"
+type="number"
+min="1"
+value="10">
+
+</div>
+
+</div>
+
+
+<div
+class="toolbar"
+style="margin-top:8px">
+
+<button
+class="primary"
+id="startBot">
+
+▶ START DEMO BOT
+
+</button>
+
+<button
+class="danger"
+id="stopBot">
+
+■ STOP BOT
+
+</button>
+
+<span
+id="botState"
+class="badge stopped">
+
+STOPPED
+
+</span>
+
+</div>
+
+
+<div class="grid">
+
+<div class="card">
+
+<div class="muted">
+Runs
+</div>
+
+<div
+id="runs"
+class="price">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="muted">
+Wins
+</div>
+
+<div
+id="wins"
+class="price up">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="muted">
+Losses
+</div>
+
+<div
+id="losses"
+class="price down">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="muted">
+Demo P/L
+</div>
+
+<div
+id="pl"
+class="price">
+
+0.00
+
+</div>
+
+</div>
+
+</div>
+
+
+<div id="journal">
+
+Ready. Select a market, then start the Demo Bot.
+
+</div>
+
+</div>
+
+
+<!-- CONTRACT TYPES -->
+
+<div class="card">
+
+<h3>
+Available Contract Types
+</h3>
+
+<div
+id="contractList"
+class="muted">
+
+Select a volatility index.
+
+</div>
+
+</div>
+
+</main>
+
 
 <script>
-const APP_ID='1089'; // TUMEBADILISHA HAPA KUWA YA DERIV PUBLIC
-let ws;let digits=[];let scanning=false;let currentSymbol="R_100";
+
+const WS_URL =
+"wss://api.derivws.com/trading/v1/options/ws/public";
+
+
+let ws;
+
+let markets = [];
+
+let selected = "";
+
+let paused = false;
+
+let botTimer = null;
+
+const state = {};
+
+
+let stats = {
+ runs:0,
+ wins:0,
+ losses:0,
+ pl:0
+};
+
+
+const $ = id =>
+document.getElementById(id);
+
+
+function setStatus(text,ok=false){
+
+ $("status").textContent = text;
+
+ $("status").className =
+ ok ? "ok" : "";
+
+}
+
+
+function send(obj){
+
+ if(ws && ws.readyState === 1){
+
+  ws.send(JSON.stringify(obj));
+
+ }
+
+}
+
+
+function log(text){
+
+ $("journal").textContent =
+ new Date().toLocaleTimeString()
+ +"  "
+ +text
+ +"\n"
+ +$("journal").textContent;
+
+}
+
+
+function rsi(a,p=14){
+
+ if(a.length < p+1)
+ return null;
+
+ let gains=0;
+ let losses=0;
+
+ for(
+ let i=a.length-p;
+ i<a.length;
+ i++
+ ){
+
+  let d=a[i]-a[i-1];
+
+  if(d>0)
+   gains+=d;
+
+  else
+   losses-=d;
+
+ }
+
+ if(losses===0)
+ return 100;
+
+ return 100 -
+ 100/(1+gains/losses);
+
+}
+
 
 function connect(){
-  ws=new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
 
-  ws.onopen=()=>{
-    document.getElementById('connStatus').className='status ok';
-    document.getElementById('connStatus').innerText='● Connected to Deriv LIVE';
-    ws.send(JSON.stringify({active_symbols:"brief"}));
-    setTimeout(()=>ws.send(JSON.stringify({ticks:currentSymbol,subscribe:1})),1000);
-  };
+ setStatus("CONNECTING…");
 
-  ws.onclose=()=>{
-    document.getElementById('connStatus').className='status bad';
-    document.getElementById('connStatus').innerText='● Disconnected. Reconnecting...';
-    setTimeout(connect,3000);
-  }
+ ws = new WebSocket(WS_URL);
 
-  ws.onmessage=(msg)=>{
-    const data=JSON.parse(msg.data);
-    if(data.active_symbols){
-      const sel=document.getElementById('market');
-      sel.innerHTML='';
-      data.active_symbols.filter(s=>s.symbol.startsWith('R_')).forEach(s=>{
-        sel.innerHTML+=`<option value="${s.symbol}">${s.display_name}</option>`
-      });
-      sel.value=currentSymbol;
-      sel.onchange=e=>{
-        currentSymbol=e.target.value;
-        ws.send(JSON.stringify({forget_all:"ticks"}));
-        ws.send(JSON.stringify({ticks:currentSymbol,subscribe:1}));
-        digits=[];
-      }
-    }
-    if(data.tick){
-      const digit=parseInt(data.tick.quote.toString().slice(-1));
-      digits.push(digit);
-      if(digits.length>500)digits.shift();
-      document.getElementById('scanText').innerText=`Receiving LIVE data... ${digits.length} ticks`;
-    }
-  }
+
+ ws.onopen = ()=>{
+
+  setStatus("LIVE",true);
+
+  loadMarkets();
+
+ };
+
+
+ ws.onclose = ()=>{
+
+  setStatus("DISCONNECTED");
+
+  setTimeout(
+   connect,
+   2500
+  );
+
+ };
+
+
+ ws.onerror = ()=>{
+
+  setStatus(
+   "CONNECTION ERROR"
+  );
+
+ };
+
+
+ ws.onmessage = e=>{
+
+  handle(
+   JSON.parse(e.data)
+  );
+
+ };
+
 }
+
+
+function loadMarkets(){
+
+ send({
+
+  active_symbols:"full",
+
+  req_id:1
+
+ });
+
+}
+
+
+function handle(d){
+
+ if(d.error)
+ return;
+
+
+ if(d.msg_type === "active_symbols"){
+
+  markets =
+  (d.active_symbols || [])
+  .filter(x=>{
+
+   let s =
+   x.underlying_symbol ||
+   x.symbol ||
+   "";
+
+   let n =
+   (
+    x.underlying_symbol_name ||
+    x.display_name ||
+    x.name ||
+    ""
+   ).toLowerCase();
+
+
+   return s &&
+   (
+    n.includes("volatility") ||
+    /^1HZ\d+V$/.test(s) ||
+    /^R_\d+/.test(s)
+   );
+
+  });
+
+
+  markets = [
+   ...new Map(
+    markets.map(
+     x=>[
+      x.underlying_symbol ||
+      x.symbol,
+      x
+     ]
+    )
+   ).values()
+  ];
+
+
+  $("symbolSelect").innerHTML =
+  markets.map(x=>{
+
+   let s =
+   x.underlying_symbol ||
+   x.symbol;
+
+   return `
+   <option value="${s}">
+   ${
+    x.underlying_symbol_name ||
+    x.display_name ||
+    s
+   }
+   (${s})
+   </option>
+   `;
+
+  }).join("");
+
+
+  selected =
+  $("symbolSelect").value;
+
+
+  markets.forEach(x=>{
+
+   let s =
+   x.underlying_symbol ||
+   x.symbol;
+
+
+   if(!state[s]){
+
+    state[s] = {
+
+     ticks:[],
+
+     digits:
+     Array(10).fill(0),
+
+     last:null
+
+    };
+
+   }
+
+
+   send({
+
+    ticks:s,
+
+    subscribe:1
+
+   });
+
+  });
+
+
+  render();
+
+  loadContracts(selected);
+
+ }
+
+
+ if(d.msg_type === "tick"){
+
+  let t=d.tick || {};
+
+  let s=t.symbol;
+
+  let q=Number(t.quote);
+
+
+  if(
+   s !== selected ||
+   !Number.isFinite(q)
+  )
+  return;
+
+
+  let st=state[s];
+
+
+  st.last=q;
+
+  st.ticks.push(q);
+
+
+  if(st.ticks.length>120)
+  st.ticks.shift();
+
+
+  let digit =
+  Number(
+   String(q)
+   .replace(".","")
+   .slice(-1)
+  );
+
+
+  if(Number.isInteger(digit))
+   st.digits[digit]++;
+
+
+  render();
+
+ }
+
+
+ if(d.msg_type === "contracts_for"){
+
+  let list =
+  d.contracts_for?.available ||
+  [];
+
+
+  $("contractList").innerHTML =
+  list.length
+
+  ?
+
+  list.map(c=>`
+
+   <span class="contract">
+
+   ${
+    c.contract_type ||
+    c.display_name ||
+    c.contract_category ||
+    "Contract"
+   }
+
+   </span>
+
+  `).join("")
+
+  :
+
+  "No contract metadata returned.";
+
+ }
+
+}
+
+
+function loadContracts(s){
+
+ if(s){
+
+  send({
+
+   contracts_for:s,
+
+   req_id:20
+
+  });
+
+ }
+
+}
+
+
+function render(){
+
+ if(paused)
+ return;
+
+
+ let st=state[selected];
+
+
+ if(!st){
+
+  $("cards").innerHTML="";
+
+  return;
+
+ }
+
+
+ let a=st.ticks;
+
+ let q=st.last;
+
+ let rr=rsi(a);
+
+ let prev=a[a.length-2];
+
+
+ let trend =
+ prev==null
+ ?
+ "—"
+ :
+ q>=prev
+ ?
+ "UP"
+ :
+ "DOWN";
+
+
+ let hot =
+ st.digits.indexOf(
+  Math.max(...st.digits)
+ );
+
+
+ $("cards").innerHTML = `
+
+ <div class="card">
+
+ <h3>${selected}</h3>
+
+ <div class="price">
+ ${q ?? "—"}
+ </div>
+
+ <div class="row">
+
+ <span class="muted">
+ Ticks loaded
+ </span>
+
+ <b>
+ ${a.length}
+ </b>
+
+ </div>
+
+ <div class="row">
+
+ <span class="muted">
+ Last movement
+ </span>
+
+ <b class="${
+  trend==="UP"
+  ?
+  "up"
+  :
+  "down"
+ }">
+
+ ${trend}
+
+ </b>
+
+ </div>
+
+ <canvas id="chart"></canvas>
+
+ </div>
+
+
+ <div class="card">
+
+ <h3>
+ RSI (14)
+ </h3>
+
+ <div class="price">
+
+ ${
+  rr==null
+  ?
+  "—"
+  :
+  rr.toFixed(2)
+ }
+
+ </div>
+
+ <div class="row">
+
+ <span>
+ Below 30
+ </span>
+
+ <b>
+
+ ${
+  rr!=null && rr<30
+  ?
+  "YES"
+  :
+  "NO"
+ }
+
+ </b>
+
+ </div>
+
+
+ <div class="row">
+
+ <span>
+ Above 70
+ </span>
+
+ <b>
+
+ ${
+  rr!=null && rr>70
+  ?
+  "YES"
+  :
+  "NO"
+ }
+
+ </b>
+
+ </div>
+
+ </div>
+
+
+ <div class="card">
+
+ <h3>
+ Last Digit
+ </h3>
+
+ <div class="price">
+
+ ${
+  q==null
+  ?
+  "—"
+  :
+  String(q)
+   .replace(".","")
+   .slice(-1)
+ }
+
+ </div>
+
+
+ <div class="row">
+
+ <span>
+ Most frequent
+ </span>
+
+ <b>
+ ${hot}
+ </b>
+
+ </div>
+
+
+ <div class="row">
+
+ <span>
+ Even / Odd
+ </span>
+
+ <b>
+
+ ${
+  q==null
+  ?
+  "—"
+  :
+  Number(
+   String(q)
+   .replace(".","")
+   .slice(-1)
+  )%2===0
+  ?
+  "EVEN"
+  :
+  "ODD"
+ }
+
+ </b>
+
+ </div>
+
+
+ <div class="muted">
+
+ Counts:
+ ${
+  st.digits
+  .map(
+   (v,i)=>i+":"+v
+  )
+  .join(" • ")
+ }
+
+ </div>
+
+ </div>
+
+ `;
+
+
+ let c=$("chart");
+
+
+ if(c && a.length>1){
+
+  let x =
+  c.getContext("2d");
+
+
+  let d =
+  devicePixelRatio || 1;
+
+
+  let w =
+  c.clientWidth*d;
+
+  let h =
+  c.clientHeight*d;
+
+
+  c.width=w;
+
+  c.height=h;
+
+
+  let mn =
+  Math.min(...a);
+
+  let mx =
+  Math.max(...a);
+
+  let sp =
+  mx-mn || 1;
+
+
+  x.beginPath();
+
+
+  a.forEach((v,i)=>{
+
+   let xx =
+   i/(a.length-1)*w;
+
+   let yy =
+   h -
+   (v-mn)/sp*
+   (h-14)-7;
+
+
+   i
+   ?
+   x.lineTo(xx,yy)
+   :
+   x.moveTo(xx,yy);
+
+  });
+
+
+  x.strokeStyle="#69b7ff";
+
+  x.lineWidth=2*d;
+
+  x.stroke();
+
+ }
+
+}
+
+
+function updateStats(){
+
+ $("runs").textContent =
+ stats.runs;
+
+ $("wins").textContent =
+ stats.wins;
+
+ $("losses").textContent =
+ stats.losses;
+
+ $("pl").textContent =
+ stats.pl.toFixed(2);
+
+}
+
+
+function signal(){
+
+ let st=state[selected];
+
+
+ if(
+  !st ||
+  st.ticks.length<15
+ )
+ return null;
+
+
+ let rr=rsi(st.ticks);
+
+
+ let last =
+ Number(
+  String(st.last)
+  .replace(".","")
+  .slice(-1)
+ );
+
+
+ if($("signal").value==="digit"){
+
+  return st.digits.indexOf(
+   Math.max(...st.digits)
+  );
+
+ }
+
+
+ if($("signal").value==="evenodd"){
+
+  return last%2===0
+   ?
+   "EVEN"
+   :
+   "ODD";
+
+ }
+
+
+ if(
+  rr!=null &&
+  rr<35
+ )
+ return "UP";
+
+
+ if(
+  rr!=null &&
+  rr>65
+ )
+ return "DOWN";
+
+
+ return
+ st.ticks.at(-1)>=
+ st.ticks.at(-2)
+ ?
+ "UP"
+ :
+ "DOWN";
+
+}
+
+
+function demoRun(){
+
+ if(!botTimer)
+ return;
+
+
+ let st=state[selected];
+
+
+ if(
+  !st ||
+  st.ticks.length<15
+ )
+ return;
+
+
+ let sig=signal();
+
+
+ let contract =
+ $("botContract").value;
+
+
+ let stake =
+ Math.max(
+  .35,
+  Number($("stake").value)||1
+ );
+
+
+ let digit =
+ Number(
+  String(st.last)
+  .replace(".","")
+  .slice(-1)
+ );
+
+
+ let win=false;
+
+
+ if(
+  contract==="DIGITEVEN"
+ ){
+
+  win=digit%2===0;
+
+ }
+
+ else if(
+  contract==="DIGITODD"
+ ){
+
+  win=digit%2!==0;
+
+ }
+
+ else if(
+  contract==="DIGITMATCH"
+ ){
+
+  win=
+  String(digit)===
+  String(sig);
+
+ }
+
+ else if(
+  contract==="DIGITDIFF"
+ ){
+
+  win=
+  String(digit)!==
+  String(sig);
+
+ }
+
+ else if(
+  contract==="DIGITOVER"
+ ){
+
+  win=digit>=5;
+
+ }
+
+ else if(
+  contract==="DIGITUNDER"
+ ){
+
+  win=digit<=4;
+
+ }
+
+ else{
+
+  win =
+  sig==="UP"
+  ?
+  st.ticks.at(-1)>=
+  st.ticks.at(-2)
+  :
+  st.ticks.at(-1)<
+  st.ticks.at(-2);
+
+ }
+
+
+ stats.runs++;
+
+
+ if(win){
+
+  stats.wins++;
+
+  stats.pl +=
+  stake*.95;
+
+
+  log(
+   `DEMO WIN • ${contract} • digit ${digit} • signal ${sig}`
+  );
+
+ }
+
+ else{
+
+  stats.losses++;
+
+  stats.pl -=
+  stake;
+
+
+  log(
+   `DEMO LOSS • ${contract} • digit ${digit} • signal ${sig}`
+  );
+
+ }
+
+
+ updateStats();
+
+
+ if(
+  stats.runs >=
+  Math.max(
+   1,
+   Number($("maxRuns").value)||10
+  )
+ ){
+
+  stopBot();
+
+ }
+
+}
+
+
+function startBot(){
+
+ if(botTimer)
+ return;
+
+
+ stats={
+  runs:0,
+  wins:0,
+  losses:0,
+  pl:0
+ };
+
+
+ updateStats();
+
+
+ botTimer =
+ setInterval(
+  demoRun,
+  2500
+ );
+
+
+ $("botState").textContent =
+ "RUNNING";
+
+
+ $("botState").className =
+ "badge running";
+
+
+ log(
+  "Demo Bot started — paper trading only."
+ );
+
+}
+
+
+function stopBot(){
+
+ if(botTimer){
+
+  clearInterval(botTimer);
+
+  botTimer=null;
+
+ }
+
+
+ $("botState").textContent =
+ "STOPPED";
+
+
+ $("botState").className =
+ "badge stopped";
+
+
+ log(
+  "Demo Bot stopped."
+ );
+
+}
+
+
+$("symbolSelect").onchange =
+ e=>{
+
+  selected=e.target.value;
+
+  loadContracts(selected);
+
+  render();
+
+ };
+
+
+$("refresh").onclick =
+ loadMarkets;
+
+
+$("pause").onclick =
+ ()=>{
+
+  paused=!paused;
+
+  $("pause").textContent =
+  paused
+  ?
+  "Resume"
+  :
+  "Pause";
+
+
+  if(!paused)
+  render();
+
+ };
+
+
+$("startBot").onclick =
+ startBot;
+
+
+$("stopBot").onclick =
+ stopBot;
+
+
 connect();
 
-document.getElementById('contract').onchange=e=>{
-  const val=e.target.value;
-  document.getElementById('dLabel').style.display = (val==='OVER'||val==='UNDER')? 'block' : 'none';
-  document.getElementById('digit').style.display = (val==='OVER'||val==='UNDER')? 'block' : 'none';
-}
-
-function startScan(){
-  if(scanning || digits.length<50){alert('Subiri data ijaze kwanza. Ngoja 1min');return}
-  scanning=true; let i=0;
-  const matrix=document.getElementById('matrix'); const bar=document.getElementById('bar'); const txt=document.getElementById('scanText');
-  matrix.innerHTML='';
-  const interval=setInterval(()=>{
-    i+=2; bar.style.width=i+'%';
-    matrix.innerHTML+=Math.random().toString(16).substring(2,8)+'<br>';
-    txt.innerText=`Scanning LIVE Market... ${5-Math.floor(i/20)}s`;
-    if(i>=100){
-      clearInterval(interval); scanning=false; txt.innerText='Scan Complete ✅'; genSignal();
-    }
-  },50);
-}
-
-function genSignal(){
-  const type=document.getElementById('contract').value;
-  const targetDigit=parseInt(document.getElementById('digit').value);
-  const counts=[0,0,0,0,0,0,0,0,0,0]; digits.forEach(d=>counts[d]++);
-
-  let signalText=''; let color='';
-  if(type==='MATCH'){let s=counts.indexOf(Math.max(...counts)); signalText=`MATCH ${s}`; color='#16a34a';}
-  if(type==='DIFF'){let s=counts.indexOf(Math.min(...counts)); signalText=`DIFFERS ${s}`; color='#dc2626';}
-  if(type==='OVER'){let t=counts.slice(targetDigit+1).reduce((a,b)=>a+b,0); signalText=`OVER ${targetDigit} - ${t} hits`; color='#16a34a';}
-  if(type==='UNDER'){let t=counts.slice(0,targetDigit).reduce((a,b)=>a+b,0); signalText=`UNDER ${targetDigit} - ${t} hits`; color='#dc2626';}
-  if(type==='EVEN'){let t=counts[0]+counts[2]+counts[4]+counts[6]+counts[8]; signalText=`EVEN - ${t} hits`; color='#16a34a';}
-  if(type==='ODD'){let t=counts[1]+counts[3]+counts[5]+counts[7]+counts[9]; signalText=`ODD - ${t} hits`; color='#dc2626';}
-
-  const box=document.getElementById('resultBox');
-  box.style.display='block'; box.style.background=color;
-  box.innerHTML=`🎯 LIVE SIGNAL: ${signalText}<br><small>${currentSymbol} - Last ${digits.length} ticks</small>`;
-}
 </script>
+
 </body>
-</html>
+  </html>
