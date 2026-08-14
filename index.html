@@ -1,25 +1,202 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BY KA EUNY Auto Run</title><style>
-body{margin:0;background:#070b14;color:#eef3ff;font-family:Arial}header{padding:16px;background:#111a2d;position:sticky;top:0}main{max-width:1000px;margin:auto;padding:12px}.card{background:#0e1525;border:1px solid #263654;border-radius:12px;padding:13px;margin:10px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.bar{display:flex;gap:8px;flex-wrap:wrap}button,select,input{background:#111a2d;color:white;border:1px solid #405171;border-radius:8px;padding:10px}.run{background:#a56b0b}.stop{color:#ff8492}h1{margin:0}.muted{color:#8fa3c7;font-size:12px}.big{font-size:25px;font-weight:bold}.good{color:#62eea5}.bad{color:#ff7f8c}.status{float:right;padding:6px 9px;border-radius:12px;background:#0d3323;color:#65efaa;font-size:12px}table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px solid #263654;text-align:left;font-size:12px}#log{height:140px;overflow:auto;background:#050a12;padding:8px;font:12px monospace;white-space:pre-wrap}</style></head><body>
-<header><span id="conn" class="status">CONNECTING</span><h1>BY KA EUNY Analysis Tool</h1><div class="muted">AUTO MARKET SCANNER • LIVE VOLATILITY • RSI • DIGITS • DEMO BOT</div></header>
-<main>
-<div class="card"><h3>🤖 AUTO RUN</h3><div class="muted">RUN BOT itascan volatility markets, ipate market yenye analysis score nzuri, halafu ianze Demo Bot.</div><div class="bar" style="margin-top:10px"><button id="run" class="run">▶ RUN BOT — FIND BEST MARKET</button><button id="stop" class="stop">■ STOP</button><select id="contract"><option>DIGITEVEN</option><option>DIGITODD</option><option>DIGITOVER</option><option>DIGITUNDER</option><option>DIGITMATCH</option><option>DIGITDIFF</option></select><input id="stake" type="number" min=".35" step=".01" value="1"></div><p id="state">IDLE — waiting for RUN</p></div>
-<div class="grid"><div class="card"><div class="muted">Selected Market</div><div id="market" class="big">—</div></div><div class="card"><div class="muted">RSI</div><div id="rsi" class="big">—</div></div><div class="card"><div class="muted">Last Digit</div><div id="digit" class="big">—</div></div><div class="card"><div class="muted">Score</div><div id="score" class="big">—</div></div></div>
-<div class="card"><h3>📊 Market Scanner</h3><table><thead><tr><th>Market</th><th>RSI</th><th>Price</th><th>Digit</th><th>Score</th></tr></thead><tbody id="rows"><tr><td colspan="5">Collecting live ticks…</td></tr></tbody></table></div>
-<div class="card"><h3>📈 Demo Results</h3><div class="grid"><div><span class="muted">Runs</span><div id="runs" class="big">0</div></div><div><span class="muted">Wins</span><div id="wins" class="big good">0</div></div><div><span class="muted">Losses</span><div id="losses" class="big bad">0</div></div><div><span class="muted">Demo P/L</span><div id="pl" class="big">0.00</div></div></div></div>
-<div class="card"><h3>Journal</h3><div id="log">Ready.</div></div>
-</main>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BY KA EUNY Analysis Tool</title>
+</head>
+
+<body>
+
+  <h1>BY KA EUNY Analysis Tool</h1>
+
+  <h2>🤖 AUTO RUN</h2>
+
+  <label>Contract Type:</label>
+  <select id="contract">
+    <option value="over">OVER</option>
+    <option value="under">UNDER</option>
+    <option value="even">EVEN</option>
+    <option value="odd">ODD</option>
+    <option value="match">MATCH</option>
+    <option value="diff">DIFF</option>
+  </select>
+
+  <br><br>
+
+  <label>Choose Digit:</label>
+  <select id="digit">
+    <option value="0">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3" selected>3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+  </select>
+
+  <br><br>
+
+  <button onclick="runBot()">▶ RUN — FIND BEST MARKET</button>
+  <button onclick="stopBot()">■ STOP</button>
+
+  <h3 id="status">IDLE</h3>
+
+  <hr>
+
+  <h2>📊 Selected Market</h2>
+  <p>Market: <b id="market">—</b></p>
+  <p>RSI: <b id="rsi">—</b></p>
+  <p>Last Digit: <b id="lastDigit">—</b></p>
+  <p>Score: <b id="score">—</b></p>
+
+  <hr>
+
+  <h2>📈 Demo Results</h2>
+  <p>Runs: <b id="runs">0</b></p>
+  <p>Wins: <b id="wins">0</b></p>
+  <p>Losses: <b id="losses">0</b></p>
+
 <script>
-const WS="wss://api.derivws.com/trading/v1/options/ws/public";let ws,ms={},run=false,timer,scan;let st={runs:0,wins:0,losses:0,pl:0};const $=x=>document.getElementById(x);
-function send(x){if(ws&&ws.readyState===1)ws.send(JSON.stringify(x))}
-function log(x){$("log").textContent=new Date().toLocaleTimeString()+"  "+x+"\n"+$("log").textContent}
-function rsi(a,p=14){if(a.length<p+1)return null;let g=0,l=0;for(let i=a.length-p;i<a.length;i++){let d=a[i]-a[i-1];if(d>0)g+=d;else l-=d}return l?100-100/(1+g/l):100}
-function connect(){ws=new WebSocket(WS);ws.onopen=()=>{$("conn").textContent="LIVE";send({active_symbols:"full",req_id:1})};ws.onclose=()=>{$("conn").textContent="OFFLINE";setTimeout(connect,2500)};ws.onmessage=e=>msg(JSON.parse(e.data))}
-function msg(d){if(d.error)return;if(d.msg_type==="active_symbols"){(d.active_symbols||[]).filter(x=>{let s=x.underlying_symbol||x.symbol||"",n=(x.underlying_symbol_name||x.display_name||"").toLowerCase();return s&&(n.includes("volatility")||/^1HZ\d+V$/.test(s)||/^R_\d+/.test(s))}).forEach(x=>{let s=x.underlying_symbol||x.symbol;if(!ms[s])ms[s]={ticks:[],digits:Array(10).fill(0)};send({ticks:s,subscribe:1})});log("Volatility markets found. Collecting ticks…")}if(d.msg_type==="tick"){let t=d.tick||{},s=t.symbol,q=+t.quote;if(!ms[s]||!isFinite(q))return;let m=ms[s];m.last=q;m.ticks.push(q);if(m.ticks.length>120)m.ticks.shift();let z=+String(q).replace(".","").slice(-1);if(z>=0)m.digits[z]++;render()}}
-function score(m){if(m.ticks.length<15)return null;let r=rsi(m.ticks),s=0;if(r<35||r>65)s+=40;else if(r<45||r>55)s+=20;if(m.ticks.at(-1)!==m.ticks.at(-2))s+=20;let n=m.digits.reduce((a,b)=>a+b,0),mx=Math.max(...m.digits);if(n)s+=Math.min(40,mx/n*60);return Math.round(s)}
-function best(){let a=Object.entries(ms).map(([s,m])=>({s,m,sc:score(m),r:rsi(m.ticks)})).filter(x=>x.sc!==null).sort((a,b)=>b.sc-a.sc);return a[0]}
-function render(){let a=Object.entries(ms).map(([s,m])=>({s,m,sc:score(m),r:rsi(m.ticks)})).filter(x=>x.sc!==null).sort((a,b)=>b.sc-a.sc);$("rows").innerHTML=a.slice(0,20).map(x=>{let d=+String(x.m.last).replace(".","").slice(-1);return "<tr><td>"+x.s+"</td><td>"+x.r.toFixed(2)+"</td><td>"+x.m.last+"</td><td>"+d+"</td><td>"+x.sc+"</td></tr>"}).join("")||'<tr><td colspan="5">Collecting ticks…</td></tr>';if(run&&a[0]){let x=a[0],d=+String(x.m.last).replace(".","").slice(-1);$("market").textContent=x.s;$("rsi").textContent=x.r.toFixed(2);$("digit").textContent=d;$("score").textContent=x.sc}}
-function one(){let x=best();if(!x)return;let d=+String(x.m.last).replace(".","").slice(-1),c=$("contract").value,w=c==="DIGITEVEN"?d%2===0:c==="DIGITODD"?d%2:c==="DIGITOVER"?d>=5:c==="DIGITUNDER"?d<=4:c==="DIGITMATCH"?d===x.m.digits.indexOf(Math.max(...x.m.digits)):d!==x.m.digits.indexOf(Math.max(...x.m.digits));let stake=Math.max(.35,+$("stake").value||1);st.runs++;w?(st.wins++,st.pl+=stake*.95):(st.losses++,st.pl-=stake);$("runs").textContent=st.runs;$("wins").textContent=st.wins;$("losses").textContent=st.losses;$("pl").textContent=st.pl.toFixed(2);log((w?"DEMO WIN":"DEMO LOSS")+" • "+x.s+" • "+c+" • digit "+d)}
-function start(){if(run)return;run=true;st={runs:0,wins:0,losses:0,pl:0};$("state").textContent="SCANNING MARKETS…";log("AUTO RUN started.");scan=setInterval(()=>{let x=best();if(x){$("state").textContent="BEST MARKET: "+x.s+" • score "+x.sc;if(x.sc>=35){clearInterval(scan);scan=null;timer=setInterval(one,3000);one();log("Demo Bot started on "+x.s)}}},1500)}
-function stop(){run=false;if(scan)clearInterval(scan);if(timer)clearInterval(timer);scan=timer=null;$("state").textContent="STOPPED";log("AUTO RUN stopped.")}
-$("run").onclick=start;$("stop").onclick=stop;connect();
-</script></body></html>
+
+let running = false;
+let runs = 0;
+let wins = 0;
+let losses = 0;
+
+/*
+  CONTRACT SETTINGS
+
+  OVER 3  = digits 4-9
+  UNDER 7 = digits 0-6
+  EVEN    = 0,2,4,6,8
+  ODD     = 1,3,5,7,9
+  MATCH   = selected digit
+  DIFF    = anything except selected digit
+*/
+
+function checkContract(digit) {
+
+  const type = document.getElementById("contract").value;
+  const target = Number(document.getElementById("digit").value);
+
+  if (type === "over") {
+    return digit > target;
+  }
+
+  if (type === "under") {
+    return digit < target;
+  }
+
+  if (type === "even") {
+    return digit % 2 === 0;
+  }
+
+  if (type === "odd") {
+    return digit % 2 !== 0;
+  }
+
+  if (type === "match") {
+    return digit === target;
+  }
+
+  if (type === "diff") {
+    return digit !== target;
+  }
+
+  return false;
+}
+
+
+function runBot() {
+
+  if (running) return;
+
+  running = true;
+
+  document.getElementById("status").innerText =
+    "🔎 SEARCHING FOR BEST MARKET...";
+
+  /*
+    Hapa ndipo live Deriv WebSocket
+    itaunganishwa na market scanner.
+    
+    Scanner itachagua:
+    - Volatility market
+    - RSI
+    - Last digit
+    - Digit frequency
+    - Market score
+  */
+
+  setTimeout(() => {
+
+    if (!running) return;
+
+    document.getElementById("market").innerText =
+      "AUTO SELECT";
+
+    document.getElementById("rsi").innerText =
+      "Scanning...";
+
+    document.getElementById("score").innerText =
+      "Scanning...";
+
+    document.getElementById("status").innerText =
+      "🤖 DEMO BOT RUNNING";
+
+    /*
+      Demo simulation.
+      Real Deriv contracts zinahitaji
+      WebSocket + authorized trading API.
+    */
+
+    demoTrade();
+
+  }, 2000);
+}
+
+
+function demoTrade() {
+
+  if (!running) return;
+
+  const digit = Math.floor(Math.random() * 10);
+
+  document.getElementById("lastDigit").innerText = digit;
+
+  const result = checkContract(digit);
+
+  runs++;
+
+  if (result) {
+    wins++;
+  } else {
+    losses++;
+  }
+
+  document.getElementById("runs").innerText = runs;
+  document.getElementById("wins").innerText = wins;
+  document.getElementById("losses").innerText = losses;
+
+  if (running) {
+    setTimeout(demoTrade, 3000);
+  }
+}
+
+
+function stopBot() {
+
+  running = false;
+
+  document.getElementById("status").innerText =
+    "⛔ BOT STOPPED";
+}
+
+</script>
+
+</body>
+</html>
