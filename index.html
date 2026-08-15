@@ -2,28 +2,1333 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BY KA EUNY DIGITS BOT - LIVE</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BY KA EUNY - LIVE DERIV ANALYSIS</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:#030713;color:#fff;background:radial-gradient(circle at 50% 0%,#0a1a3a 0%,#030713 70%)}
-.header{text-align:center;padding:15px;background:linear-gradient(90deg,#000428,#004e92);border-bottom:2px solid #00aaff}
-.header h1{color:#ffd700;font-size:24px}
-.live-badge{background:#00ff88;color:#000;padding:5px 15px;border-radius:20px;font-weight:bold;font-size:12px}
-.container{display:grid;grid-template-columns:300px 1fr 300px;gap:15px;padding:15px}
-.card{background:#0a1429;border:1px solid #1e3a5f;border-radius:12px;padding:15px}
-.btn{background:linear-gradient(90deg,#007bff,#00aaff);border:none;color:#fff;padding:12px;border-radius:8px;cursor:pointer;width:100%;font-weight:bold;font-size:16px}
-.btn:hover{box-shadow:0 0 15px #00aaff}
-.btn-trade{background:linear-gradient(90deg,#00ff88,#00cc66)}
-.btn-stop{background:linear-gradient(90deg,#ff0044,#cc0033)}
-select,input{background:#001a33;border:1px solid #1e3a5f;color:#fff;padding:10px;border-radius:6px;width:100%;margin:5px 0}
-.label{font-size:12px;color:#aaa;margin-top:10px}
-.stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1e3a5f}
-.win{color:#00ff88}.loss{color:#ff0044}
-.signal-box{text-align:center;padding:20px;border-radius:10px;background:#001a33;margin:10px 0}
-.digit-big{font-size:60px;font-weight:bold;color:#00aaff}
-.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.analysis-item{padding:10px;border-radius:8px;background:#001a33;text-align:center}
-.percent{font-size:24px;font-weight:bold}
-.live-log{height:300px;overflow-y:auto;font-size:12px}
-.log-item{padding:5px;border-bottom:1px solid #1
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:Arial,Helvetica,sans-serif;
+ background:
+ radial-gradient(circle at top,#13264a 0,#07101f 45%,#02060d 100%);
+ color:#fff;
+ min-height:100vh;
+}
+
+header{
+ padding:18px 14px;
+ text-align:center;
+ background:rgba(0,0,0,.35);
+ border-bottom:1px solid rgba(255,255,255,.12);
+}
+
+.logo{
+ font-size:25px;
+ font-weight:900;
+ letter-spacing:1px;
+}
+
+.sub{
+ color:#9fb3d5;
+ margin-top:5px;
+ font-size:13px;
+}
+
+.container{
+ width:min(1100px,94%);
+ margin:18px auto 40px;
+}
+
+.card{
+ background:rgba(12,25,45,.82);
+ border:1px solid rgba(255,255,255,.1);
+ border-radius:16px;
+ padding:15px;
+ margin-bottom:15px;
+ box-shadow:0 12px 30px rgba(0,0,0,.25);
+}
+
+.row{
+ display:flex;
+ flex-wrap:wrap;
+ gap:10px;
+}
+
+.col{
+ flex:1 1 180px;
+}
+
+label{
+ display:block;
+ color:#9fb3d5;
+ font-size:12px;
+ margin-bottom:6px;
+}
+
+select,input,button{
+ width:100%;
+ padding:12px;
+ border-radius:10px;
+ border:1px solid #29405f;
+ background:#071322;
+ color:#fff;
+ outline:none;
+}
+
+button{
+ cursor:pointer;
+ font-weight:800;
+ border:none;
+}
+
+.green{background:#087f5b}
+.blue{background:#1769aa}
+.red{background:#a9273f}
+.gray{background:#26364c}
+
+.status{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ font-weight:800;
+}
+
+.dot{
+ width:11px;
+ height:11px;
+ border-radius:50%;
+ background:#777;
+}
+
+.live .dot{background:#00e676;box-shadow:0 0 12px #00e676}
+
+.bigDigit{
+ text-align:center;
+ font-size:82px;
+ font-weight:900;
+ line-height:1;
+ margin:10px 0;
+}
+
+.quote{
+ text-align:center;
+ color:#9fb3d5;
+ font-size:14px;
+}
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ gap:8px;
+}
+
+.stat{
+ background:#071322;
+ padding:12px 8px;
+ border-radius:10px;
+ text-align:center;
+}
+
+.stat b{
+ display:block;
+ font-size:20px;
+ margin-top:5px;
+}
+
+.digits{
+ display:grid;
+ grid-template-columns:repeat(10,1fr);
+ gap:7px;
+ margin-top:12px;
+}
+
+.digit{
+ background:#071322;
+ border:1px solid #213754;
+ border-radius:9px;
+ padding:10px 4px;
+ text-align:center;
+}
+
+.digit strong{
+ display:block;
+ font-size:20px;
+}
+
+.bar{
+ height:6px;
+ background:#1b2a3d;
+ border-radius:10px;
+ overflow:hidden;
+ margin-top:7px;
+}
+
+.bar span{
+ display:block;
+ height:100%;
+ background:#1ee6a4;
+ width:0%;
+}
+
+.signal{
+ text-align:center;
+ padding:20px;
+ border-radius:14px;
+ background:#071322;
+ border:1px solid #27415f;
+}
+
+.signalTitle{
+ font-size:30px;
+ font-weight:900;
+}
+
+.conf{
+ font-size:14px;
+ color:#9fb3d5;
+ margin-top:7px;
+}
+
+.grid2{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+}
+
+@media(max-width:700px){
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .digits{grid-template-columns:repeat(5,1fr)}
+ .grid2{grid-template-columns:1fr}
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+}
+
+td,th{
+ padding:9px 6px;
+ border-bottom:1px solid #1c3049;
+ text-align:left;
+ font-size:13px;
+}
+
+.greenText{color:#00e676}
+.redText{color:#ff526c}
+.yellowText{color:#ffd54f}
+
+.log{
+ max-height:180px;
+ overflow:auto;
+ background:#020913;
+ padding:10px;
+ border-radius:10px;
+ font-family:monospace;
+ font-size:12px;
+ color:#a9bdd8;
+}
+
+.footer{
+ text-align:center;
+ color:#667d9d;
+ font-size:11px;
+ margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">⚡ BY KA EUNY</div>
+ <div class="sub">LIVE DERIV DIGIT ANALYSIS TOOL</div>
+</header>
+
+<div class="container">
+
+ <div class="card">
+  <div class="row">
+
+   <div class="col">
+    <label>DERIV MARKET</label>
+    <select id="symbol">
+     <option value="1HZ100V">Volatility 100 (1s)</option>
+     <option value="1HZ75V">Volatility 75 (1s)</option>
+     <option value="1HZ50V">Volatility 50 (1s)</option>
+     <option value="1HZ25V">Volatility 25 (1s)</option>
+     <option value="1HZ10V">Volatility 10 (1s)</option>
+    </select>
+   </div>
+
+   <div class="col">
+    <label>ANALYSIS WINDOW</label>
+    <select id="window">
+     <option value="20">20 ticks</option>
+     <option value="50" selected>50 ticks</option>
+     <option value="100">100 ticks</option>
+     <option value="200">200 ticks</option>
+    </select>
+   </div>
+
+   <div class="col">
+    <label>STRATEGY</label>
+    <select id="strategy">
+     <option value="over3">OVER 3</option>
+     <option value="under6">UNDER 6</option>
+     <option value="even">EVEN</option>
+     <option value="odd">ODD</option>
+     <option value="match">MATCH</option>
+     <option value="diff">DIFF</option>
+    </select>
+   </div>
+
+  </div>
+
+  <div style="margin-top:12px">
+   <button class="blue" onclick="connect()">🔄 CONNECT LIVE DERIV</button>
+  </div>
+
+  <div id="status" class="status" style="margin-top:12px">
+   <span class="dot"></span>
+   <span id="statusText">Disconnected</span>
+  </div>
+ </div>
+
+
+ <div class="card">
+
+  <div class="quote">LATEST LIVE QUOTE</div>
+
+  <div id="bigDigit" class="bigDigit">-</div>
+
+  <div id="quote" class="quote">Waiting for live tick...</div>
+
+  <div class="stats" style="margin-top:15px">
+   <div class="stat">
+    TICKS
+    <b id="tickCount">0</b>
+   </div>
+
+   <div class="stat">
+    OVER 3
+    <b id="over3">0%</b>
+   </div>
+
+   <div class="stat">
+    UNDER 6
+    <b id="under6">0%</b>
+   </div>
+
+   <div class="stat">
+    EVEN
+    <b id="even">0%</b>
+   </div>
+
+   <div class="stat">
+    ODD
+    <b id="odd">0%</b>
+   </div>
+  </div>
+
+ </div>
+
+
+ <div class="card">
+
+  <h3>📊 DIGIT FREQUENCY</h3>
+
+  <div id="digits" class="digits"></div>
+
+ </div>
+
+
+ <div class="grid2">
+
+  <div class="card">
+
+   <h3>🎯 SIGNAL</h3>
+
+   <div class="signal">
+
+    <div id="signal" class="signalTitle">
+     WAIT
+    </div>
+
+    <div id="signalReason" class="conf">
+     Collecting live digits...
+    </div>
+
+    <div id="confidence" class="conf">
+     Confidence: 0%
+    </div>
+
+   </div>
+
+  </div>
+
+
+  <div class="card">
+
+   <h3>🤖 BOT</h3>
+
+   <div class="row">
+
+    <div class="col">
+     <label>BOT MODE</label>
+     <select id="botMode">
+      <option value="analysis">ANALYSIS ONLY</option>
+      <option value="paper">PAPER TRADING</option>
+     </select>
+    </div>
+
+    <div class="col">
+     <label>STAKE</label>
+     <input id="stake" type="number" min="0.35" step="0.01" value="1">
+    </div>
+
+   </div>
+
+   <div style="margin-top:10px">
+    <button id="botBtn" class="green" onclick="toggleBot()">
+     ▶ START BOT
+    </button>
+   </div>
+
+   <div id="botStatus" class="conf" style="margin-top:10px">
+    Bot OFF
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="card">
+
+  <h3>💰 PAPER P/L</h3>
+
+  <div class="stats">
+
+   <div class="stat">
+    WINS
+    <b id="wins" class="greenText">0</b>
+   </div>
+
+   <div class="stat">
+    LOSSES
+    <b id="losses" class="redText">0</b>
+   </div>
+
+   <div class="stat">
+    PROFIT
+    <b id="profit">$0.00</b>
+   </div>
+
+   <div class="stat">
+    STAKE
+    <b id="stakeDisplay">$1</b>
+   </div>
+
+   <div class="stat">
+    TRADES
+    <b id="trades">0</b>
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="card">
+
+  <h3>🔐 DERIV OAUTH</h3>
+
+  <p style="color:#9fb3d5;font-size:13px">
+   App ID: <b>346Fu3sx0dtDikmKRP1S5</b>
+  </p>
+
+  <button class="blue" onclick="derivLogin()">
+   🔑 LOGIN WITH DERIV
+  </button>
+
+  <div id="oauthStatus" class="conf" style="margin-top:10px">
+   OAuth not connected
+  </div>
+
+ </div>
+
+
+ <div class="card">
+
+  <h3>📜 LIVE ACTIVITY</h3>
+
+  <div id="log" class="log"></div>
+
+ </div>
+
+
+ <div class="card">
+
+  <h3>⚠️ IMPORTANT</h3>
+
+  <div style="color:#a9bdd8;font-size:13px;line-height:1.6">
+   This tool analyses live market digits. A high frequency or confidence
+   score is <b>not</b> a guarantee that the next contract will win.
+   Paper trading is used for testing the bot logic.
+   Real-money trading requires authenticated Deriv account access.
+  </div>
+
+ </div>
+
+ <div class="footer">
+  BY KA EUNY • LIVE DIGIT ANALYSIS • DERIV
+ </div>
+
+</div>
+
+
+<script>
+
+const APP_ID = "346Fu3sx0dtDikmKRP1S5";
+
+const PUBLIC_WS =
+ "wss://api.derivws.com/trading/v1/options/ws/public";
+
+let ws = null;
+let reconnectTimer = null;
+
+let ticks = [];
+let lastQuote = null;
+let botRunning = false;
+
+let wins = 0;
+let losses = 0;
+let profit = 0;
+let trades = 0;
+
+const $ = id => document.getElementById(id);
+
+
+function log(message){
+
+ const time = new Date().toLocaleTimeString();
+
+ $("log").innerHTML +=
+   "[" + time + "] " + message + "<br>";
+
+ $("log").scrollTop = $("log").scrollHeight;
+}
+
+
+function setStatus(text,live=false){
+
+ $("statusText").textContent = text;
+
+ $("status").classList.toggle("live",live);
+}
+
+
+function connect(){
+
+ clearTimeout(reconnectTimer);
+
+ if(ws){
+   try{ws.close()}catch(e){}
+ }
+
+ setStatus("Connecting...",false);
+
+ const symbol = $("symbol").value;
+
+ ws = new WebSocket(PUBLIC_WS);
+
+ ws.onopen = () => {
+
+   setStatus("LIVE • " + symbol,true);
+
+   log("Connected to Deriv public market stream.");
+
+   ws.send(JSON.stringify({
+     ticks_history:symbol,
+     count:200,
+     end:"latest",
+     style:"ticks",
+     subscribe:1
+   }));
+
+ };
+
+ ws.onmessage = event => {
+
+   try{
+
+     const data = JSON.parse(event.data);
+
+     if(data.error){
+
+       log("API ERROR: " + data.error.message);
+       return;
+     }
+
+     if(data.msg_type === "history"){
+
+       const prices = data.history?.prices || [];
+
+       prices.forEach(price => addTick(price));
+
+       log("Historical ticks loaded: " + prices.length);
+
+       return;
+     }
+
+     if(data.msg_type === "tick"){
+
+       if(data.tick && data.tick.quote != null){
+
+         addTick(data.tick.quote);
+
+       }
+
+     }
+
+   }catch(err){
+
+     log("Message error.");
+
+   }
+
+ };
+
+ ws.onerror = () => {
+
+   setStatus("Connection error",false);
+
+   log("WebSocket error.");
+
+ };
+
+ ws.onclose = () => {
+
+   setStatus("Disconnected",false);
+
+   log("Connection closed. Reconnecting...");
+
+   reconnectTimer = setTimeout(connect,3000);
+
+ };
+
+}
+
+
+function addTick(price){
+
+ const numeric = Number(price);
+
+ if(!Number.isFinite(numeric)) return;
+
+ lastQuote = numeric;
+
+ const text = String(numeric);
+
+ const clean = text.replace(".","");
+
+ const digit = Number(clean.slice(-1));
+
+ if(!Number.isInteger(digit) || digit<0 || digit>9)
+   return;
+
+ ticks.push(digit);
+
+ if(ticks.length > 500)
+   ticks.shift();
+
+ $("bigDigit").textContent = digit;
+ $("quote").textContent = "Quote: " + numeric;
+
+ analyse();
+
+}
+
+
+function analyse(){
+
+ const requested = Number($("window").value);
+
+ const data =
+   ticks.slice(-requested);
+
+ if(data.length < 5){
+
+   $("signal").textContent = "WAIT";
+
+   $("signalReason").textContent =
+     "Collecting more live digits...";
+
+   $("confidence").textContent =
+     "Confidence: 0%";
+
+   return;
+ }
+
+ const counts = Array(10).fill(0);
+
+ data.forEach(d => counts[d]++);
+
+ const total = data.length;
+
+ let strongest = 0;
+
+ for(let i=1;i<10;i++){
+
+   if(counts[i] > counts[strongest])
+     strongest = i;
+
+ }
+
+ const over3 =
+   data.filter(d => d >= 4).length / total * 100;
+
+ const under6 =
+   data.filter(d => d <= 5).length / total * 100;
+
+ const even =
+   data.filter(d => d % 2 === 0).length / total * 100;
+
+ const odd =
+   100-even;
+
+ $("tickCount").textContent = total;
+
+ $("over3").textContent = over3.toFixed(1)+"%";
+
+ $("under6").textContent = under6.toFixed(1)+"%";
+
+ $("even").textContent = even.toFixed(1)+"%";
+
+ $("odd").textContent = odd.toFixed(1)+"%";
+
+ renderDigits(counts,total);
+
+ generateSignal({
+   data,
+   counts,
+   over3,
+   under6,
+   even,
+   odd,
+   strongest
+ });
+
+}
+
+
+function renderDigits(counts,total){
+
+ let html = "";
+
+ for(let d=0;d<=9;d++){
+
+   const pct =
+     total ? counts[d]/total*100 : 0;
+
+   html += `
+    <div class="digit">
+      <strong>${d}</strong>
+      ${counts[d]}<br>
+      <small>${pct.toFixed(1)}%</small>
+      <div class="bar">
+       <span style="width:${Math.min(pct,100)}%"></span>
+      </div>
+    </div>
+   `;
+
+ }
+
+ $("digits").innerHTML = html;
+
+}
+
+
+function generateSignal(s){
+
+ const strategy = $("strategy").value;
+
+ let signal = "WAIT";
+ let reason = "";
+ let confidence = 0;
+
+ if(strategy === "over3"){
+
+   if(s.over3 >= 58){
+
+     signal = "OVER 3";
+
+     confidence = Math.min(
+       95,
+       Math.round(50 + (s.over3-50)*1.4)
+     );
+
+     reason =
+       "Recent sample has " +
+       s.over3.toFixed(1) +
+       "% digits 4–9.";
+
+   }else{
+
+     signal = "WAIT";
+
+     confidence =
+       Math.round(Math.min(49,s.over3));
+
+     reason =
+       "OVER 3 frequency is only " +
+       s.over3.toFixed(1) +
+       "%.";
+
+   }
+
+ }
+
+
+ if(strategy === "under6"){
+
+   if(s.under6 >= 58){
+
+     signal = "UNDER 6";
+
+     confidence = Math.min(
+       95,
+       Math.round(50+(s.under6-50)*1.4)
+     );
+
+     reason =
+       "Recent sample has " +
+       s.under6.toFixed(1) +
+       "% digits 0–5.";
+
+   }else{
+
+     signal = "WAIT";
+
+     confidence =
+       Math.round(Math.min(49,s.under6));
+
+     reason =
+       "UNDER 6 frequency is " +
+       s.under6.toFixed(1) +
+       "%.";
+
+   }
+
+ }
+
+
+ if(strategy === "even"){
+
+   if(s.even >= 58){
+
+     signal = "EVEN";
+
+     confidence =
+       Math.min(95,Math.round(s.even));
+
+     reason =
+       "EVEN frequency is " +
+       s.even.toFixed(1) +
+       "%.";
+
+   }else{
+
+     signal = "WAIT";
+
+     confidence =
+       Math.round(Math.min(49,s.even));
+
+     reason =
+       "EVEN frequency is " +
+       s.even.toFixed(1) +
+       "%.";
+
+   }
+
+ }
+
+
+ if(strategy === "odd"){
+
+   if(s.odd >= 58){
+
+     signal = "ODD";
+
+     confidence =
+       Math.min(95,Math.round(s.odd));
+
+     reason =
+       "ODD frequency is " +
+       s.odd.toFixed(1) +
+       "%.";
+
+   }else{
+
+     signal = "WAIT";
+
+     confidence =
+       Math.round(Math.min(49,s.odd));
+
+     reason =
+       "ODD frequency is " +
+       s.odd.toFixed(1) +
+       "%.";
+
+   }
+
+ }
+
+
+ if(strategy === "match"){
+
+   const recent =
+     s.data[s.data.length-1];
+
+   const same =
+     s.data.filter(d=>d===recent).length /
+     s.data.length*100;
+
+   if(same >= 20){
+
+     signal = "MATCH " + recent;
+
+     confidence =
+       Math.min(90,Math.round(same*2));
+
+     reason =
+       "Digit " + recent +
+       " appears " + same.toFixed(1) +
+       "% in the selected window.";
+
+   }else{
+
+     signal = "WAIT";
+
+     confidence = Math.round(Math.min(49,same));
+
+     reason =
+       "No strong repeated digit.";
+
+   }
+
+ }
+
+
+ if(strategy === "diff"){
+
+   const recent =
+     s.data[s.data.length-1];
+
+   const different =
+     100 -
+     (s.data.filter(d=>d===recent).length /
+     s.data.length*100);
+
+   if(different >= 80){
+
+     signal = "DIFF";
+
+     confidence =
+       Math.min(90,Math.round(different));
+
+     reason =
+       "Different from last digit in " +
+       different.toFixed(1) +
+       "% of sample.";
+
+   }else{
+
+     signal = "WAIT";
+
+     confidence =
+       Math.round(Math.min(79,different));
+
+     reason =
+       "DIFF condition not strong enough.";
+
+   }
+
+ }
+
+
+ $("signal").textContent = signal;
+
+ $("signalReason").textContent = reason;
+
+ $("confidence").textContent =
+   "Confidence: " + confidence + "%";
+
+ if(botRunning &&
+    $("botMode").value === "paper" &&
+    signal !== "WAIT"){
+
+   paperTrade(signal,s.data[s.data.length-1]);
+
+ }
+
+}
+
+
+let lastPaperSignal = "";
+let lastPaperTick = -1;
+
+
+function paperTrade(signal,currentDigit){
+
+ if(signal === lastPaperSignal &&
+    currentDigit === lastPaperTick){
+
+   return;
+ }
+
+ lastPaperSignal = signal;
+ lastPaperTick = currentDigit;
+
+ trades++;
+
+ const stake =
+   Math.max(.35,Number($("stake").value)||1);
+
+ /*
+  PAPER MODEL ONLY.
+
+  It waits for the next tick and checks
+  whether the simple condition matched.
+ */
+
+ setTimeout(()=>{
+
+   if(!botRunning) return;
+
+   const next =
+     ticks[ticks.length-1];
+
+   if(next == null) return;
+
+   let win = false;
+
+   if(signal === "OVER 3")
+     win = next >= 4;
+
+   else if(signal === "UNDER 6")
+     win = next <= 5;
+
+   else if(signal === "EVEN")
+     win = next % 2 === 0;
+
+   else if(signal === "ODD")
+     win = next % 2 === 1;
+
+   else if(signal.startsWith("MATCH")){
+
+     const target =
+       Number(signal.split(" ")[1]);
+
+     win = next === target;
+
+   }
+
+   else if(signal === "DIFF")
+     win = next !== currentDigit;
+
+   if(win){
+
+     wins++;
+
+     /*
+       Approximate paper payout.
+       This is NOT Deriv's actual contract payout.
+     */
+
+     profit += stake * 0.80;
+
+     log(
+       "PAPER WIN • " +
+       signal +
+       " • next digit " +
+       next
+     );
+
+   }else{
+
+     losses++;
+
+     profit -= stake;
+
+     log(
+       "PAPER LOSS • " +
+       signal +
+       " • next digit " +
+       next
+     );
+
+   }
+
+   updatePL();
+
+ },1000);
+
+}
+
+
+function updatePL(){
+
+ $("wins").textContent = wins;
+
+ $("losses").textContent = losses;
+
+ $("profit").textContent =
+   "$" + profit.toFixed(2);
+
+ $("trades").textContent = trades;
+
+ $("stakeDisplay").textContent =
+   "$" +
+   (Number($("stake").value)||1).toFixed(2);
+
+}
+
+
+function toggleBot(){
+
+ botRunning = !botRunning;
+
+ if(botRunning){
+
+   $("botBtn").textContent =
+     "⏹ STOP BOT";
+
+   $("botBtn").className = "red";
+
+   $("botStatus").textContent =
+     "Bot ON • " +
+     $("botMode").value.toUpperCase();
+
+   log(
+     "BOT STARTED • " +
+     $("botMode").value.toUpperCase()
+   );
+
+ }else{
+
+   $("botBtn").textContent =
+     "▶ START BOT";
+
+   $("botBtn").className = "green";
+
+   $("botStatus").textContent =
+     "Bot OFF";
+
+   log("BOT STOPPED.");
+
+ }
+
+}
+
+
+function derivLogin(){
+
+ /*
+   OAuth2 + PKCE starter.
+
+   The authorization-code exchange must happen
+   on a secure backend according to Deriv's
+   OAuth documentation.
+ */
+
+ const redirectUri =
+   window.location.origin +
+   window.location.pathname;
+
+ const state =
+   cryptoRandom(32);
+
+ const verifier =
+   cryptoRandom(64);
+
+ sessionStorage.setItem(
+   "deriv_oauth_state",
+   state
+ );
+
+ sessionStorage.setItem(
+   "deriv_code_verifier",
+   verifier
+ );
+
+ sha256(verifier).then(challenge => {
+
+   const url =
+     "https://auth.deriv.com/oauth2/auth" +
+     "?response_type=code" +
+     "&client_id=" +
+     encodeURIComponent(APP_ID) +
+     "&redirect_uri=" +
+     encodeURIComponent(redirectUri) +
+     "&scope=" +
+     encodeURIComponent("trade") +
+     "&state=" +
+     encodeURIComponent(state) +
+     "&code_challenge=" +
+     encodeURIComponent(challenge) +
+     "&code_challenge_method=S256";
+
+   $("oauthStatus").textContent =
+     "Opening Deriv login...";
+
+   window.location.href = url;
+
+ });
+
+}
+
+
+function cryptoRandom(length){
+
+ const chars =
+   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+
+ let result = "";
+
+ const array =
+   new Uint8Array(length);
+
+ crypto.getRandomValues(array);
+
+ for(let i=0;i<length;i++){
+
+   result +=
+     chars[array[i] % chars.length];
+
+ }
+
+ return result;
+
+}
+
+
+async function sha256(text){
+
+ const data =
+   new TextEncoder().encode(text);
+
+ const hash =
+   await crypto.subtle.digest(
+     "SHA-256",
+     data
+   );
+
+ const bytes =
+   new Uint8Array(hash);
+
+ let binary = "";
+
+ bytes.forEach(b=>{
+   binary += String.fromCharCode(b);
+ });
+
+ return btoa(binary)
+   .replace(/\+/g,"-")
+   .replace(/\//g,"_")
+   .replace(/=/g,"");
+
+}
+
+
+function checkOAuthCallback(){
+
+ const params =
+   new URLSearchParams(
+     window.location.search
+   );
+
+ const code =
+   params.get("code");
+
+ const returnedState =
+   params.get("state");
+
+ const error =
+   params.get("error");
+
+ if(error){
+
+   $("oauthStatus").textContent =
+     "OAuth cancelled/error: " + error;
+
+   return;
+
+ }
+
+ if(code){
+
+   const savedState =
+     sessionStorage.getItem(
+       "deriv_oauth_state"
+     );
+
+   if(returnedState !== savedState){
+
+     $("oauthStatus").textContent =
+       "OAuth state mismatch.";
+
+     return;
+
+   }
+
+   /*
+     Do NOT exchange the code inside this HTML.
+     A backend endpoint is required.
+   */
+
+   $("oauthStatus").textContent =
+     "Deriv login returned successfully. " +
+     "Backend token exchange is required.";
+
+   history.replaceState(
+     {},
+     document.title,
+     window.location.pathname
+   );
+
+ }
+
+}
+
+
+$("symbol").addEventListener(
+ "change",
+ connect
+);
+
+$("window").addEventListener(
+ "change",
+ analyse
+);
+
+$("strategy").addEventListener(
+ "change",
+ analyse
+);
+
+$("stake").addEventListener(
+ "input",
+ updatePL
+);
+
+checkOAuthCallback();
+
+connect();
+
+</script>
+
+</body>
+  </html>
