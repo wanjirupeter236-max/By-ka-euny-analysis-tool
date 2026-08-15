@@ -1,153 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BY KA EUNY — OAuth Bot</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BY KA EUNY ANALYSIS TOOL - LIVE</title>
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#050914;color:#eef3ff;font-family:Arial,sans-serif}
-.wrap{max-width:720px;margin:auto;padding:16px}.card{background:#0d1626;border:1px solid #263957;border-radius:16px;padding:16px;margin-bottom:14px}
-h1{margin:0 0 5px;font-size:24px}.muted{color:#9cafc8;font-size:13px}
-button,select,input{width:100%;padding:13px;border-radius:10px;border:1px solid #304b6c;background:#081321;color:#fff}
-button{cursor:pointer;font-weight:bold;margin-top:10px}.login{background:#18a96b}.start{background:#d59b18}.stop{background:#b83250}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.box{background:#091426;border-radius:12px;padding:13px;text-align:center}.box b{display:block;font-size:21px;margin-top:5px}
-.status{padding:11px;border-radius:10px;background:#081321;margin-top:10px}.live{color:#48df91}.warn{color:#ffd166}.bad{color:#ff667c}
-.digits{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}.digit{padding:9px 2px;text-align:center;background:#18243a;border-radius:7px}
-small{color:#8298b3}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:#030713;color:#fff;background:radial-gradient(circle at 50% 0%,#0a1a3a 0%,#030713 70%)}
+.header{text-align:center;padding:15px;background:linear-gradient(90deg,#000428,#004e92);border-bottom:2px solid #00aaff}
+.header h1{color:#ffd700;font-size:28px;text-shadow:0 0 10px #ffd700}
+.live-badge{background:#00ff88;color:#000;padding:5px 15px;border-radius:20px;font-weight:bold}
+.container{display:grid;grid-template-columns:280px 1fr 300px;gap:15px;padding:15px}
+.card{background:#0a1429;border:1px solid #1e3a5f;border-radius:12px;padding:12px;box-shadow:0 0 15px rgba(0,170,255,0.2)}
+.btn{background:linear-gradient(90deg,#007bff,#00aaff);border:none;color:#fff;padding:10px;border-radius:8px;cursor:pointer;width:100%;font-weight:bold}
+.btn:hover{box-shadow:0 0 15px #00aaff}
+.btn-trade{background:linear-gradient(90deg,#00ff88,#00cc66)}
+.signal-box{padding:15px;border-radius:10px;text-align:center;background:#001a33}
+.signal-over{color:#00ff88;font-size:24px;font-weight:bold}
+.rsi-circle{width:120px;height:120px;border-radius:50%;border:8px solid #00ff88;display:flex;align-items:center;justify-content:center;margin:auto;font-size:24px;font-weight:bold}
+.live-signal{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px}
+.win{color:#00ff88}.loss{color:#ff0044}
+select,input{background:#001a33;border:1px solid #1e3a5f;color:#fff;padding:8px;border-radius:6px;width:100%;margin:5px 0}
+.label{font-size:12px;color:#aaa;margin-top:8px}
+.stat{display:flex;justify-content:space-between;padding:5px 0}
+.token-box{background:#001a33;padding:8px;border-radius:6px;font-size:11px;word-break:break-all}
+@media(max-width:1200px){.container{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="card">
-    <h1>⚡ BY KA EUNY AUTO BOT</h1>
-    <div class="muted">Deriv OAuth • Demo Bot • Live market data</div>
-  </div>
 
-  <div class="card">
-    <h3>🔐 Deriv OAuth</h3>
-    <button class="login" id="loginBtn">LOGIN WITH DERIV</button>
-    <div class="status" id="authStatus">Not connected</div>
-  </div>
-
-  <div class="card">
-    <h3>🤖 Bot Settings</h3>
-    <div class="grid">
-      <div><small>Contract</small>
-        <select id="contract">
-          <option value="OVER">OVER</option><option value="UNDER">UNDER</option>
-          <option value="EVEN">EVEN</option><option value="ODD">ODD</option>
-        </select>
-      </div>
-      <div><small>Target</small><select id="target">
-        <option>1</option><option>2</option><option selected>3</option><option>4</option>
-        <option>5</option><option>6</option><option>7</option><option>8</option>
-      </select></div>
-      <div><small>Stake (demo)</small><input id="stake" type="number" value="1" min="0.35" step="0.01"></div>
-      <div><small>Mode</small><select id="mode"><option>DEMO</option></select></div>
-    </div>
-    <button class="start" id="startBtn">▶ START BOT</button>
-    <button class="stop" id="stopBtn">■ STOP BOT</button>
-    <div class="status" id="botStatus">IDLE — Login with Deriv first.</div>
-  </div>
-
-  <div class="card">
-    <h3>📡 Live Digits</h3>
-    <div class="digits" id="digits"></div>
-    <div class="status">Last digit: <b id="lastDigit">—</b></div>
-  </div>
-
-  <div class="card">
-    <h3>📊 Session</h3>
-    <div class="grid">
-      <div class="box">Wins<b id="wins">0</b></div>
-      <div class="box">Losses<b id="losses">0</b></div>
-      <div class="box">Trades<b id="trades">0</b></div>
-      <div class="box">P/L<b id="pl">0.00</b></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <small>Security: this page does not ask for or store your Deriv password or API token.</small>
-  </div>
+<div class="header">
+    <h1>👑 BY KA EUNY ANALYSIS TOOL 👑</h1>
+    <span class="live-badge">● LIVE WITH DERIV</span>
 </div>
 
-<script>
-const CLIENT_ID="346Fu3sx0dtDikmKRP1S5";
-const REDIRECT_URI="https://wanjirupeter236-max.github.io/By-ka-euny-analysis-tool/auto-bot.html";
+<div class="container">
+    <!-- LEFT -->
+    <div>
+        <div class="card">
+            <div class="label">API TOKEN</div>
+            <input id="token" type="password" placeholder="Weka API Token yako hapa">
+            <button class="btn" onclick="login()">🔑 CONNECT</button>
+            <div id="status" style="color:#ffaa00;font-size:12px;margin-top:5px">Status: Disconnected</div>
+        </div>
 
-function b64url(bytes){
-  let s=""; bytes.forEach(b=>s+=String.fromCharCode(b));
-  return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-}
-async function sha256(s){
-  return new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s)));
-}
-function randomString(n=64){
-  const a=crypto.getRandomValues(new Uint8Array(n));
-  const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
-  return [...a].map(x=>chars[x%chars.length]).join("");
-}
-async function login(){
-  const verifier=randomString(64);
-  const challenge=b64url(await sha256(verifier));
-  const state=b64url(crypto.getRandomValues(new Uint8Array(24)));
-  sessionStorage.setItem("pkce_verifier",verifier);
-  sessionStorage.setItem("oauth_state",state);
-  const u=new URL("https://auth.deriv.com/oauth2/auth");
-  u.searchParams.set("response_type","code");
-  u.searchParams.set("client_id",CLIENT_ID);
-  u.searchParams.set("redirect_uri",REDIRECT_URI);
-  u.searchParams.set("scope","trade");
-  u.searchParams.set("state",state);
-  u.searchParams.set("code_challenge",challenge);
-  u.searchParams.set("code_challenge_method","S256");
-  location.href=u.toString();
-}
-document.getElementById("loginBtn").onclick=login;
-
-function showCallback(){
-  const p=new URLSearchParams(location.search);
-  const code=p.get("code"), state=p.get("state"), error=p.get("error");
-  if(error){
-    document.getElementById("authStatus").innerHTML='<span class="bad">OAuth error: '+error+'</span>';
-    return;
-  }
-  if(code){
-    const saved=sessionStorage.getItem("oauth_state");
-    if(!saved || saved!==state){
-      document.getElementById("authStatus").innerHTML='<span class="bad">State mismatch. Login again.</span>';
-      return;
-    }
-    document.getElementById("authStatus").innerHTML=
-      '<span class="warn">Authorization received.</span> Token exchange must be completed by a secure backend.';
-    document.getElementById("botStatus").textContent=
-      "OAuth callback reached. Add the secure token-exchange backend before enabling account trading.";
-    history.replaceState({},document.title,location.pathname);
-  }
-}
-showCallback();
-
-let running=false,timer=null,digits=Array(10).fill(0);
-function renderDigits(){
-  document.getElementById("digits").innerHTML=digits.map((n,i)=>
-    `<div class="digit">${i}<br><b>${n}</b></div>`).join("");
-}
-function tick(){
-  const d=Math.floor(Math.random()*10);
-  digits[d]++; document.getElementById("lastDigit").textContent=d; renderDigits();
-}
-renderDigits();
-
-document.getElementById("startBtn").onclick=()=>{
-  if(running)return;
-  running=true;
-  document.getElementById("botStatus").innerHTML='<span class="live">DEMO BOT RUNNING — simulation only</span>';
-  timer=setInterval(tick,1000);
-};
-document.getElementById("stopBtn").onclick=()=>{
-  running=false; clearInterval(timer);
-  document.getElementById("botStatus").textContent="STOPPED";
-};
-</script>
-</body>
-                               </html>
+        <div class="card">
+            <div class="
