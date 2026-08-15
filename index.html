@@ -4,1229 +4,139 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>BY KA EUNY LIVE DERIV ANALYSIS</title>
-
 <style>
 *{box-sizing:border-box}
-
 body{
   margin:0;
   min-height:100vh;
   font-family:Arial,sans-serif;
-  background:
-    radial-gradient(circle at top,#07324a 0%,#020711 45%,#010409 100%);
+  background: radial-gradient(circle at top,#07324a 0%,#020711 45%,#010409 100%);
   color:#fff;
 }
-
-.container{
-  width:94%;
-  max-width:850px;
-  margin:18px auto;
-}
-
-.card{
-  background:rgba(4,13,27,.94);
-  border:2px solid #00d9ff;
-  border-radius:26px;
-  padding:22px;
-  margin-bottom:18px;
-  box-shadow:0 0 25px rgba(0,217,255,.12);
-}
-
-h1{
-  text-align:center;
-  font-size:25px;
-  margin:4px 0 8px;
-}
-
-.subtitle{
-  text-align:center;
-  color:#8ed9eb;
-  font-size:13px;
-  margin-bottom:18px;
-}
-
-.status{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
-  font-weight:bold;
-  margin:10px 0 18px;
-}
-
-.dot{
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  background:#ff4757;
-}
-
-.dot.live{
-  background:#00ff88;
-  box-shadow:0 0 14px #00ff88;
-}
-
-.live{
-  color:#00ff88;
-}
-
-.offline{
-  color:#ff4757;
-}
-
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-
-.box{
-  background:#071526;
-  border:1px solid #164d67;
-  border-radius:18px;
-  padding:18px;
-  text-align:center;
-}
-
-.label{
-  font-size:12px;
-  color:#8db8c7;
-  text-transform:uppercase;
-  letter-spacing:.5px;
-}
-
-.value{
-  font-size:40px;
-  font-weight:900;
-  margin-top:8px;
-}
-
-.last-digit{
-  font-size:78px;
-  color:#00d9ff;
-}
-
-.power-digit{
-  font-size:60px;
-  color:#ffd84d;
-}
-
-select,
-button{
-  width:100%;
-  padding:14px;
-  border-radius:13px;
-  font-size:15px;
-}
-
-select{
-  background:#071526;
-  color:#fff;
-  border:1px solid #164d67;
-}
-
-button{
-  border:0;
-  background:#00d9ff;
-  color:#001018;
-  font-weight:900;
-  cursor:pointer;
-  margin-top:14px;
-}
-
-button:hover{
-  filter:brightness(1.1);
-}
-
-.market-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-
-.digits{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:9px;
-  margin-top:14px;
-}
-
-.digit{
-  background:#071526;
-  border:1px solid #164d67;
-  border-radius:13px;
-  padding:12px 5px;
-  text-align:center;
-}
-
-.digit-number{
-  font-size:25px;
-  font-weight:900;
-}
-
-.digit-count{
-  font-size:11px;
-  color:#8db8c7;
-  margin-top:4px;
-}
-
-.bar{
-  width:100%;
-  height:5px;
-  background:#102b3b;
-  border-radius:10px;
-  margin-top:8px;
-  overflow:hidden;
-}
-
-.fill{
-  height:100%;
-  width:0%;
-  background:#00d9ff;
-}
-
-.power-card{
-  border-color:#ffd84d;
-  box-shadow:0 0 25px rgba(255,216,77,.10);
-}
-
-.tick-list{
-  max-height:240px;
-  overflow-y:auto;
-  margin-top:12px;
-}
-
-.tick{
-  display:grid;
-  grid-template-columns:1fr 1fr 45px;
-  gap:5px;
-  padding:8px 3px;
-  border-bottom:1px solid #10293a;
-  font-family:monospace;
-  font-size:13px;
-}
-
-.tick-digit{
-  text-align:right;
-  font-weight:bold;
-  color:#00d9ff;
-}
-
-.info{
-  color:#9db8c3;
-  font-size:12px;
-  line-height:1.6;
-  text-align:center;
-}
-
-@media(max-width:600px){
-
-  .row,
-  .market-grid{
-    grid-template-columns:1fr;
-  }
-
-  .digits{
-    grid-template-columns:repeat(5,1fr);
-  }
-
-  .last-digit{
-    font-size:65px;
-  }
-
-  .power-digit{
-    font-size:52px;
-  }
-}
+.container{width:94%;max-width:850px;margin:18px auto}
+.card{background:rgba(4,13,27,.94);border:2px solid #00d9ff;border-radius:26px;padding:22px;margin-bottom:18px;box-shadow:0 0 25px rgba(0,217,255,.12)}
+h1{text-align:center;font-size:25px;margin:4px 0 8px;color:#00d9ff;text-shadow:0 0 10px #00d9ff}
+.subtitle{text-align:center;color:#8ed9eb;font-size:13px;margin-bottom:18px}
+.status{display:flex;justify-content:center;align-items:center;gap:8px;font-weight:bold;margin:10px 0 18px;font-size:16px}
+.dot{width:12px;height:12px;border-radius:50%;background:#ff4757;box-shadow:0 0 10px #ff4757}
+.dot.live{background:#00ff88;box-shadow:0 0 10px #00ff88}
+select,input{background:#001a33;border:1px solid #00d9ff;color:#fff;padding:12px;border-radius:10px;width:100%;margin:8px 0;font-size:15px}
+.label{color:#8ed9eb;font-size:13px;margin-top:10px}
+.box{background:#000d1a;border:1px solid #00d9ff;border-radius:15px;padding:20px;text-align:center;margin:10px 0}
+.big-digit{font-size:60px;font-weight:bold;color:#00d9ff;margin:10px 0;text-shadow:0 0 15px #00d9ff}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.digit-box{background:#000d1a;border:1px solid #00d9ff;border-radius:10px;padding:10px;text-align:center;transition:0.3s}
+.digit-box.active{border-color:#00ff88;box-shadow:0 0 15px #00ff88;background:#001a33}
+.digit-box.num{font-size:28px;font-weight:bold}
+.digit-box.stats{font-size:11px;color:#8ed9eb}
+.btn{background:linear-gradient(90deg,#00d9ff,#007bff);border:none;color:#000;padding:14px;border-radius:12px;width:100%;font-weight:bold;font-size:16px;cursor:pointer;margin-top:10px}
+.btn:hover{box-shadow:0 0 20px #00d9ff}
 </style>
 </head>
-
 <body>
-
 <div class="container">
 
   <div class="card">
-
-    <h1>⚡ BY KA EUNY LIVE DERIV ANALYSIS</h1>
-
-    <div class="subtitle">
-      REAL-TIME DERIV TICK & LAST DIGIT ANALYSIS
-    </div>
-
+    <h1>👑 BY KA EUNY LIVE DERIV ANALYSIS 👑</h1>
+    <p class="subtitle">Live Digits Analysis Tool - Volatility</p>
     <div class="status">
-      <span id="statusDot" class="dot"></span>
-      <span id="statusText" class="offline">
-        CONNECTING...
-      </span>
+      <div class="dot" id="statusDot"></div>
+      <span id="statusText">Disconnected</span>
     </div>
-
-    <button id="connectButton">
-      CONNECT LIVE
-    </button>
-
   </div>
 
-
-  <!-- MARKET -->
-
   <div class="card">
-
-    <div class="market-grid">
-
-      <div>
-        <div class="label">Select Volatility</div>
-
-        <select id="market">
-
-          <option value="R_10">
-            Volatility 10 Index
-          </option>
-
-          <option value="1HZ10V">
-            Volatility 10 (1s) Index
-          </option>
-
-          <option value="R_25">
-            Volatility 25 Index
-          </option>
-
-          <option value="1HZ25V">
-            Volatility 25 (1s) Index
-          </option>
-
-          <option value="R_50">
-            Volatility 50 Index
-          </option>
-
-          <option value="1HZ50V">
-            Volatility 50 (1s) Index
-          </option>
-
-          <option value="R_75" selected>
-            Volatility 75 Index
-          </option>
-
-          <option value="1HZ75V">
-            Volatility 75 (1s) Index
-          </option>
-
-          <option value="R_100">
-            Volatility 100 Index
-          </option>
-
-          <option value="1HZ100V">
-            Volatility 100 (1s) Index
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div>
-
-        <div class="label">Analysis Window</div>
-
-        <select id="window">
-
-          <option value="50">
-            Last 50 ticks
-          </option>
-
-          <option value="100" selected>
-            Last 100 ticks
-          </option>
-
-          <option value="200">
-            Last 200 ticks
-          </option>
-
-          <option value="500">
-            Last 500 ticks
-          </option>
-
-        </select>
-
-      </div>
-
-    </div>
-
+    <div class="label">API TOKEN</div>
+    <input id="token" type="password" placeholder="Weka API Token yako">
+    <div class="label">SELECT VOLATILITY</div>
+    <select id="symbol">
+      <option value="R_10">Volatility 10 Index</option>
+      <option value="R_25">Volatility 25 Index</option>
+      <option value="R_50">Volatility 50 Index</option>
+      <option value="R_75">Volatility 75 Index</option>
+      <option value="R_100">Volatility 100 Index</option>
+    </select>
+    <button class="btn" onclick="connect()">🔑 CONNECT LIVE</button>
   </div>
 
-
-  <!-- LIVE DIGITS -->
-
   <div class="card">
-
-    <div class="row">
-
-      <div class="box">
-
-        <div class="label">
-          Last Live Digit
-        </div>
-
-        <div id="lastDigit" class="value last-digit">
-          -
-        </div>
-
-      </div>
-
-
-      <div class="box power-card">
-
-        <div class="label">
-          Most Powerful Digit
-        </div>
-
-        <div id="powerDigit" class="value power-digit">
-          -
-        </div>
-
-      </div>
-
+    <div class="box">
+      <div style="color:#8ed9eb">LAST LIVE DIGIT</div>
+      <div class="big-digit" id="lastDigit">-</div>
     </div>
-
+    <div class="box" style="border-color:#ffd700">
+      <div style="color:#ffd700">MOST POWERFUL DIGIT</div>
+      <div class="big-digit" id="powerDigit" style="color:#ffd700">-</div>
+      <div id="powerPercent" style="color:#ffd700">0%</div>
+    </div>
   </div>
 
-
-  <!-- DIGIT FREQUENCY -->
-
   <div class="card">
-
-    <div class="label">
-      LIVE DIGIT FREQUENCY 0 - 9
-    </div>
-
-    <div id="digits" class="digits"></div>
-
-  </div>
-
-
-  <!-- LIVE TICKS -->
-
-  <div class="card">
-
-    <div class="label">
-      RECENT LIVE TICKS
-    </div>
-
-    <div id="tickList" class="tick-list">
-
-      <div class="info">
-        Waiting for Deriv live ticks...
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="card">
-
-    <div class="info">
-
-      <strong>BY KA EUNY ANALYSIS</strong>
-      <br><br>
-
-      Most Powerful Digit inapatikana kwa
-      kuhesabu frequency ya digits kutoka
-      kwenye ticks halisi zilizopokelewa.
-      <br><br>
-
-      ⚠️ Hii ni statistical analysis tu.
-      Hakuna digit inayoweza kuhakikishiwa
-      kuwa itakuwa next digit.
-
-    </div>
-
+    <div class="label">LIVE DIGIT FREQUENCY 0 - 9 <span id="tickCount" style="float:right;color:#00ff88">0/100 ticks</span></div>
+    <div class="grid" id="frequencyGrid"></div>
   </div>
 
 </div>
 
-
 <script>
-
-/* =========================================================
-   BY KA EUNY
-   DERIV LIVE WEBSOCKET
-   ========================================================= */
-
-
-/* Deriv App ID */
-
 const APP_ID = "346Fu3sx0dtDikmKRP1S5";
-
-
-/* WebSocket */
-
-let socket = null;
-
-
-/* Tick storage */
-
-let ticks = [];
-
-
-/* Prevent automatic reconnect after manual close */
-
-let manualClose = false;
-
-
-/* Reconnect timer */
-
-let reconnectTimer = null;
-
-
-/* =========================================================
-   ELEMENTS
-   ========================================================= */
-
-const marketSelect =
-  document.getElementById("market");
-
-const windowSelect =
-  document.getElementById("window");
-
-const connectButton =
-  document.getElementById("connectButton");
-
-const statusText =
-  document.getElementById("statusText");
-
-const statusDot =
-  document.getElementById("statusDot");
-
-const lastDigitElement =
-  document.getElementById("lastDigit");
-
-const powerDigitElement =
-  document.getElementById("powerDigit");
-
-const digitsElement =
-  document.getElementById("digits");
-
-const tickListElement =
-  document.getElementById("tickList");
-
-
-/* =========================================================
-   STATUS
-   ========================================================= */
-
-function setStatus(text, live){
-
-  statusText.textContent = text;
-
-  if(live){
-
-    statusText.className = "live";
-
-    statusDot.className =
-      "dot live";
-
-  }else{
-
-    statusText.className =
-      "offline";
-
-    statusDot.className =
-      "dot";
-
-  }
-
-}
-
-
-/* =========================================================
-   GET LAST DIGIT
-   ========================================================= */
-
-function getLastDigit(quote){
-
-  /*
-    Convert quote to string.
-
-    Example:
-
-    123.45 -> 5
-    987.60 -> 0
-  */
-
-  const text =
-    String(quote);
-
-  const match =
-    text.match(/(\d)$/);
-
-  if(!match){
-
-    return null;
-
-  }
-
-  return Number(match[1]);
-
-}
-
-
-/* =========================================================
-   ADD TICK
-   ========================================================= */
-
-function addTick(tick){
-
-  if(!tick){
-
-    return;
-
-  }
-
-
-  const quote =
-    tick.quote;
-
-
-  const digit =
-    getLastDigit(quote);
-
-
-  if(digit === null){
-
-    return;
-
-  }
-
-
-  ticks.push({
-
-    quote:quote,
-
-    digit:digit,
-
-    epoch:Number(tick.epoch) || Date.now()/1000
-
-  });
-
-
-  const maxTicks =
-    Number(windowSelect.value);
-
-
-  if(ticks.length > maxTicks){
-
-    ticks =
-      ticks.slice(-maxTicks);
-
-  }
-
-
-  /*
-    Show latest digit
-  */
-
-  lastDigitElement.textContent =
-    digit;
-
-
-  /*
-    Update analysis
-  */
-
-  updateAnalysis();
-
-
-  /*
-    Update tick list
-  */
-
-  updateTickList();
-
-}
-
-
-/* =========================================================
-   ANALYSIS
-   ========================================================= */
-
-function updateAnalysis(){
-
-  const counts =
-    [0,0,0,0,0,0,0,0,0,0];
-
-
-  /*
-    Count every digit
-  */
-
-  for(const tick of ticks){
-
-    if(
-      tick.digit >= 0 &&
-      tick.digit <= 9
-    ){
-
-      counts[tick.digit]++;
-
-    }
-
-  }
-
-
-  /*
-    Find highest frequency
-  */
-
-  let highest = 0;
-
-  for(let i=0;i<10;i++){
-
-    if(counts[i] > highest){
-
-      highest =
-        counts[i];
-
-    }
-
-  }
-
-
-  /*
-    If no ticks
-  */
-
-  if(ticks.length === 0){
-
-    powerDigitElement.textContent =
-      "-";
-
-  }else{
-
-    /*
-      If there is a tie,
-      choose the latest digit among
-      the tied highest-frequency digits.
-    */
-
-    const leaders = [];
-
-    for(let i=0;i<10;i++){
-
-      if(counts[i] === highest){
-
-        leaders.push(i);
-
-      }
-
-    }
-
-
-    let selected =
-      leaders[0];
-
-
-    for(
-      let i=ticks.length-1;
-      i>=0;
-      i--
-    ){
-
-      if(
-        leaders.includes(
-          ticks[i].digit
-        )
-      ){
-
-        selected =
-          ticks[i].digit;
-
-        break;
-
-      }
-
-    }
-
-
-    powerDigitElement.textContent =
-      selected;
-
-  }
-
-
-  /*
-    Build digit cards
-  */
-
-  let html = "";
-
-
-  for(let digit=0;digit<10;digit++){
-
-    const count =
-      counts[digit];
-
-
-    const percentage =
-      ticks.length > 0
-      ? (count / ticks.length) * 100
-      : 0;
-
-
-    html += `
-
-      <div class="digit">
-
-        <div class="digit-number">
-          ${digit}
-        </div>
-
-        <div class="digit-count">
-          ${count} ticks
-          •
-          ${percentage.toFixed(1)}%
-        </div>
-
-        <div class="bar">
-
-          <div
-            class="fill"
-            style="width:${percentage}%">
-          </div>
-
-        </div>
-
-      </div>
-
-    `;
-
-  }
-
-
-  digitsElement.innerHTML =
-    html;
-
-}
-
-
-/* =========================================================
-   TICK LIST
-   ========================================================= */
-
-function updateTickList(){
-
-  if(ticks.length === 0){
-
-    tickListElement.innerHTML = `
-      <div class="info">
-        Waiting for Deriv live ticks...
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  /*
-    Show last 40 ticks
-  */
-
-  const recent =
-    ticks.slice(-40).reverse();
-
-
-  let html = "";
-
-
-  for(const tick of recent){
-
-    const time =
-      new Date(
-        tick.epoch * 1000
-      ).toLocaleTimeString();
-
-
-    html += `
-
-      <div class="tick">
-
-        <span>
-          ${time}
-        </span>
-
-        <span>
-          ${tick.quote}
-        </span>
-
-        <span class="tick-digit">
-          ${tick.digit}
-        </span>
-
-      </div>
-
-    `;
-
-  }
-
-
-  tickListElement.innerHTML =
-    html;
-
-}
-
-
-/* =========================================================
-   SUBSCRIBE TO MARKET
-   ========================================================= */
-
-function subscribe(){
-
-  if(
-    !socket ||
-    socket.readyState !== WebSocket.OPEN
-  ){
-
-    return;
-
-  }
-
-
-  const symbol =
-    marketSelect.value;
-
-
-  /*
-    Subscribe to selected market
-  */
-
-  socket.send(
-    JSON.stringify({
-
-      ticks:symbol,
-
-      subscribe:1
-
-    })
-  );
-
-}
-
-
-/* =========================================================
-   CONNECT
-   ========================================================= */
+let ws;
+let digits = [];
 
 function connect(){
+  const token = document.getElementById('token').value;
+  if(!token) return alert("Weka API Token kwanza!");
 
-  manualClose = false;
+  document.getElementById('statusText').innerText = "Connecting...";
 
+  ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
 
-  /*
-    Close old connection
-  */
-
-  if(socket){
-
-    try{
-
-      socket.close();
-
-    }catch(error){}
-
-  }
-
-
-  setStatus(
-    "CONNECTING...",
-    false
-  );
-
-
-  /*
-    Deriv WebSocket
-
-    App ID is inserted automatically.
-  */
-
-  const url =
-    "wss://ws.derivws.com/websockets/v3/" +
-    "?app_id=" +
-    encodeURIComponent(APP_ID);
-
-
-  socket =
-    new WebSocket(url);
-
-
-  /* ---------------------------------------------------------
-     OPEN
-     --------------------------------------------------------- */
-
-  socket.onopen = function(){
-
-    setStatus(
-      "LIVE • CONNECTED",
-      true
-    );
-
-
-    connectButton.textContent =
-      "RECONNECT LIVE";
-
-
-    /*
-      Reset old analysis
-    */
-
-    ticks = [];
-
-
-    lastDigitElement.textContent =
-      "-";
-
-
-    powerDigitElement.textContent =
-      "-";
-
-
-    updateAnalysis();
-
-    updateTickList();
-
-
-    /*
-      Subscribe
-    */
-
-    subscribe();
-
+  ws.onopen = () => {
+    ws.send(JSON.stringify({authorize: token}));
   };
 
+  ws.onmessage = (msg) => {
+    const data = JSON.parse(msg.data);
 
-  /* ---------------------------------------------------------
-     MESSAGE
-     --------------------------------------------------------- */
-
-  socket.onmessage =
-    function(event){
-
-      try{
-
-        const message =
-          JSON.parse(event.data);
-
-
-        /*
-          Deriv error
-        */
-
-        if(message.error){
-
-          setStatus(
-            "ERROR: " +
-            message.error.message,
-            false
-          );
-
-          return;
-
-        }
-
-
-        /*
-          Live tick
-        */
-
-        if(
-          message.msg_type === "tick" &&
-          message.tick
-        ){
-
-          addTick(
-            message.tick
-          );
-
-        }
-
-      }catch(error){
-
-        console.log(
-          "Message error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  /* ---------------------------------------------------------
-     ERROR
-     --------------------------------------------------------- */
-
-  socket.onerror =
-    function(){
-
-      setStatus(
-        "CONNECTION ERROR",
-        false
-      );
-
-    };
-
-
-  /* ---------------------------------------------------------
-     CLOSE
-     --------------------------------------------------------- */
-
-  socket.onclose =
-    function(){
-
-      setStatus(
-        "OFFLINE",
-        false
-      );
-
-
-      /*
-        Automatic reconnect
-      */
-
-      if(!manualClose){
-
-        clearTimeout(
-          reconnectTimer
-        );
-
-
-        reconnectTimer =
-          setTimeout(
-            connect,
-            4000
-          );
-
-      }
-
-    };
-
-}
-
-
-/* =========================================================
-   CHANGE MARKET
-   ========================================================= */
-
-marketSelect.addEventListener(
-  "change",
-  function(){
-
-    ticks = [];
-
-
-    lastDigitElement.textContent =
-      "-";
-
-
-    powerDigitElement.textContent =
-      "-";
-
-
-    updateAnalysis();
-
-    updateTickList();
-
-
-    if(
-      socket &&
-      socket.readyState === WebSocket.OPEN
-    ){
-
-      /*
-        Remove old tick subscriptions
-      */
-
-      try{
-
-        socket.send(
-          JSON.stringify({
-            forget_all:"ticks"
-          })
-        );
-
-      }catch(error){}
-
-
-      /*
-        Subscribe to new market
-      */
-
-      setTimeout(
-        subscribe,
-        150
-      );
-
+    if(data.error){
+      alert("Error: " + data.error.message);
+      return;
     }
 
-  }
-);
+    if(data.authorize){
+      document.getElementById('statusDot').classList.add('live');
+      document.getElementById('statusText').innerText = "LIVE CONNECTED";
+      // Subscribe ticks
+      ws.send(JSON.stringify({
+        ticks: document.getElementById('symbol').value,
+        subscribe: 1
+      }));
+    }
 
+    if(data.tick){
+      const digit = parseInt(data.tick.quote.toString().slice(-1));
+      digits.push(digit);
+      if(digits.length > 100) digits.shift(); // Weka 100 ticks tu
+      updateUI(digit);
+    }
+  };
 
-/* =========================================================
-   CHANGE ANALYSIS WINDOW
-   ========================================================= */
+  ws.onclose = () => {
+    document.getElementById('statusDot').classList.remove('live');
+    document.getElementById('statusText').innerText = "Disconnected";
+  };
+}
 
-windowSelect.addEventListener(
-  "change",
-  function(){
+function updateUI(lastDigit){
+  document.getElementById('lastDigit').innerText = lastDigit;
+  document.getElementById('tickCount').innerText = digits.length + "/100 ticks";
 
-    const max =
-      Number(
-        windowSelect.value
-      );
+  let freq = Array(10).fill(0);
+  digits.forEach(d => freq[d]++);
 
+  let grid = "";
+  let maxFreq = 0, powerDigit = 0;
 
-    ticks =
-      ticks.slice(-max);
-
-
-    updateAnalysis();
-
-    updateTickList();
-
-  }
-);
-
-
-/* =========================================================
-   CONNECT BUTTON
-   ========================================================= */
-
-connectButton.addEventListener(
-  "click",
-  function(){
-
-    connect();
-
-  }
-);
-
-
-/* =========================================================
-   INITIAL DISPLAY
-   ========================================================= */
-
-updateAnalysis();
-
-updateTickList();
-
-
-/* =========================================================
-   AUTO CONNECT
-   ========================================================= */
-
-connect();
-
-</script>
-
-</body>
-            </html>
+  for(let i=0;i<10;i++){
+    let percent = digits.length>0? ((freq[i]/digits.length)*100).toFixed(1) : 0;
+    if(freq[i] > maxFreq
