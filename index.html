@@ -1,383 +1,267 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>BY KA EUNY LIVE DERIV ANALYSIS</title>
 <style>
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:#020711;color:#fff;font-family:Arial,sans-serif}
-body{min-height:100vh;background:
-radial-gradient(circle at 50% -10%,#12304b 0,#061323 32%,#020711 70%)}
-.wrap{width:min(900px,100%);margin:auto;padding:14px 12px 45px}
-.card{background:rgba(3,12,24,.88);border:2px solid #08d5ff;border-radius:30px;padding:20px 14px;margin-bottom:16px;box-shadow:0 0 22px rgba(0,213,255,.12)}
-h1{text-align:center;font-size:30px;line-height:1.12;margin:0 0 12px}
-.sub{text-align:center;color:#86eaff;font-size:15px;line-height:1.5}
-.status{text-align:center;margin:22px 0;font-size:21px;font-weight:800}
-.status .led{display:inline-block;width:13px;height:13px;border-radius:50%;background:#18e86b;margin-right:9px;box-shadow:0 0 13px #18e86b}
-.status.off .led{background:#ff3c55;box-shadow:none}
-select,button{width:100%;height:58px;border-radius:20px;margin:6px 0;padding:0 16px;font-size:17px;font-weight:800}
-select{background:#071a29;color:#fff;border:2px solid #0b9fc9}
-button{border:2px solid #19cfff;background:#079ed5;color:#fff}
-button.stop{background:#a92342}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.grid2>*{min-width:0}
-.panelTitle{text-align:center;color:#91aac0;font-size:18px;margin-bottom:8px}
-.bigDigit{text-align:center;font-size:64px;font-weight:900;line-height:1.05;min-height:68px}
-.quote{text-align:center;color:#a1edff;font-size:17px;min-height:25px}
-.time{text-align:center;color:#728ba2;font-size:12px;margin:6px 0 16px}
-.digits{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
-.digit{background:#061a28;border:2px solid #123e55;border-radius:16px;text-align:center;padding:10px 3px}
-.digit.hot{border-color:#00dcff;box-shadow:0 0 12px rgba(0,220,255,.28)}
-.dn{font-size:28px;font-weight:900}.pct{font-size:12px;color:#a0b6c7;margin-top:4px}.ct{font-size:11px;color:#688399;margin-top:3px}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
-.stat{background:#061a28;border:1px solid #17475f;border-radius:15px;padding:11px}
-.stat b{display:block;font-size:17px}.stat span{font-size:11px;color:#7f98ac}
-.sectionTitle{text-align:center;font-size:19px;font-weight:900;margin:3px 0 14px}
-.analysisGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.aBox{background:#061a28;border:1px solid #17475f;border-radius:16px;padding:13px}
-.aBox b{font-size:18px}.aBox small{display:block;color:#7e98ad;margin-top:4px}
-.bar{height:7px;background:#102c3d;border-radius:8px;margin-top:9px;overflow:hidden}.bar i{display:block;height:100%;background:#08cfff;border-radius:8px}
-.selectorRow{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.mode{background:#061a28;border:1px solid #17475f;border-radius:15px;padding:11px;text-align:center}
-.mode.active{border-color:#08d5ff}
-.mode b{font-size:16px}.mode span{display:block;color:#8ba5b8;font-size:12px;margin-top:4px}
-.note{text-align:center;color:#718ba1;font-size:12px;line-height:1.5;margin-top:15px}
-@media(max-width:430px){h1{font-size:27px}.digits{gap:5px}.digit{padding:9px 1px}.dn{font-size:25px}.pct{font-size:11px}}
+*{box-sizing:border-box}body{margin:0;background:#020711;color:#fff;font-family:Arial,sans-serif}
+.wrap{max-width:900px;margin:auto;padding:14px 12px 40px}
+.card{background:#03101d;border:2px solid #08d5ff;border-radius:30px;padding:18px 14px;margin-bottom:16px}
+h1{text-align:center;font-size:29px;line-height:1.1;margin:2px 0 12px}.sub{text-align:center;color:#8deaff}
+.status{text-align:center;font-size:20px;font-weight:800;margin:20px 0}.led{display:inline-block;width:13px;height:13px;border-radius:50%;background:#19e86a;box-shadow:0 0 12px #19e86a;margin-right:8px}
+select,button{width:100%;height:58px;border-radius:20px;margin:5px 0;font-size:17px;font-weight:800;padding:0 15px}
+select{background:#071b2a;color:white;border:2px solid #0aaedb}button{background:#079fd7;color:white;border:2px solid #08d5ff}.stop{background:#a62443}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.title{text-align:center;color:#93abc0;font-size:18px}.big{text-align:center;font-size:65px;font-weight:900;min-height:70px}.quote{text-align:center;color:#9deeff;font-size:17px}.time{text-align:center;color:#728ba0;font-size:12px;margin:6px 0 15px}
+.digits{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.dig{background:#061b29;border:2px solid #123f56;border-radius:16px;text-align:center;padding:9px 2px}.hot{border-color:#08dcff;box-shadow:0 0 12px #08dcff44}.n{font-size:28px;font-weight:900}.p{font-size:12px;color:#a3b7c7}.c{font-size:10px;color:#688399}
+.stats,.analysis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.box{background:#061b29;border:1px solid #16465e;border-radius:16px;padding:12px}.box b{font-size:18px}.box small{display:block;color:#829bae;margin-top:5px}
+.note{text-align:center;color:#728a9e;font-size:12px;line-height:1.5;margin-top:13px}
 </style>
 </head>
 <body>
 <div class="wrap">
-
 <div class="card">
 <h1>BY KA EUNY LIVE DERIV<br>ANALYSIS</h1>
 <div class="sub">LIVE DIGITS • REAL-TIME TICKS • ALL VOLATILITY INDICES</div>
-<div id="status" class="status"><span class="led"></span><span id="statusText">LIVE</span></div>
-
-<select id="symbol">
-<option value="R_10">Volatility 10 Index</option>
-<option value="R_10_1s">Volatility 10 (1s)</option>
-<option value="R_25">Volatility 25 Index</option>
-<option value="R_25_1s">Volatility 25 (1s)</option>
-<option value="R_50">Volatility 50 Index</option>
-<option value="R_50_1s">Volatility 50 (1s)</option>
-<option value="R_75">Volatility 75 Index</option>
-<option value="R_75_1s">Volatility 75 (1s)</option>
-<option value="R_100">Volatility 100 Index</option>
-<option value="R_100_1s" selected>Volatility 100 (1s)</option>
-</select>
-
-<select id="sample">
-<option value="50">Last 50 ticks</option>
-<option value="100" selected>Last 100 ticks</option>
-<option value="200">Last 200 ticks</option>
-<option value="500">Last 500 ticks</option>
-</select>
-
-<div class="grid2">
-<button id="connect">CONNECT LIVE</button>
-<button id="stop" class="stop">STOP</button>
-</div>
+<div class="status"><span class="led"></span><span id="status">LIVE</span></div>
+<select id="symbol"><option>Loading volatility indices...</option></select>
+<select id="count"><option value="50">Last 50 ticks</option><option value="100" selected>Last 100 ticks</option><option value="200">Last 200 ticks</option><option value="500">Last 500 ticks</option></select>
+<div class="row"><button id="connect">CONNECT LIVE</button><button id="stop" class="stop">STOP</button></div>
 </div>
 
 <div class="card">
-<div id="panelTitle" class="panelTitle">Volatility 100 (1s)</div>
-<div id="lastDigit" class="bigDigit">--</div>
+<div id="name" class="title">Volatility Index</div>
+<div id="last" class="big">--</div>
 <div id="quote" class="quote">Waiting for live tick...</div>
-<div id="time" class="time">Live stream will appear here</div>
-
+<div id="clock" class="time">--</div>
 <div id="digits" class="digits"></div>
-
 <div class="stats">
-<div class="stat"><b id="ticks">0</b><span>Live ticks</span></div>
-<div class="stat"><b id="hot">--</b><span>Most frequent digit</span></div>
-<div class="stat"><b id="cold">--</b><span>Least frequent digit</span></div>
-<div class="stat"><b id="confidence">--</b><span>Frequency share</span></div>
+<div class="box"><b id="received">0</b><small>Live ticks</small></div>
+<div class="box"><b id="most">--</b><small>Most frequent digit</small></div>
+<div class="box"><b id="least">--</b><small>Least frequent digit</small></div>
+<div class="box"><b id="share">--</b><small>Frequency share</small></div>
 </div>
 </div>
 
 <div class="card">
-<div class="sectionTitle">DIGIT ANALYSIS</div>
-<div class="analysisGrid">
-<div class="aBox"><b id="over">--</b><small>OVER 5</small><div class="bar"><i id="overBar" style="width:0%"></i></div></div>
-<div class="aBox"><b id="under">--</b><small>UNDER 5</small><div class="bar"><i id="underBar" style="width:0%"></i></div></div>
-<div class="aBox"><b id="even">--</b><small>EVEN</small><div class="bar"><i id="evenBar" style="width:0%"></i></div></div>
-<div class="aBox"><b id="odd">--</b><small>ODD</small><div class="bar"><i id="oddBar" style="width:0%"></i></div></div>
+<div class="title"><b>DIGIT ANALYSIS</b></div>
+<div class="analysis">
+<div class="box"><b id="over">--</b><small>OVER 5</small></div>
+<div class="box"><b id="under">--</b><small>UNDER 5</small></div>
+<div class="box"><b id="even">--</b><small>EVEN</small></div>
+<div class="box"><b id="odd">--</b><small>ODD</small></div>
 </div>
 </div>
 
 <div class="card">
-<div class="sectionTitle">MOST POWERFUL DIGITS</div>
-<div id="power" class="selectorRow"></div>
-<div class="note">Frequency analysis only. It does not guarantee the next tick.</div>
+<div class="title"><b>MOST POWERFUL DIGITS</b></div>
+<div id="power" class="analysis"></div>
+<div class="note">This is statistical frequency analysis, not a guarantee of the next tick.</div>
 </div>
-
-<div class="card">
-<div class="sectionTitle">MATCH / DIFFER</div>
-<div id="matchDiff" class="analysisGrid"></div>
-</div>
-
 </div>
 
 <script>
-"use strict";
+const WS_URL="wss://ws.binaryws.com/websockets/v3";
+const wantedNames=[
+"Volatility 10 Index","Volatility 10 (1s)",
+"Volatility 25 Index","Volatility 25 (1s)",
+"Volatility 50 Index","Volatility 50 (1s)",
+"Volatility 75 Index","Volatility 75 (1s)",
+"Volatility 100 Index","Volatility 100 (1s)"
+];
 
-const APP_ID = "1089";
-const WS = "wss://ws.derivws.com/websockets/v3?app_id=" + APP_ID;
+let ws=null, stopped=false, timer=null, watch=null, list=[], meta={}, selected="", pip=null;
+let data=[], liveCount=0, sample=100, lastEpoch=0;
 
-const el = id => document.getElementById(id);
-let socket = null;
-let retryTimer = null;
-let watchTimer = null;
-let heartbeat = null;
-let running = false;
-let manualStop = false;
-let symbol = el("symbol").value;
-let sample = Number(el("sample").value);
-let digits = [];
-let totalLive = 0;
-let lastTickTime = 0;
-let pipSize = null;
+const $=x=>document.getElementById(x);
 
-function setStatus(text, online){
-  el("statusText").textContent = text;
-  el("status").classList.toggle("off", !online);
-}
+function setStatus(t){$("status").textContent=t}
+function send(x){if(ws&&ws.readyState===1)ws.send(JSON.stringify(x))}
 
-function digitFromQuote(quote, pip){
-  if(quote === null || quote === undefined) return null;
-  let n = Number(quote);
-  if(!Number.isFinite(n)) return null;
-  let p = Number(pip);
-  let s = Number.isInteger(p) && p >= 0 && p <= 10 ? n.toFixed(p) : String(quote);
-  if(/[eE]/.test(s)) s = n.toFixed(10);
-  let raw = s.replace(/\D/g,"");
-  return raw.length ? Number(raw[raw.length-1]) : null;
-}
+function openSocket(){
+ if(stopped)return;
+ if(ws){try{ws.close()}catch(e){}}
+ ws=new WebSocket(WS_URL);
 
-function quoteText(q,p){
-  let n = Number(q);
-  let ps = Number(p);
-  if(Number.isFinite(n) && Number.isInteger(ps) && ps >= 0 && ps <= 10) return n.toFixed(ps);
-  return String(q);
-}
+ ws.onopen=()=>{
+   setStatus("LIVE");
+   send({active_symbols:"brief",req_id:1});
+   if(selected) startSymbol();
+ };
 
-function reset(){
-  symbol = el("symbol").value;
-  sample = Number(el("sample").value);
-  digits = [];
-  totalLive = 0;
-  pipSize = null;
-  el("panelTitle").textContent = el("symbol").selectedOptions[0].textContent;
-  el("lastDigit").textContent = "--";
-  el("quote").textContent = "Waiting for live tick...";
-  el("time").textContent = "Live stream will appear here";
-  render();
-}
+ ws.onmessage=e=>{
+   let d;try{d=JSON.parse(e.data)}catch(_){return}
+   if(d.error){
+     console.error(d.error);
+     // Re-open silently; never show "RECONNECTING".
+     silentRetry();
+     return;
+   }
 
-function closeAll(){
-  if(retryTimer){clearTimeout(retryTimer);retryTimer=null}
-  if(watchTimer){clearTimeout(watchTimer);watchTimer=null}
-  if(heartbeat){clearInterval(heartbeat);heartbeat=null}
-  if(socket){
-    try{socket.onclose=null;socket.close()}catch(e){}
-    socket=null;
-  }
-}
+   if(d.msg_type==="active_symbols"){
+     buildSymbols(d.active_symbols||[]);
+     return;
+   }
 
-function connect(){
-  if(manualStop) return;
-  closeAll();
-  setStatus("LIVE", true);
+   if(d.msg_type==="history" && d.history){
+     if(d.pip_size!==undefined)pip=d.pip_size;
+     const prices=d.history.prices||[];
+     data=[];
+     prices.forEach(q=>{let x=getDigit(q,pip);if(x!==null)data.push(x)});
+     data=data.slice(-sample);
+     if(prices.length){
+       const q=prices[prices.length-1];
+       const x=getDigit(q,pip);
+       if(x!==null)$("last").textContent=x;
+       $("quote").textContent="Price: "+formatQuote(q,pip);
+     }
+     render();
+     return;
+   }
 
-  try{socket = new WebSocket(WS)}
-  catch(e){silentRetry();return}
+   if(d.msg_type==="tick" && d.tick){
+     if(d.tick.pip_size!==undefined)pip=d.tick.pip_size;
+     const x=getDigit(d.tick.quote,pip);
+     if(x===null)return;
+     data.push(x);if(data.length>sample)data.shift();
+     liveCount++;
+     lastEpoch=d.tick.epoch||Math.floor(Date.now()/1000);
+     $("last").textContent=x;
+     $("quote").textContent="Price: "+formatQuote(d.tick.quote,pip);
+     $("clock").textContent="LIVE TICK • "+new Date(lastEpoch*1000).toLocaleTimeString();
+     $("received").textContent=liveCount;
+     setStatus("LIVE");
+     render();
+   }
+ };
 
-  socket.onopen = () => {
-    if(manualStop) return;
-    setStatus("LIVE", true);
-
-    socket.send(JSON.stringify({
-      ticks_history:symbol,
-      count:sample,
-      end:"latest",
-      style:"ticks"
-    }));
-
-    socket.send(JSON.stringify({
-      ticks:symbol,
-      subscribe:1
-    }));
-
-    heartbeat = setInterval(()=>{
-      if(socket && socket.readyState === WebSocket.OPEN){
-        socket.send(JSON.stringify({ping:1}));
-      }
-    },20000);
-
-    watch();
-  };
-
-  socket.onmessage = ev => {
-    let d;
-    try{d=JSON.parse(ev.data)}catch(e){return}
-    if(d.error){silentRetry();return}
-
-    if(d.msg_type === "history" && d.history){
-      pipSize = d.history.pip_size;
-      const prices = d.history.prices || [];
-      digits = [];
-      prices.forEach(q=>{
-        const x=digitFromQuote(q,pipSize);
-        if(x!==null) digits.push(x);
-      });
-      digits = digits.slice(-sample);
-      render();
-      if(prices.length){
-        const q=prices[prices.length-1];
-        const x=digitFromQuote(q,pipSize);
-        if(x!==null) el("lastDigit").textContent=x;
-        el("quote").textContent="Price: "+quoteText(q,pipSize);
-      }
-      return;
-    }
-
-    if(d.msg_type === "tick" && d.tick){
-      pipSize = d.tick.pip_size;
-      const x=digitFromQuote(d.tick.quote,pipSize);
-      if(x===null)return;
-
-      digits.push(x);
-      if(digits.length>sample)digits.shift();
-      totalLive++;
-      lastTickTime=Date.now();
-
-      el("lastDigit").textContent=x;
-      el("quote").textContent="Price: "+quoteText(d.tick.quote,pipSize);
-      el("time").textContent="LIVE • "+new Date().toLocaleTimeString();
-      el("ticks").textContent=totalLive;
-      setStatus("LIVE",true);
-
-      render();
-      watch();
-    }
-  };
-
-  socket.onerror=()=>{};
-  socket.onclose=()=>{
-    if(!manualStop) silentRetry();
-  };
+ ws.onclose=()=>{if(!stopped)silentRetry()};
+ ws.onerror=()=>{};
 }
 
 function silentRetry(){
-  if(manualStop)return;
-  setStatus("LIVE",true);
-  if(retryTimer)clearTimeout(retryTimer);
-  retryTimer=setTimeout(connect,2500);
+ if(stopped)return;
+ clearTimeout(timer);
+ timer=setTimeout(openSocket,2000);
 }
 
-function watch(){
-  if(watchTimer)clearTimeout(watchTimer);
-  watchTimer=setTimeout(()=>{
-    if(manualStop)return;
-    // Reconnect silently; the UI never displays "RECONNECTING".
-    if(Date.now()-lastTickTime>12000 && lastTickTime!==0) connect();
-    else watch();
-  },12000);
+function buildSymbols(items){
+ const map={};
+ items.forEach(x=>{
+   const code=x.underlying_symbol||x.symbol;
+   const name=x.underlying_symbol_name||x.display_name||"";
+   if(code)map[name]=x;
+ });
+
+ list=[];
+ wantedNames.forEach(n=>{
+   if(map[n])list.push(map[n]);
+ });
+
+ // Fallback: find synthetic volatility names even if wording changes.
+ if(list.length<10){
+   const extra=items.filter(x=>{
+     const n=(x.underlying_symbol_name||x.display_name||"").toLowerCase();
+     return n.includes("volatility") && !list.some(y=>(y.underlying_symbol||y.symbol)===(x.underlying_symbol||x.symbol));
+   });
+   extra.forEach(x=>{if(list.length<20)list.push(x)});
+ }
+
+ const sel=$("symbol");
+ sel.innerHTML="";
+ list.forEach((x,i)=>{
+   const code=x.underlying_symbol||x.symbol;
+   const name=x.underlying_symbol_name||x.display_name||code;
+   meta[code]=x;
+   const o=document.createElement("option");
+   o.value=code;o.textContent=name;sel.appendChild(o);
+ });
+ if(!list.length){
+   sel.innerHTML='<option value="">No volatility symbols returned</option>';
+   return;
+ }
+ selected=sel.value;
+ $("name").textContent=sel.selectedOptions[0].textContent;
+ startSymbol();
+}
+
+function startSymbol(){
+ if(!selected)return;
+ const m=meta[selected]||{};
+ pip=m.pip_size;
+ data=[];liveCount=0;
+ $("received").textContent="0";$("last").textContent="--";
+ $("quote").textContent="Waiting for live tick...";
+ $("clock").textContent="Live stream active";
+ $("name").textContent=(m.underlying_symbol_name||m.display_name||selected);
+ render();
+
+ // Cancel any previous streams, then ask history and subscribe.
+ send({forget_all:"ticks",req_id:20});
+ send({ticks_history:selected,count:sample,end:"latest",style:"ticks",req_id:21});
+ send({ticks:selected,subscribe:1,req_id:22});
+}
+
+function getDigit(q,p){
+ if(q===undefined||q===null)return null;
+ const n=Number(q);if(!Number.isFinite(n))return null;
+ let ps=Number(p),s;
+ if(Number.isInteger(ps)&&ps>=0&&ps<=10)s=n.toFixed(ps);
+ else s=String(q);
+ if(/[eE]/.test(s))s=n.toFixed(10);
+ const raw=s.replace(/\D/g,"");
+ return raw.length?Number(raw[raw.length-1]):null;
+}
+
+function formatQuote(q,p){
+ const n=Number(q),ps=Number(p);
+ if(Number.isFinite(n)&&Number.isInteger(ps)&&ps>=0&&ps<=10)return n.toFixed(ps);
+ return String(q);
 }
 
 function render(){
-  const c=Array(10).fill(0);
-  digits.forEach(d=>{if(Number.isInteger(d))c[d]++});
-  const total=digits.length;
-
-  const max=Math.max(...c);
-  el("digits").innerHTML="";
-  for(let d=0;d<10;d++){
-    const pct=total?(c[d]/total*100):0;
-    const box=document.createElement("div");
-    box.className="digit"+(max>0&&c[d]===max?" hot":"");
-    box.innerHTML='<div class="dn">'+d+'</div><div class="pct">'+pct.toFixed(1)+'%</div><div class="ct">'+c[d]+' ticks</div>';
-    el("digits").appendChild(box);
-  }
-
-  if(!total){
-    ["hot","cold","confidence","over","under","even","odd"].forEach(x=>el(x).textContent="--");
-    ["overBar","underBar","evenBar","oddBar"].forEach(x=>el(x).style.width="0%");
-    renderPower(c,total);
-    renderMatchDiff(c,total);
-    return;
-  }
-
-  let sorted=[0,1,2,3,4,5,6,7,8,9].sort((a,b)=>c[b]-c[a]||a-b);
-  const hot=sorted[0],cold=sorted[9];
-  el("hot").textContent=hot+" ("+c[hot]+")";
-  el("cold").textContent=cold+" ("+c[cold]+")";
-  el("confidence").textContent=(c[hot]/total*100).toFixed(1)+"%";
-
-  const over=c.slice(6).reduce((a,b)=>a+b,0)/total*100;
-  const under=c.slice(0,5).reduce((a,b)=>a+b,0)/total*100;
-  const even=[0,2,4,6,8].reduce((a,d)=>a+c[d],0)/total*100;
-  const odd=100-even;
-
-  el("over").textContent=over.toFixed(1)+"%";
-  el("under").textContent=under.toFixed(1)+"%";
-  el("even").textContent=even.toFixed(1)+"%";
-  el("odd").textContent=odd.toFixed(1)+"%";
-  el("overBar").style.width=over+"%";
-  el("underBar").style.width=under+"%";
-  el("evenBar").style.width=even+"%";
-  el("oddBar").style.width=odd+"%";
-
-  renderPower(c,total);
-  renderMatchDiff(c,total);
+ const c=Array(10).fill(0);
+ data.forEach(d=>{if(Number.isInteger(d))c[d]++});
+ const total=data.length,max=Math.max(...c);
+ $("digits").innerHTML="";
+ for(let d=0;d<10;d++){
+   const pct=total?c[d]/total*100:0;
+   const a=document.createElement("div");
+   a.className="dig"+(total&&c[d]===max?" hot":"");
+   a.innerHTML='<div class="n">'+d+'</div><div class="p">'+pct.toFixed(1)+'%</div><div class="c">'+c[d]+' ticks</div>';
+   $("digits").appendChild(a);
+ }
+ if(!total){
+   ["most","least","share","over","under","even","odd"].forEach(id=>$(id).textContent="--");
+   $("power").innerHTML="";
+   return;
+ }
+ const order=[0,1,2,3,4,5,6,7,8,9].sort((a,b)=>c[b]-c[a]||a-b);
+ $("most").textContent=order[0]+" ("+c[order[0]]+")";
+ $("least").textContent=order[9]+" ("+c[order[9]]+")";
+ $("share").textContent=(c[order[0]]/total*100).toFixed(1)+"%";
+ const over=c[6]+c[7]+c[8]+c[9], under=c[0]+c[1]+c[2]+c[3]+c[4];
+ const even=c[0]+c[2]+c[4]+c[6]+c[8],odd=total-even;
+ $("over").textContent=(over/total*100).toFixed(1)+"%";
+ $("under").textContent=(under/total*100).toFixed(1)+"%";
+ $("even").textContent=(even/total*100).toFixed(1)+"%";
+ $("odd").textContent=(odd/total*100).toFixed(1)+"%";
+ $("power").innerHTML=order.slice(0,3).map((d,i)=>
+ '<div class="box"><b>#'+(i+1)+' Digit '+d+'</b><small>'+(c[d]/total*100).toFixed(1)+'% frequency</small></div>'
+ ).join("");
 }
 
-function renderPower(c,total){
-  const arr=[0,1,2,3,4,5,6,7,8,9].sort((a,b)=>c[b]-c[a]||a-b);
-  const top=arr.slice(0,3);
-  el("power").innerHTML=top.map((d,i)=>{
-    const pct=total?c[d]/total*100:0;
-    return '<div class="mode '+(i===0?'active':'')+'"><b>#'+(i+1)+' Digit '+d+'</b><span>'+pct.toFixed(1)+'% frequency</span></div>';
-  }).join("");
-}
-
-function renderMatchDiff(c,total){
-  const arr=[0,1,2,3,4,5,6,7,8,9].sort((a,b)=>c[b]-c[a]||a-b);
-  const top=arr.slice(0,5);
-  const bottom=arr.slice(-5).reverse();
-  el("matchDiff").innerHTML =
-    '<div class="aBox"><b>Match focus</b><small>Top digit: '+(total?top[0]:"--")+'</small></div>'+
-    '<div class="aBox"><b>Differ focus</b><small>Lowest digit: '+(total?bottom[0]:"--")+'</small></div>'+
-    '<div class="aBox"><b>Top 5</b><small>'+top.join(" • ")+'</small></div>'+
-    '<div class="aBox"><b>Bottom 5</b><small>'+bottom.join(" • ")+'</small></div>';
-}
-
-el("connect").onclick=()=>{
-  manualStop=false;
-  reset();
-  connect();
+$("symbol").onchange=()=>{
+ selected=$("symbol").value;
+ if(ws&&ws.readyState===1)startSymbol();
 };
+$("count").onchange=()=>{sample=Number($("count").value);data=data.slice(-sample);render()};
+$("connect").onclick=()=>{stopped=false;openSocket()};
+$("stop").onclick=()=>{stopped=true;clearTimeout(timer);clearTimeout(watch);if(ws)try{ws.close()}catch(e){}setStatus("STOPPED")};
 
-el("stop").onclick=()=>{
-  manualStop=true;
-  closeAll();
-  setStatus("STOPPED",false);
-};
-
-el("symbol").onchange=()=>{
-  if(!manualStop){reset();connect()}else reset();
-};
-
-el("sample").onchange=()=>{
-  sample=Number(el("sample").value);
-  digits=digits.slice(-sample);
-  render();
-};
-
-reset();
-manualStop=false;
-connect();
+render();
+openSocket();
 </script>
 </body>
 </html>
