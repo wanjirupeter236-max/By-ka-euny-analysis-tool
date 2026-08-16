@@ -1,128 +1,142 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>BY KA EUNY LIVE PRO BOT</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BY KA EUNY • DERIV LIVE DIGITS PRO</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;font-family:Arial,sans-serif;background:radial-gradient(circle at top,#07324a 0%,#020711 45%,#010409 100%);color:#fff}
-.container{width:96%;max-width:900px;margin:15px auto}
-.card{background:rgba(4,13,27,.95);border:2px solid #00d9ff;border-radius:20px;padding:18px;margin-bottom:15px;box-shadow:0 0 20px rgba(0,217,255,.15)}
-h1{text-align:center;font-size:22px;margin:5px 0;color:#00d9ff;text-shadow:0 0 10px #00d9ff}
-.subtitle{text-align:center;color:#8ed9eb;font-size:12px;margin-bottom:12px}
-.status{display:flex;justify-content:center;align-items:center;gap:8px;font-weight:bold;margin:8px 0;font-size:15px}
-.dot{width:12px;height:12px;border-radius:50%;background:#ff4757}.dot.live{background:#00ff88;box-shadow:0 0 10px #00ff88}
-select,input{background:#001a33;border:1px solid #00d9ff;color:#fff;padding:12px;border-radius:10px;width:100%;margin:6px 0;font-size:14px}
-.label{color:#8ed9eb;font-size:12px;margin-top:8px}
-.box{background:#000d1a;border:1px solid #00d9ff;border-radius:12px;padding:15px;text-align:center;margin:8px 0}
-.big-digit{font-size:50px;font-weight:bold;color:#00d9ff;text-shadow:0 0 15px #00d9ff;animation: pulse 0.5s}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
-.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.digit-box{background:#000d1a;border:1px solid #00d9ff;border-radius:8px;padding:8px;text-align:center;font-size:12px;transition:0.2s}
-.digit-box.active{border-color:#00ff88;box-shadow:0 0 10px #00ff88;background:#001a33;transform:scale(1.1)}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.stat-card{background:#000d1a;border:1px solid #00d9ff;border-radius:10px;padding:12px;text-align:center}
-.stat-card .title{font-size:11px;color:#8ed9eb}
-.stat-card .value{font-size:18px;font-weight:bold;color:#ffd700;margin-top:4px}
-.btn{background:linear-gradient(90deg,#00d9ff,#007bff);border:none;color:#000;padding:14px;border-radius:12px;width:100%;font-weight:bold;font-size:15px;cursor:pointer;margin-top:10px}
-.btn:hover{box-shadow:0 0 20px #00d9ff}
+*{box-sizing:border-box}body{margin:0;background:#020711;color:#fff;font-family:Arial,sans-serif}
+.wrap{max-width:900px;width:96%;margin:14px auto}.card{background:#061225;border:1px solid #00d9ff;border-radius:18px;padding:16px;margin-bottom:14px}
+h1{text-align:center;color:#00d9ff;font-size:21px;margin:3px 0}.sub{text-align:center;color:#8ed9eb;font-size:12px}
+.status{display:flex;justify-content:center;align-items:center;gap:8px;margin:12px 0;font-weight:bold}.dot{width:11px;height:11px;border-radius:50%;background:#ff4757}.dot.live{background:#00ff88;box-shadow:0 0 12px #00ff88}
+select,button{width:100%;padding:13px;border-radius:10px;font-size:14px}select{background:#001a33;color:#fff;border:1px solid #00d9ff;margin:9px 0}
+button{border:0;background:linear-gradient(90deg,#00d9ff,#007bff);font-weight:bold;cursor:pointer}button.stop{background:#d63031;color:#fff}
+.big{text-align:center;background:#000d1a;border:1px solid #00d9ff;border-radius:14px;padding:14px}.digit{font-size:62px;font-weight:bold;color:#00d9ff;text-shadow:0 0 16px #00d9ff;animation:pulse.4s}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+.quote{color:#8ed9eb;font-size:12px;margin-top:5px}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.d{background:#000d1a;border:1px solid #14506a;border-radius:9px;padding:10px;text-align:center;transition:.2s}.d.on{border-color:#00ff88;box-shadow:0 0 10px #00ff88;transform:scale(1.05)}.d b{display:block;color:#00d9ff;font-size:16px}.d span{font-size:12px;color:#8ed9eb}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#000d1a;border:1px solid #14506a;border-radius:10px;padding:10px;text-align:center}.stat small{color:#8ed9eb}.stat strong{display:block;color:#ffd700;font-size:18px;margin-top:4px}
+.log{font-size:11px;color:#8ed9eb;background:#000810;border-radius:8px;padding:8px;word-break:break-word}
 </style>
 </head>
 <body>
-<div class="container">
+<div class="wrap">
+<div class="card">
+<h1>👑 BY KA EUNY • DERIV LIVE DIGITS PRO</h1>
+<div class="sub">22 MARKETS • LIVE 100 TICKS ANALYSIS</div>
+<div class="status"><i class="dot" id="dot"></i><span id="status">Disconnected</span></div>
+</div>
 
-  <div class="card">
-    <h1>👑 BY KA EUNY LIVE PRO BOT 👑</h1>
-    <p class="subtitle">22 Markets | Live Digits Analysis</p>
-    <div class="status"><div class="dot" id="statusDot"></div><span id="statusText">Disconnected</span></div>
-  </div>
+<div class="card">
+<select id="symbol">
+<optgroup label="VOLATILITY"><option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75">Volatility 75</option><option value="R_100">Volatility 100</option></optgroup>
+<optgroup label="VOLATILITY 1s"><option value="1HZ10V">Vol 10 1s</option><option value="1HZ25V">Vol 25 1s</option><option value="1HZ50V">Vol 50 1s</option><option value="1HZ75V">Vol 75 1s</option><option value="1HZ100V">Vol 100 1s</option></optgroup>
+<optgroup label="CRASH/BOOM"><option value="CRASH300">Crash 300</option><option value="CRASH500">Crash 500</option><option value="CRASH1000">Crash 1000</option><option value="BOOM300">Boom 300</option><option value="BOOM500">Boom 500</option><option value="BOOM1000">Boom 1000</option></optgroup>
+<optgroup label="OTHER"><option value="STP">Step Index</option><option value="RDBULL">Bull Market</option><option value="RDBEAR">Bear Market</option></optgroup>
+</select>
+<button id="btn" onclick="toggle()">🔌 CONNECT LIVE TO DERIV</button>
+</div>
 
-  <div class="card">
-    <div class="label">API TOKEN - Tafuta kwa https://app.deriv.com/account/api-token</div>
-    <input id="token" type="password" placeholder="Weka API Token yako hapa">
-    <div class="label">SELECT MARKET</div>
-    <select id="symbol">
-      <optgroup label="VOLATILITY INDEX">
-        <option value="R_10">Volatility 10 Index</option>
-        <option value="R_25">Volatility 25 Index</option>
-        <option value="R_50">Volatility 50 Index</option>
-        <option value="R_75">Volatility 75 Index</option>
-        <option value="R_100">Volatility 100 Index</option>
-        <option value="1HZ10V">Volatility 10 1s</option>
-        <option value="1HZ25V">Volatility 25 1s</option>
-        <option value="1HZ50V">Volatility 50 1s</option>
-        <option value="1HZ75V">Volatility 75 1s</option>
-        <option value="1HZ100V">Volatility 100 1s</option>
-      </optgroup>
-      <optgroup label="CRASH/BOOM">
-        <option value="CRASH300">Crash 300</option>
-        <option value="CRASH500">Crash 500</option>
-        <option value="CRASH1000">Crash 1000</option>
-        <option value="BOOM300">Boom 300</option>
-        <option value="BOOM500">Boom 500</option>
-        <option value="BOOM1000">Boom 1000</option>
-      </optgroup>
-      <optgroup label="OTHER">
-        <option value="STP">Step Index</option>
-        <option value="RDBULL">Bull Market</option>
-        <option value="RDBEAR">Bear Market</option>
-      </optgroup>
-    </select>
-    <button class="btn" onclick="connect()">🔑 CONNECT LIVE</button>
-  </div>
+<div class="card">
+<div class="big">
+<div class="sub">LAST LIVE DIGIT</div>
+<div class="digit" id="last">-</div>
+<div class="quote" id="quote">Waiting for Deriv tick...</div>
+<div class="quote" id="time">—</div>
+</div>
+</div>
 
-  <div class="card">
-    <div class="box">
-      <div style="color:#8ed9eb">LAST LIVE DIGIT</div>
-      <div class="big-digit" id="lastDigit">-</div>
-    </div>
-  </div>
+<div class="card">
+<div class="sub">LIVE DIGIT FREQUENCY • LAST 100 TICKS</div>
+<div class="grid" id="grid"></div>
+</div>
 
-  <div class="card">
-    <div class="label">MOST POWERFUL ANALYSIS</div>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="title">POWER DIGIT</div><div class="value" id="powerDigit">-</div></div>
-      <div class="stat-card"><div class="title">EVEN</div><div class="value" id="evenPercent">0%</div></div>
-      <div class="stat-card"><div class="title">ODD</div><div class="value" id="oddPercent">0%</div></div>
-      <div class="stat-card"><div class="title">OVER 4</div><div class="value" id="overPercent">0%</div></div>
-      <div class="stat-card"><div class="title">UNDER 5</div><div class="value" id="underPercent">0%</div></div>
-      <div class="stat-card"><div class="title">MATCHES</div><div class="value" id="matchPercent">0%</div></div>
-    </div>
-  </div>
+<div class="card">
+<div class="stats">
+<div class="stat"><small>POWER DIGIT</small><strong id="power">-</strong></div>
+<div class="stat"><small>EVEN</small><strong id="even">0%</strong></div>
+<div class="stat"><small>ODD</small><strong id="odd">0%</strong></div>
+<div class="stat"><small>OVER 4</small><strong id="over">0%</strong></div>
+<div class="stat"><small>UNDER 5</small><strong id="under">0%</strong></div>
+<div class="stat"><small>MATCHES</small><strong id="match">0%</strong></div>
+</div>
+</div>
 
-  <div class="card">
-    <div class="label">DIGIT FREQUENCY 0-9 <span id="tickCount" style="float:right;color:#00ff88">0/100</span></div>
-    <div class="grid" id="frequencyGrid"></div>
-  </div>
-
+<div class="card"><div class="log" id="log">Connection log: waiting...</div></div>
 </div>
 
 <script>
-const APP_ID = "346Fu3sx0dtDikmKRP1S5"; // BADILISHA NA YAKO
-let ws;
-let digits = [];
+const APP_ID="346Fu3sx0dtDikmKRP1S5"; // WEKA APP ID YAKO HAPA
+const URL="wss://ws.derivws.com/websockets/v3?app_id="+encodeURIComponent(APP_ID);
+let ws=null,manual=false,timer=null,tries=0,digits=[];
+
+const $=x=>document.getElementById(x);
+
+for(let i=0;i<10;i++){
+  const e=document.createElement("div");e.className="d";e.id="d"+i;
+  e.innerHTML="<b>"+i+"</b><span id=\"c"+i+"\">0</span>";
+  $("grid").appendChild(e);
+}
+
+function log(x){$("log").textContent="Log: "+x}
+function setStatus(live,text){$("dot").classList.toggle("live",live);$("status").textContent=text}
+function reset(){
+  digits=[];$("last").textContent="-";$("quote").textContent="Waiting for Deriv tick...";
+  $("time").textContent="—";$("power").textContent="-";
+  $("even").textContent="0%";$("odd").textContent="0%";$("over").textContent="0%";$("under").textContent="0%";$("match").textContent="0%";
+  for(let i=0;i<10;i++){$("c"+i).textContent="0";$("d"+i).classList.remove("on")}
+}
+
+function getDigit(t){
+  const q=String(t.quote);
+  return Number(q.slice(-1));
+}
+
+function analyse(d){
+  digits.push(d);if(digits.length>100)digits.shift();
+  const c=Array(10).fill(0);digits.forEach(x=>c[x]++);
+  const max=Math.max(...c),power=c.indexOf(max),n=digits.length;
+  for(let i=0;i<10;i++){$("c"+i).textContent=c[i];$("d"+i).classList.toggle("on",i===d)}
+  $("last").style.animation='none';setTimeout(()=>$("last").style.animation='pulse.4s',10);
+  $("last").textContent=d;$("power").textContent=power;
+  const even=digits.filter(x=>x%2===0).length,over=digits.filter(x=>x>=5).length;
+  $("even").textContent=Math.round(even/n*100)+"%";$("odd").textContent=Math.round((n-even)/n*100)+"%";
+  $("over").textContent=Math.round(over/n*100)+"%";$("under").textContent=Math.round((n-over)/n*100)+"%";
+  if(n>1){let matches=0;for(let i=1;i<n;i++){if(digits[i]==digits[i-1])matches++}$("match").textContent=Math.round(matches/(n-1)*100)+"%"}
+}
+
+function subscribe(){
+  if(!ws||ws.readyState!==WebSocket.OPEN)return;
+  const symbol=$("symbol").value;
+  ws.send(JSON.stringify({forget_all:"ticks"}));
+  ws.send(JSON.stringify({ticks:symbol,subscribe:1}));
+  log("Subscribed to "+symbol);
+}
 
 function connect(){
-  const token = document.getElementById('token').value.trim();
-  if(!token) return alert("Weka API Token kwanza!");
+  manual=false;clearTimeout(timer);reset();
+  if(ws)try{ws.close()}catch(e){}
+  $("btn").textContent="⏹ STOP LIVE";setStatus(false,"Connecting...");
+  ws=new WebSocket(URL);
 
-  document.getElementById('statusText').innerText = "Connecting...";
-  ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
-
-  ws.onopen = () => {
-    ws.send(JSON.stringify({authorize: token}));
-  };
-
-  ws.onmessage = (msg) => {
-    const data = JSON.parse(msg.data);
-    console.log(data);
-    
-    if(data.error){ 
-      alert("Error: " + data.error.message + "\nAngalia App ID na Token"); 
-      return; 
+  ws.onopen=()=>{tries=0;setStatus(true,"Connected");subscribe();};
+  ws.onmessage=e=>{
+    let data;try{data=JSON.parse(e.data)}catch(_){return}
+    if(data.error){setStatus(false,"Error");log(data.error.message);return}
+    if(data.tick){
+      const t=data.tick,d=getDigit(t);
+      analyse(d);
+      $("quote").textContent="Quote: "+t.quote+" | Digit: "+d;
+      $("time").textContent=new Date(t.epoch*1000).toLocaleTimeString();
+      setStatus(true,"LIVE: "+t.symbol);
     }
-
-    if(data.authorize){
-      document.getElementById('statusDot').classList.add('live');
-      document.getElementById('statusText').inner
+  };
+  ws.onclose=()=>{ws=null;if(manual){setStatus(false,"Disconnected");$("btn").textContent="🔌 CONNECT LIVE TO DERIV";return}
+    setStatus(false,"Reconnecting...");tries=Math.min(tries+1,6);timer=setTimeout(connect,Math.min(1000*2**(tries-1),10000));};
+}
+function disconnect(){manual=true;clearTimeout(timer);if(ws)ws.close();ws=null;setStatus(false,"Disconnected");$("btn").textContent="🔌 CONNECT LIVE TO DERIV";log("Stopped");}
+function toggle(){if(ws&&(ws.readyState===0||ws.readyState===1))disconnect();else connect()}
+$("symbol").onchange=()=>{reset();if(ws&&ws.readyState===1)subscribe()}
+</script>
+</body>
+</html>
