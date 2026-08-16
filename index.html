@@ -139,4 +139,10 @@ function updateUI(lastDigit){
 
   for(let i=0;i<10;i++){
     let percent = digits.length>0? ((freq[i]/digits.length)*100).toFixed(1) : 0;
-    if(freq[i] > maxFreq
+    if(freq[i] > maxFreq<!-- MANIFEST YA APP -->
+<link rel="manifest" href="manifest.json">
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js');
+}
+</script>
