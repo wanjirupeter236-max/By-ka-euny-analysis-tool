@@ -1,58 +1,278 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>Deriv API Example</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BY KA EUNY LIVE DERIV ANALYSIS</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#07111f;color:#fff;font-family:Arial,sans-serif}
+.wrap{max-width:1050px;margin:auto;padding:14px}
+h1{text-align:center;font-size:24px;margin:12px 0 18px}
+.panel{background:#0d1b2d;border:2px solid #203c5d;border-radius:18px;padding:16px;margin:14px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+select,button{min-height:48px;padding:10px 14px;border-radius:11px;border:2px solid #315579;background:#132a45;color:#fff;font-size:16px}
+button{font-weight:800}
+.status{padding:11px 15px;border-radius:22px;background:#70252f;font-weight:800}
+.status.live{background:#12623d}
+.status.connect{background:#725b20}
+.big{text-align:center;font-size:70px;font-weight:900;margin:8px}
+.small{text-align:center;color:#a9bdd5;font-size:16px}
+.error{color:#ff9b9b;margin-top:10px;line-height:1.45}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.card{background:#122942;padding:11px;border-radius:12px;text-align:center}
+.card b{display:block;font-size:26px;margin:4px}
+.bar{height:8px;background:#253e5b;border-radius:10px;overflow:hidden}
+.fill{height:100%;width:0;background:#37d98b}
+.history{display:flex;gap:5px;flex-wrap:wrap}
+.d{width:30px;height:30px;border-radius:7px;background:#1c3857;display:flex;align-items:center;justify-content:center;font-weight:800}
+.note{color:#9db3cc;font-size:13px;line-height:1.5}
+@media(max-width:650px){.grid{grid-template-columns:repeat(2,1fr)}h1{font-size:22px}}
+</style>
 </head>
 <body>
-    <h1>Deriv API WebSocket Example</h1>
-    <div id="status">Connecting...</div>
-    <div id="output"></div>
+<div class="wrap">
+<h1>BY KA EUNY LIVE DERIV ANALYSIS</h1>
 
-    <script>
-        const ws = new WebSocket('wss://ws.binaryws.com/websockets/v3');
-        const statusDiv = document.getElementById('status');
-        const outputDiv = document.getElementById('output');
+<div class="panel">
+<div class="row">
+<select id="symbol">
+<option value="1HZ10V">Volatility 10 (1s)</option>
+<option value="1HZ25V">Volatility 25 (1s)</option>
+<option value="1HZ50V">Volatility 50 (1s)</option>
+<option value="1HZ75V">Volatility 75 (1s)</option>
+<option value="1HZ100V">Volatility 100 (1s)</option>
+<option value="R_10">Volatility 10</option>
+<option value="R_25">Volatility 25</option>
+<option value="R_50">Volatility 50</option>
+<option value="R_75">Volatility 75</option>
+<option value="R_100">Volatility 100</option>
+</select>
+<button id="start">START LIVE</button>
+<button id="stop">STOP</button>
+<span id="status" class="status">OFFLINE</span>
+</div>
+<div id="error" class="error"></div>
+</div>
 
-        ws.onopen = () => {
-            statusDiv.textContent = 'Connected';
-            
-            // Get active symbols (no auth required)
-            ws.send(JSON.stringify({
-                active_symbols: 'brief',
-                product_type: 'basic',
-                req_id: 1
-            }));
-            
-            // Subscribe to tick stream
-            ws.send(JSON.stringify({
-                ticks: '1HZ100V',
-                subscribe: 1,
-                req_id: 2
-            }));
-        };
+<div class="panel">
+<div id="digit" class="big">-</div>
+<div id="quote" class="small">Waiting for live tick...</div>
+<div id="time" class="small">-</div>
+</div>
 
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            
-            if (data.msg_type === 'active_symbols') {
-                outputDiv.innerHTML += '<h3>Active Symbols:</h3>';
-                data.active_symbols.forEach(symbol => {
-                    outputDiv.innerHTML += `<p>${symbol.display_name} (${symbol.symbol})</p>`;
-                });
-            }
-            
-            if (data.msg_type === 'tick') {
-                outputDiv.innerHTML += `<p>Tick: ${data.tick.quote} at ${new Date(data.tick.epoch * 1000).toLocaleTimeString()}</p>`;
-            }
-        };
+<div class="panel">
+<h2>Digits 0–9</h2>
+<div id="grid" class="grid"></div>
+</div>
 
-        ws.onerror = (error) => {
-            statusDiv.textContent = 'Error: ' + error.message;
-        };
+<div class="panel">
+<h2>Most Powerful Digit</h2>
+<div id="power" class="big">-</div>
+<div id="powerText" class="small">Waiting for live data...</div>
+</div>
 
-        ws.onclose = () => {
-            statusDiv.textContent = 'Disconnected';
-        };
-    </script>
+<div class="panel">
+<h2>Recent Digits</h2>
+<div id="history" class="history"></div>
+</div>
+
+<div class="panel">
+<div class="note">
+This page reads public Deriv market ticks only. No account password or trading token is required.
+The app silently tries the current public market-data WebSocket first and the legacy public endpoint as a fallback.
+</div>
+</div>
+</div>
+
+<script>
+const ENDPOINTS=[
+  "wss://api.derivws.com/trading/v1/options/ws/public",
+  "wss://ws.binaryws.com/websockets/v3"
+];
+
+let ws=null,running=false,endpointIndex=0,connectTimer=null,pingTimer=null;
+let counts=Array(10).fill(0),history=[],connectedEndpoint="";
+
+const $=id=>document.getElementById(id);
+
+for(let i=0;i<10;i++){
+  $("grid").insertAdjacentHTML("beforeend",
+    `<div class="card">
+      <div>Digit ${i}</div>
+      <b id="c${i}">0</b>
+      <div id="p${i}">0.00%</div>
+      <div class="bar"><div id="b${i}" class="fill"></div></div>
+    </div>`);
+}
+
+function setStatus(text,type=""){
+  $("status").textContent=text;
+  $("status").className="status "+type;
+}
+function showError(text){$("error").textContent=text||""}
+
+function resetStats(){
+  counts=Array(10).fill(0);history=[];
+  $("digit").textContent="-";
+  $("quote").textContent="Waiting for live tick...";
+  $("time").textContent="-";
+  $("history").innerHTML="";
+  $("power").textContent="-";
+  $("powerText").textContent="Waiting for live data...";
+  for(let i=0;i<10;i++){
+    $("c"+i).textContent="0";
+    $("p"+i).textContent="0.00%";
+    $("b"+i).style.width="0%";
+  }
+}
+
+function getDigit(quote,pip){
+  let decimals;
+  if(Number.isFinite(Number(pip)) && Number(pip)>0){
+    const p=String(pip);
+    decimals=p.includes(".")?p.split(".")[1].length:0;
+  }else{
+    const s=String(quote);
+    decimals=s.includes(".")?s.split(".")[1].length:0;
+  }
+  const formatted=Number(quote).toFixed(Math.min(10,Math.max(0,decimals)));
+  const onlyDigits=formatted.replace(/\D/g,"");
+  return Number(onlyDigits.slice(-1));
+}
+
+function addTick(tick){
+  const q=Number(tick.quote);
+  if(!Number.isFinite(q))return;
+  const d=getDigit(q,tick.pip_size);
+
+  $("digit").textContent=d;
+  $("quote").textContent="Quote: "+q;
+  $("time").textContent=new Date(Number(tick.epoch)*1000).toLocaleTimeString();
+
+  counts[d]++;
+  history.unshift(d);
+  if(history.length>80)history.pop();
+
+  const total=counts.reduce((a,b)=>a+b,0);
+  for(let i=0;i<10;i++){
+    const pct=total?(counts[i]/total)*100:0;
+    $("c"+i).textContent=counts[i];
+    $("p"+i).textContent=pct.toFixed(2)+"%";
+    $("b"+i).style.width=pct+"%";
+  }
+
+  $("history").innerHTML=history.map(x=>`<span class="d">${x}</span>`).join("");
+
+  const max=Math.max(...counts);
+  const winners=[];
+  counts.forEach((v,i)=>{if(v===max)winners.push(i)});
+  $("power").textContent=winners.join(" / ");
+  $("powerText").textContent=`Highest observed frequency: ${max} tick(s) out of ${total}`;
+}
+
+function startPing(){
+  clearInterval(pingTimer);
+  pingTimer=setInterval(()=>{
+    if(ws && ws.readyState===WebSocket.OPEN){
+      try{ws.send(JSON.stringify({ping:1}))}catch(e){}
+    }
+  },30000);
+}
+
+function stopPing(){clearInterval(pingTimer);pingTimer=null}
+
+function subscribe(){
+  if(!ws || ws.readyState!==WebSocket.OPEN)return;
+  ws.send(JSON.stringify({
+    ticks:$("symbol").value,
+    subscribe:1
+  }));
+}
+
+function openSocket(index){
+  if(!running)return;
+
+  endpointIndex=index;
+  setStatus("CONNECTING","connect");
+  showError("");
+
+  try{
+    ws=new WebSocket(ENDPOINTS[index]);
+  }catch(e){
+    tryNext("Browser could not create the WebSocket.");
+    return;
+  }
+
+  ws.onopen=()=>{
+    if(!running)return;
+    connectedEndpoint=ENDPOINTS[index];
+    setStatus("LIVE","live");
+    showError("");
+    startPing();
+    subscribe();
+  };
+
+  ws.onmessage=(event)=>{
+    let data;
+    try{data=JSON.parse(event.data)}catch(e){return}
+
+    if(data.error){
+      showError("Deriv API error: "+(data.error.message||"Unknown API error"));
+      return;
+    }
+
+    if(data.msg_type==="tick" && data.tick){
+      addTick(data.tick);
+    }
+  };
+
+  ws.onerror=()=>{
+    if(running){
+      showError("This network/browser blocked the current WebSocket endpoint. Trying the other public Deriv endpoint...");
+    }
+  };
+
+  ws.onclose=()=>{
+    stopPing();
+    if(!running)return;
+
+    if(endpointIndex<ENDPOINTS.length-1){
+      clearTimeout(connectTimer);
+      connectTimer=setTimeout(()=>openSocket(endpointIndex+1),500);
+    }else{
+      setStatus("OFFLINE");
+      showError("WebSocket could not connect from this browser/network. Try Chrome mobile data or another network, then press START LIVE.");
+    }
+  };
+}
+
+function start(){
+  running=true;
+  resetStats();
+  clearTimeout(connectTimer);
+  if(ws){try{ws.close()}catch(e){}}
+  openSocket(0);
+}
+
+function stop(){
+  running=false;
+  clearTimeout(connectTimer);
+  stopPing();
+  if(ws){try{ws.close()}catch(e){}}
+  ws=null;
+  setStatus("OFFLINE");
+}
+
+$("start").onclick=start;
+$("stop").onclick=stop;
+$("symbol").onchange=()=>{
+  if(running){
+    if(ws && ws.readyState===WebSocket.OPEN)subscribe();
+    else start();
+  }
+};
+window.addEventListener("beforeunload",stop);
+</script>
 </body>
 </html>
