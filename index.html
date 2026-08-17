@@ -1,278 +1,591 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>BY KA EUNY LIVE DERIV ANALYSIS</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BY KA EUNY LIVE DERIV DIGITS ANALYSIS</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#07111f;color:#fff;font-family:Arial,sans-serif}
-.wrap{max-width:1050px;margin:auto;padding:14px}
-h1{text-align:center;font-size:24px;margin:12px 0 18px}
-.panel{background:#0d1b2d;border:2px solid #203c5d;border-radius:18px;padding:16px;margin:14px 0}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-select,button{min-height:48px;padding:10px 14px;border-radius:11px;border:2px solid #315579;background:#132a45;color:#fff;font-size:16px}
-button{font-weight:800}
-.status{padding:11px 15px;border-radius:22px;background:#70252f;font-weight:800}
-.status.live{background:#12623d}
-.status.connect{background:#725b20}
-.big{text-align:center;font-size:70px;font-weight:900;margin:8px}
-.small{text-align:center;color:#a9bdd5;font-size:16px}
-.error{color:#ff9b9b;margin-top:10px;line-height:1.45}
-.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
-.card{background:#122942;padding:11px;border-radius:12px;text-align:center}
-.card b{display:block;font-size:26px;margin:4px}
-.bar{height:8px;background:#253e5b;border-radius:10px;overflow:hidden}
-.fill{height:100%;width:0;background:#37d98b}
-.history{display:flex;gap:5px;flex-wrap:wrap}
-.d{width:30px;height:30px;border-radius:7px;background:#1c3857;display:flex;align-items:center;justify-content:center;font-weight:800}
-.note{color:#9db3cc;font-size:13px;line-height:1.5}
-@media(max-width:650px){.grid{grid-template-columns:repeat(2,1fr)}h1{font-size:22px}}
+body{
+  margin:0;font-family:Arial,Helvetica,sans-serif;
+  background:radial-gradient(circle at top,#172554 0,#07111f 42%,#030712 100%);
+  color:#fff;min-height:100vh
+}
+.wrap{max-width:1200px;margin:auto;padding:16px}
+header{
+  background:rgba(15,23,42,.92);border:1px solid #26354d;border-radius:18px;
+  padding:18px;box-shadow:0 10px 35px rgba(0,0,0,.35)
+}
+h1{margin:0 0 6px;font-size:24px}
+.sub{color:#9fb0c8;font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+select,button{
+  border:1px solid #334155;border-radius:10px;padding:11px 13px;
+  background:#0f172a;color:#fff;font-weight:700
+}
+button{cursor:pointer;background:#2563eb;border-color:#3b82f6}
+button:hover{filter:brightness(1.12)}
+button.secondary{background:#1e293b}
+.status{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;
+  background:#111827;border:1px solid #334155;font-size:13px
+}
+.dot{width:9px;height:9px;border-radius:50%;background:#ef4444}
+.dot.live{background:#22c55e;box-shadow:0 0 12px #22c55e}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.card{
+  background:rgba(15,23,42,.9);border:1px solid #26354d;border-radius:16px;padding:15px;
+  box-shadow:0 8px 25px rgba(0,0,0,.22)
+}
+.label{font-size:12px;color:#8fa2bd;text-transform:uppercase;letter-spacing:.6px}
+.big{font-size:34px;font-weight:900;margin-top:5px}
+.tick{font-size:18px;font-weight:800;word-break:break-all}
+.good{color:#4ade80}.warn{color:#facc15}.bad{color:#fb7185}
+.section-title{font-size:18px;font-weight:900;margin:20px 0 10px}
+.digits{display:grid;grid-template-columns:repeat(10,1fr);gap:8px}
+.digit{
+  text-align:center;padding:13px 5px;border-radius:12px;background:#0b1324;
+  border:1px solid #26354d
+}
+.digit .n{font-size:22px;font-weight:900}
+.digit .p{font-size:12px;color:#93a4bd;margin-top:5px}
+.power{border-color:#facc15;box-shadow:0 0 16px rgba(250,204,21,.18)}
+table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:12px}
+th,td{padding:10px;border-bottom:1px solid #26354d;text-align:left;font-size:13px}
+th{color:#9fb0c8;background:#0b1324}
+td:last-child{text-align:right;font-weight:900}
+.bar{
+  height:8px;background:#172033;border-radius:99px;overflow:hidden;margin-top:6px
+}
+.bar span{display:block;height:100%;background:#38bdf8;width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.note{
+  margin-top:14px;padding:12px;border:1px solid #334155;border-radius:12px;
+  color:#aebdd0;font-size:12px;line-height:1.5;background:#0b1324
+}
+footer{text-align:center;color:#64748b;font-size:11px;padding:20px}
+@media(max-width:850px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .digits{grid-template-columns:repeat(5,1fr)}
+  .two{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .grid{grid-template-columns:1fr 1fr}
+  .big{font-size:28px}
+  select,button{width:100%}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-<h1>BY KA EUNY LIVE DERIV ANALYSIS</h1>
+<header>
+  <h1>BY KA EUNY LIVE DERIV DIGITS ANALYSIS</h1>
+  <div class="sub">Live tick stream • Digits 0–9 • Over/Under • Even/Odd • Percentage analysis</div>
 
-<div class="panel">
-<div class="row">
-<select id="symbol">
-<option value="1HZ10V">Volatility 10 (1s)</option>
-<option value="1HZ25V">Volatility 25 (1s)</option>
-<option value="1HZ50V">Volatility 50 (1s)</option>
-<option value="1HZ75V">Volatility 75 (1s)</option>
-<option value="1HZ100V">Volatility 100 (1s)</option>
-<option value="R_10">Volatility 10</option>
-<option value="R_25">Volatility 25</option>
-<option value="R_50">Volatility 50</option>
-<option value="R_75">Volatility 75</option>
-<option value="R_100">Volatility 100</option>
-</select>
-<button id="start">START LIVE</button>
-<button id="stop">STOP</button>
-<span id="status" class="status">OFFLINE</span>
-</div>
-<div id="error" class="error"></div>
-</div>
+  <div class="row">
+    <select id="symbolSelect" aria-label="Volatility Index">
+      <option value="">Loading Volatility Indices...</option>
+    </select>
+    <button id="connectBtn">CONNECT LIVE</button>
+    <button id="stopBtn" class="secondary">STOP</button>
+    <span class="status"><span id="dot" class="dot"></span><span id="status">Offline</span></span>
+  </div>
+  <div class="sub" style="margin-top:9px">
+    Volatility list is loaded dynamically from Deriv <code>active_symbols</code>, so newly added indices can appear without changing this file.
+  </div>
+  </div>
+</header>
 
-<div class="panel">
-<div id="digit" class="big">-</div>
-<div id="quote" class="small">Waiting for live tick...</div>
-<div id="time" class="small">-</div>
+<div class="grid">
+  <div class="card"><div class="label">Selected Index</div><div id="market" class="tick">—</div></div>
+  <div class="card"><div class="label">Last Digit</div><div id="lastDigit" class="big">—</div></div>
+  <div class="card"><div class="label">Live Quote</div><div id="quote" class="tick">—</div></div>
+  <div class="card"><div class="label">Ticks Analysed</div><div id="count" class="big">0</div></div>
 </div>
 
-<div class="panel">
-<h2>Digits 0–9</h2>
-<div id="grid" class="grid"></div>
+<div class="card" style="margin-top:14px">
+  <div class="label">Most Powerful Digit — Highest Frequency</div>
+  <div id="powerDigit" class="big">—</div>
+  <div id="powerText" class="sub">Waiting for live tick data...</div>
 </div>
 
-<div class="panel">
-<h2>Most Powerful Digit</h2>
-<div id="power" class="big">-</div>
-<div id="powerText" class="small">Waiting for live data...</div>
+<div class="section-title">DIGITS 0–9 LIVE PERCENTAGE</div>
+<div id="digits" class="digits"></div>
+
+<div class="two">
+  <div>
+    <div class="section-title">OVER</div>
+    <div class="card">
+      <table>
+        <thead><tr><th>Contract</th><th>Meaning</th><th>Live %</th></tr></thead>
+        <tbody id="overTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-title">UNDER</div>
+    <div class="card">
+      <table>
+        <thead><tr><th>Contract</th><th>Meaning</th><th>Live %</th></tr></thead>
+        <tbody id="underTable"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<div class="panel">
-<h2>Recent Digits</h2>
-<div id="history" class="history"></div>
+<div class="section-title">EVEN / ODD</div>
+<div class="grid">
+  <div class="card">
+    <div class="label">Even</div>
+    <div id="evenPct" class="big">0%</div>
+    <div class="bar"><span id="evenBar"></span></div>
+  </div>
+  <div class="card">
+    <div class="label">Odd</div>
+    <div id="oddPct" class="big">0%</div>
+    <div class="bar"><span id="oddBar"></span></div>
+  </div>
+  <div class="card">
+    <div class="label">Last Tick Time</div>
+    <div id="tickTime" class="tick">—</div>
+  </div>
+  <div class="card">
+    <div class="label">Data Source</div>
+    <div class="tick">Deriv WebSocket</div>
+  </div>
 </div>
 
-<div class="panel">
 <div class="note">
-This page reads public Deriv market ticks only. No account password or trading token is required.
-The app silently tries the current public market-data WebSocket first and the legacy public endpoint as a fallback.
+  <b>How the percentages work:</b> the tool counts the digits received from the live tick stream
+  and calculates the percentage from that sample. “Over N” means digit &gt; N and “Under N” means
+  digit &lt; N. Even means 0,2,4,6,8 and Odd means 1,3,5,7,9.
+  The “Most Powerful Digit” is only the most frequent digit in the current sample; it is not a guarantee
+  of the next tick or of a winning trade.
 </div>
-</div>
+
+<footer>BY KA EUNY • Live market-data monitor</footer>
 </div>
 
 <script>
-const ENDPOINTS=[
-  "wss://api.derivws.com/trading/v1/options/ws/public",
-  "wss://ws.binaryws.com/websockets/v3"
-];
+"use strict";
 
-let ws=null,running=false,endpointIndex=0,connectTimer=null,pingTimer=null;
-let counts=Array(10).fill(0),history=[],connectedEndpoint="";
+/*
+  Public Deriv market-data WebSocket.
+  No Deriv login/token is required for public tick data.
+  The page intentionally does NOT auto-reconnect.
+*/
+const WS_URL = "wss://ws.binaryws.com/websockets/v3";
 
-const $=id=>document.getElementById(id);
+let ws = null;
+let activeSubscriptionId = null;
+let symbols = [];
+let currentSymbol = "";
+let pipSize = null;
+let counts = Array(10).fill(0);
+let total = 0;
+let lastQuote = null;
 
-for(let i=0;i<10;i++){
-  $("grid").insertAdjacentHTML("beforeend",
-    `<div class="card">
-      <div>Digit ${i}</div>
-      <b id="c${i}">0</b>
-      <div id="p${i}">0.00%</div>
-      <div class="bar"><div id="b${i}" class="fill"></div></div>
-    </div>`);
+const $ = id => document.getElementById(id);
+
+function setStatus(text, live=false){
+  $("status").textContent = text;
+  $("dot").classList.toggle("live", live);
 }
-
-function setStatus(text,type=""){
-  $("status").textContent=text;
-  $("status").className="status "+type;
-}
-function showError(text){$("error").textContent=text||""}
 
 function resetStats(){
-  counts=Array(10).fill(0);history=[];
-  $("digit").textContent="-";
-  $("quote").textContent="Waiting for live tick...";
-  $("time").textContent="-";
-  $("history").innerHTML="";
-  $("power").textContent="-";
-  $("powerText").textContent="Waiting for live data...";
-  for(let i=0;i<10;i++){
-    $("c"+i).textContent="0";
-    $("p"+i).textContent="0.00%";
-    $("b"+i).style.width="0%";
-  }
+  counts = Array(10).fill(0);
+  total = 0;
+  lastQuote = null;
+  renderAll();
 }
 
-function getDigit(quote,pip){
-  let decimals;
-  if(Number.isFinite(Number(pip)) && Number(pip)>0){
-    const p=String(pip);
-    decimals=p.includes(".")?p.split(".")[1].length:0;
-  }else{
-    const s=String(quote);
-    decimals=s.includes(".")?s.split(".")[1].length:0;
+function decimalsFromPip(pip){
+  if(!Number.isFinite(pip) || pip <= 0) return null;
+  const s = String(pip);
+  if(s.includes("e-")){
+    const parts = s.split("e-");
+    return parseInt(parts[1],10);
   }
-  const formatted=Number(quote).toFixed(Math.min(10,Math.max(0,decimals)));
-  const onlyDigits=formatted.replace(/\D/g,"");
-  return Number(onlyDigits.slice(-1));
+  const i = s.indexOf(".");
+  return i < 0 ? 0 : s.length - i - 1;
 }
 
-function addTick(tick){
-  const q=Number(tick.quote);
-  if(!Number.isFinite(q))return;
-  const d=getDigit(q,tick.pip_size);
+function getLastDigit(quote){
+  const q = Number(quote);
+  if(!Number.isFinite(q)) return null;
 
-  $("digit").textContent=d;
-  $("quote").textContent="Quote: "+q;
-  $("time").textContent=new Date(Number(tick.epoch)*1000).toLocaleTimeString();
+  let decimals = decimalsFromPip(pipSize);
 
-  counts[d]++;
-  history.unshift(d);
-  if(history.length>80)history.pop();
-
-  const total=counts.reduce((a,b)=>a+b,0);
-  for(let i=0;i<10;i++){
-    const pct=total?(counts[i]/total)*100:0;
-    $("c"+i).textContent=counts[i];
-    $("p"+i).textContent=pct.toFixed(2)+"%";
-    $("b"+i).style.width=pct+"%";
-  }
-
-  $("history").innerHTML=history.map(x=>`<span class="d">${x}</span>`).join("");
-
-  const max=Math.max(...counts);
-  const winners=[];
-  counts.forEach((v,i)=>{if(v===max)winners.push(i)});
-  $("power").textContent=winners.join(" / ");
-  $("powerText").textContent=`Highest observed frequency: ${max} tick(s) out of ${total}`;
-}
-
-function startPing(){
-  clearInterval(pingTimer);
-  pingTimer=setInterval(()=>{
-    if(ws && ws.readyState===WebSocket.OPEN){
-      try{ws.send(JSON.stringify({ping:1}))}catch(e){}
+  // If pip_size is unavailable, preserve enough decimal places to avoid
+  // losing the displayed final digit.
+  if(decimals === null){
+    const raw = String(quote);
+    if(raw.includes("e")){
+      const fixed = q.toFixed(8).replace(/0+$/,"");
+      decimals = fixed.includes(".") ? fixed.split(".")[1].length : 0;
+    }else{
+      decimals = raw.includes(".") ? raw.split(".")[1].length : 0;
     }
-  },30000);
+  }
+
+  const fixed = q.toFixed(Math.min(Math.max(decimals,0),10));
+  const digits = fixed.replace(/\D/g,"");
+  if(!digits) return null;
+  return Number(digits[digits.length-1]);
 }
 
-function stopPing(){clearInterval(pingTimer);pingTimer=null}
-
-function subscribe(){
-  if(!ws || ws.readyState!==WebSocket.OPEN)return;
-  ws.send(JSON.stringify({
-    ticks:$("symbol").value,
-    subscribe:1
-  }));
+function pct(n, denominator=total){
+  return denominator ? (n / denominator * 100) : 0;
 }
 
-function openSocket(index){
-  if(!running)return;
+function fmtPct(v){
+  return v.toFixed(1) + "%";
+}
 
-  endpointIndex=index;
-  setStatus("CONNECTING","connect");
-  showError("");
+function renderDigits(){
+  const box = $("digits");
+  box.innerHTML = "";
+  const max = Math.max(...counts);
 
-  try{
-    ws=new WebSocket(ENDPOINTS[index]);
-  }catch(e){
-    tryNext("Browser could not create the WebSocket.");
+  counts.forEach((c,d)=>{
+    const p = pct(c);
+    const div = document.createElement("div");
+    div.className = "digit" + (c === max && total > 0 ? " power" : "");
+    div.innerHTML = `
+      <div class="n">${d}</div>
+      <div class="p">${fmtPct(p)}</div>
+      <div class="sub">${c} ticks</div>
+    `;
+    box.appendChild(div);
+  });
+}
+
+function renderOverUnder(){
+  let overHTML = "";
+  let underHTML = "";
+
+  for(let n=0;n<=9;n++){
+    let overCount = 0;
+    let underCount = 0;
+
+    for(let d=0;d<=9;d++){
+      if(d > n) overCount += counts[d];
+      if(d < n) underCount += counts[d];
+    }
+
+    overHTML += `
+      <tr>
+        <td>Over ${n}</td>
+        <td>Digit &gt; ${n}</td>
+        <td>${fmtPct(pct(overCount))}</td>
+      </tr>`;
+
+    underHTML += `
+      <tr>
+        <td>Under ${n}</td>
+        <td>Digit &lt; ${n}</td>
+        <td>${fmtPct(pct(underCount))}</td>
+      </tr>`;
+  }
+
+  $("overTable").innerHTML = overHTML;
+  $("underTable").innerHTML = underHTML;
+}
+
+function renderEvenOdd(){
+  let even = 0, odd = 0;
+  for(let d=0;d<=9;d++){
+    if(d % 2 === 0) even += counts[d];
+    else odd += counts[d];
+  }
+
+  const ep = pct(even), op = pct(odd);
+  $("evenPct").textContent = fmtPct(ep);
+  $("oddPct").textContent = fmtPct(op);
+  $("evenBar").style.width = ep + "%";
+  $("oddBar").style.width = op + "%";
+}
+
+function renderPower(){
+  if(!total){
+    $("powerDigit").textContent = "—";
+    $("powerText").textContent = "Waiting for live tick data...";
     return;
   }
 
-  ws.onopen=()=>{
-    if(!running)return;
-    connectedEndpoint=ENDPOINTS[index];
-    setStatus("LIVE","live");
-    showError("");
-    startPing();
-    subscribe();
+  let best = 0;
+  for(let d=1;d<=9;d++){
+    if(counts[d] > counts[best]) best = d;
+  }
+
+  const p = pct(counts[best]);
+  $("powerDigit").textContent = best;
+  $("powerText").textContent =
+    `Digit ${best} is currently highest at ${fmtPct(p)} (${counts[best]} of ${total} ticks).`;
+}
+
+function renderAll(){
+  $("count").textContent = total.toLocaleString();
+  renderDigits();
+  renderOverUnder();
+  renderEvenOdd();
+  renderPower();
+}
+
+function updateFromTick(tick){
+  const quote = Number(tick.quote);
+  if(!Number.isFinite(quote)) return;
+
+  lastQuote = quote;
+  const digit = getLastDigit(quote);
+  if(digit === null || digit < 0 || digit > 9) return;
+
+  counts[digit]++;
+  total++;
+
+  $("quote").textContent = String(tick.quote);
+  $("lastDigit").textContent = digit;
+  $("tickTime").textContent = new Date(Number(tick.epoch)*1000).toLocaleTimeString();
+  renderAll();
+}
+
+function populateSymbols(list){
+  // Deriv is the source of truth: active_symbols changes over time.
+  // Keep every symbol whose name/market identifies it as a Volatility Index,
+  // including 1-second variants and newly released indices.
+  symbols = list
+    .filter(s => s && s.underlying_symbol)
+    .filter(s => {
+      const type = String(s.underlying_symbol_type || "").toLowerCase();
+      const name = String(s.underlying_symbol_name || "").toLowerCase();
+      const market = String(s.market || "").toLowerCase();
+      const submarket = String(s.submarket || "").toLowerCase();
+      const symbol = String(s.underlying_symbol || "").toLowerCase();
+
+      return name.includes("volatility") ||
+             market.includes("synthetic") ||
+             submarket.includes("synthetic") ||
+             submarket.includes("volatility") ||
+             type.includes("synthetic") ||
+             symbol.includes("volatility");
+    })
+    .sort((a,b)=>
+      String(a.underlying_symbol_name || a.underlying_symbol)
+      .localeCompare(String(b.underlying_symbol_name || b.underlying_symbol),
+        undefined,{numeric:true,sensitivity:"base"})
+    );
+
+  const select = $("symbolSelect");
+  select.innerHTML = "";
+
+  if(!symbols.length){
+    select.innerHTML = '<option value="">No Volatility Indices found</option>';
+    return;
+  }
+
+  symbols.forEach(s=>{
+    const option = document.createElement("option");
+    option.value = s.underlying_symbol;
+    option.textContent =
+      `${s.underlying_symbol_name || s.underlying_symbol} (${s.underlying_symbol})`;
+    select.appendChild(option);
+  });
+
+  // Prefer a normal 100 index if present; otherwise use the first returned symbol.
+  const preferred =
+    symbols.find(s => /^volatility 100( index)?$/i.test(
+      String(s.underlying_symbol_name || "").trim()
+    )) ||
+    symbols.find(s => /volatility 100/i.test(
+      String(s.underlying_symbol_name || "")
+    )) ||
+    symbols[0];
+
+  select.value = preferred.underlying_symbol;
+  currentSymbol = preferred.underlying_symbol;
+  $("market").textContent = currentSymbol;
+}
+
+function send(obj){
+  if(ws && ws.readyState === WebSocket.OPEN){
+    ws.send(JSON.stringify(obj));
+    return true;
+  }
+  return false;
+}
+
+function connect(){
+  if(ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)){
+    setStatus("Already connected", ws.readyState === WebSocket.OPEN);
+    return;
+  }
+
+  setStatus("Connecting...", false);
+
+  ws = new WebSocket(WS_URL);
+
+  ws.onopen = ()=>{
+    setStatus("Live", true);
+
+    // Get currently active symbols. This is public market data.
+    send({
+      active_symbols: "brief",
+      req_id: 1
+    });
+
+    // Request a larger initial history after selecting the symbol.
+    if(currentSymbol){
+      subscribeSelected();
+    }
   };
 
-  ws.onmessage=(event)=>{
+  ws.onmessage = event=>{
     let data;
-    try{data=JSON.parse(event.data)}catch(e){return}
-
-    if(data.error){
-      showError("Deriv API error: "+(data.error.message||"Unknown API error"));
+    try{
+      data = JSON.parse(event.data);
+    }catch(e){
       return;
     }
 
-    if(data.msg_type==="tick" && data.tick){
-      addTick(data.tick);
+    if(data.error){
+      setStatus("API Error: " + (data.error.message || "Unknown error"), false);
+      return;
+    }
+
+    if(data.msg_type === "active_symbols"){
+      populateSymbols(Array.isArray(data.active_symbols) ? data.active_symbols : []);
+      if($("symbolSelect").value){
+        currentSymbol = $("symbolSelect").value;
+        if(ws.readyState === WebSocket.OPEN) subscribeSelected();
+      }
+      return;
+    }
+
+    if(data.msg_type === "history"){
+      const history = data.history;
+      const prices = history && Array.isArray(history.prices) ? history.prices : [];
+      const times = history && Array.isArray(history.times) ? history.times : [];
+
+      for(let i=0;i<prices.length;i++){
+        const digit = getLastDigit(prices[i]);
+        if(digit !== null && digit >= 0 && digit <= 9){
+          counts[digit]++;
+          total++;
+          lastQuote = Number(prices[i]);
+        }
+      }
+
+      if(prices.length){
+        const last = prices[prices.length-1];
+        const d = getLastDigit(last);
+        $("quote").textContent = String(last);
+        if(d !== null) $("lastDigit").textContent = d;
+        if(times.length){
+          $("tickTime").textContent =
+            new Date(Number(times[times.length-1])*1000).toLocaleTimeString();
+        }
+      }
+
+      renderAll();
+      return;
+    }
+
+    if(data.msg_type === "tick"){
+      if(data.subscription && data.subscription.id){
+        activeSubscriptionId = data.subscription.id;
+      }
+
+      if(data.tick){
+        if(data.tick.pip_size !== undefined && data.tick.pip_size !== null){
+          pipSize = Number(data.tick.pip_size);
+        }
+        updateFromTick(data.tick);
+      }
+      return;
     }
   };
 
-  ws.onerror=()=>{
-    if(running){
-      showError("This network/browser blocked the current WebSocket endpoint. Trying the other public Deriv endpoint...");
-    }
+  ws.onerror = ()=>{
+    setStatus("WebSocket error", false);
   };
 
-  ws.onclose=()=>{
-    stopPing();
-    if(!running)return;
-
-    if(endpointIndex<ENDPOINTS.length-1){
-      clearTimeout(connectTimer);
-      connectTimer=setTimeout(()=>openSocket(endpointIndex+1),500);
-    }else{
-      setStatus("OFFLINE");
-      showError("WebSocket could not connect from this browser/network. Try Chrome mobile data or another network, then press START LIVE.");
-    }
+  ws.onclose = ()=>{
+    setStatus("Offline", false);
+    activeSubscriptionId = null;
+    ws = null;
   };
 }
 
-function start(){
-  running=true;
+function subscribeSelected(){
+  if(!currentSymbol) return;
+
+  if(activeSubscriptionId){
+    send({forget: activeSubscriptionId});
+    activeSubscriptionId = null;
+  }
+
   resetStats();
-  clearTimeout(connectTimer);
-  if(ws){try{ws.close()}catch(e){}}
-  openSocket(0);
+  $("market").textContent = currentSymbol;
+  pipSize = null;
+
+  // Historical sample first, then continuous live stream.
+  send({
+    ticks_history: currentSymbol,
+    count: 200,
+    end: "latest",
+    style: "ticks",
+    req_id: 10
+  });
+
+  send({
+    ticks: currentSymbol,
+    subscribe: 1,
+    req_id: 11
+  });
 }
 
 function stop(){
-  running=false;
-  clearTimeout(connectTimer);
-  stopPing();
-  if(ws){try{ws.close()}catch(e){}}
-  ws=null;
-  setStatus("OFFLINE");
+  if(ws && ws.readyState === WebSocket.OPEN){
+    if(activeSubscriptionId){
+      send({forget: activeSubscriptionId});
+      activeSubscriptionId = null;
+    }
+    ws.close();
+  }else{
+    setStatus("Offline", false);
+  }
 }
 
-$("start").onclick=start;
-$("stop").onclick=stop;
-$("symbol").onchange=()=>{
-  if(running){
-    if(ws && ws.readyState===WebSocket.OPEN)subscribe();
-    else start();
+$("connectBtn").addEventListener("click", ()=>{
+  currentSymbol = $("symbolSelect").value;
+  if(!currentSymbol){
+    alert("Select a Volatility Index first.");
+    return;
   }
-};
-window.addEventListener("beforeunload",stop);
+  connect();
+  if(ws && ws.readyState === WebSocket.OPEN) subscribeSelected();
+});
+
+$("stopBtn").addEventListener("click", stop);
+
+$("symbolSelect").addEventListener("change", ()=>{
+  currentSymbol = $("symbolSelect").value;
+  if(ws && ws.readyState === WebSocket.OPEN){
+    subscribeSelected();
+  }
+});
+
+// Initial UI
+for(let d=0;d<=9;d++){
+  const div = document.createElement("div");
+  div.className = "digit";
+  div.innerHTML = `<div class="n">${d}</div><div class="p">0.0%</div><div class="sub">0 ticks</div>`;
+  $("digits").appendChild(div);
+}
+renderOverUnder();
+renderEvenOdd();
+renderPower();
 </script>
 </body>
 </html>
