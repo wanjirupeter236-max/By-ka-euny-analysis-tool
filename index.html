@@ -4,57 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
-
 <title>BY KA EUNY LIVE DERIV ANALYSIS</title>
 
 <style>
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
   background:#07111f;
-  color:#fff;
+  color:#fff
 }
-
 header{
   padding:22px 14px;
   text-align:center;
-  background:linear-gradient(135deg,#0b2442,#102f52);
+  background:linear-gradient(135deg,#0b2442,#102f52)
 }
-
-h1{
-  margin:0;
-  font-size:27px;
-}
-
+h1{margin:0;font-size:27px}
 .sub{
   margin-top:10px;
   color:#8ed8ff;
-  font-size:14px;
+  font-size:14px
 }
-
-.wrap{
-  max-width:760px;
-  margin:auto;
-  padding:14px;
-}
-
+.wrap{max-width:760px;margin:auto;padding:14px}
 .card{
   background:#0b1829;
   border:1px solid #203957;
   border-radius:18px;
   padding:18px;
   margin-bottom:14px;
-  box-shadow:0 8px 25px rgba(0,0,0,.22);
+  box-shadow:0 8px 25px rgba(0,0,0,.22)
 }
-
 .controls{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
+  gap:10px
 }
-
 select,button{
   width:100%;
   padding:14px;
@@ -63,94 +47,65 @@ select,button{
   background:#12263d;
   color:#fff;
   font-size:16px;
-  font-weight:700;
+  font-weight:700
 }
-
-button{
-  cursor:pointer;
-  background:#1677b8;
-}
-
-button.stop{
-  background:#6b2632;
-}
-
+button{cursor:pointer;background:#1677b8}
+button.stop{background:#6b2632}
 .status{
   text-align:center;
   margin-top:12px;
   font-weight:700;
   padding:10px;
-  border-radius:10px;
+  border-radius:10px
 }
-
-.online{
-  color:#4dffb0;
-  background:#103c30;
-}
-
-.offline{
-  color:#ff6478;
-  background:#421b25;
-}
-
-.warn{
-  color:#ffd34d;
-  background:#403719;
-}
-
+.online{color:#4dffb0;background:#103c30}
+.offline{color:#ff6478;background:#421b25}
+.warn{color:#ffd34d;background:#403719}
 .title{
   font-size:21px;
   color:#63caff;
   font-weight:800;
-  margin-bottom:15px;
+  margin-bottom:15px
 }
-
 .big{
   font-size:55px;
   font-weight:900;
   text-align:center;
-  margin:8px 0;
+  margin:8px 0
 }
-
 .lastrow{
   display:flex;
   justify-content:space-between;
   border-bottom:1px solid #203957;
-  padding:11px 0;
+  padding:11px 0
 }
-
 .grid{
   display:grid;
   grid-template-columns:repeat(5,1fr);
-  gap:7px;
+  gap:7px
 }
-
 .digit{
   background:#12263d;
   border-radius:10px;
   padding:10px 4px;
-  text-align:center;
+  text-align:center
 }
-
 .digit b{
   display:block;
-  font-size:22px;
+  font-size:22px
 }
-
 .bar{
   height:6px;
   background:#25384d;
   border-radius:10px;
   margin-top:6px;
-  overflow:hidden;
+  overflow:hidden
 }
-
 .fill{
   height:100%;
   background:#39b9ff;
-  width:0;
+  width:0
 }
-
 .signal{
   font-size:24px;
   text-align:center;
@@ -158,34 +113,57 @@ button.stop{
   background:#273b52;
   padding:18px;
   border-radius:14px;
-  margin-bottom:12px;
+  margin-bottom:12px
 }
-
 .green{color:#4dffb0}
 .red{color:#ff6478}
 .yellow{color:#ffd34d}
 
+.featureGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+.feature{
+  background:#12263d;
+  border:1px solid #315274;
+  border-radius:14px;
+  padding:16px;
+  text-align:center
+}
+.feature .name{
+  color:#63caff;
+  font-size:17px;
+  font-weight:800
+}
+.feature .value{
+  font-size:28px;
+  font-weight:900;
+  margin-top:8px
+}
+.feature .desc{
+  color:#9fb1c5;
+  font-size:11px;
+  margin-top:6px
+}
+
 table{
   width:100%;
-  border-collapse:collapse;
+  border-collapse:collapse
 }
-
 td{
   padding:9px;
-  border-bottom:1px solid #203957;
+  border-bottom:1px solid #203957
 }
-
 td:last-child{
   text-align:right;
-  font-weight:800;
+  font-weight:800
 }
-
 .small{
   font-size:12px;
   color:#9fb1c5;
-  line-height:1.5;
+  line-height:1.5
 }
-
 .errorbox{
   margin-top:10px;
   padding:10px;
@@ -194,21 +172,12 @@ td:last-child{
   color:#ff8797;
   font-size:12px;
   display:none;
-  word-break:break-word;
+  word-break:break-word
 }
-
 @media(max-width:520px){
-  .controls{
-    grid-template-columns:1fr;
-  }
-
-  .grid{
-    grid-template-columns:repeat(5,1fr);
-  }
-
-  h1{
-    font-size:23px;
-  }
+  .controls{grid-template-columns:1fr}
+  .featureGrid{grid-template-columns:1fr 1fr}
+  h1{font-size:23px}
 }
 </style>
 </head>
@@ -217,92 +186,51 @@ td:last-child{
 
 <header>
 <h1>BY KA EUNY LIVE DERIV ANALYSIS</h1>
-
 <div class="sub">
-LIVE TICKS • 200-TICK ANALYSIS • OVER/UNDER • EVEN/ODD • MATCH/DIFF
+LIVE TICKS • DD • DU • OVER/UNDER • EVEN/ODD • MATCH/DIFF
 </div>
 </header>
 
 <div class="wrap">
 
-<!-- CONNECTION -->
 <div class="card">
 
 <div class="controls">
 
 <select id="symbol">
-
-<option value="1HZ10V">
-Volatility 10 • 1HZ10V
-</option>
-
-<option value="1HZ15V">
-Volatility 15 • 1HZ15V
-</option>
-
-<option value="1HZ25V">
-Volatility 25 • 1HZ25V
-</option>
-
-<option value="1HZ30V">
-Volatility 30 • 1HZ30V
-</option>
-
-<option value="1HZ50V">
-Volatility 50 • 1HZ50V
-</option>
-
-<option value="1HZ75V">
-Volatility 75 • 1HZ75V
-</option>
-
-<option value="1HZ90V">
-Volatility 90 • 1HZ90V
-</option>
-
-<option value="1HZ100V">
-Volatility 100 • 1HZ100V
-</option>
-
+<option value="1HZ10V">Volatility 10 • 1HZ10V</option>
+<option value="1HZ15V">Volatility 15 • 1HZ15V</option>
+<option value="1HZ25V">Volatility 25 • 1HZ25V</option>
+<option value="1HZ30V">Volatility 30 • 1HZ30V</option>
+<option value="1HZ50V">Volatility 50 • 1HZ50V</option>
+<option value="1HZ75V">Volatility 75 • 1HZ75V</option>
+<option value="1HZ90V">Volatility 90 • 1HZ90V</option>
+<option value="1HZ100V">Volatility 100 • 1HZ100V</option>
 </select>
 
-<button id="start">
-START LIVE
-</button>
+<button id="start">START LIVE</button>
 
 </div>
 
 <div class="controls" style="margin-top:10px">
 
-<button class="stop" id="stop">
-STOP
-</button>
-
-<button id="reset">
-RESET ANALYSIS
-</button>
+<button class="stop" id="stop">STOP</button>
+<button id="reset">RESET ANALYSIS</button>
 
 </div>
 
-<div id="status" class="status offline">
-OFFLINE
-</div>
-
+<div id="status" class="status offline">OFFLINE</div>
 <div id="errorBox" class="errorbox"></div>
 
 </div>
 
-
 <!-- LIVE MARKET -->
+
 <div class="card">
 
-<div class="title">
-LIVE MARKET
-</div>
+<div class="title">LIVE MARKET</div>
 
-<div id="price" class="big">
---
-</div>
+<div id="price" class="big">--</div>
 
 <div class="lastrow">
 <span>Last digit</span>
@@ -321,15 +249,13 @@ LIVE MARKET
 
 </div>
 
-
 <!-- SIGNAL -->
+
 <div class="card">
 
-<div class="title">
-FINAL SIGNAL
-</div>
+<div class="title">FINAL SIGNAL</div>
 
-<div id="signal" class="signal">
+<div id="signal" class="signal yellow">
 COLLECTING 200 TICKS
 </div>
 
@@ -359,37 +285,71 @@ COLLECTING 200 TICKS
 
 </div>
 
+<!-- DD DU -->
 
-<!-- DIGITS -->
 <div class="card">
 
-<div class="title">
-DIGIT FREQUENCY
+<div class="title">DOUBLE DIGITS / DOUBLE UP</div>
+
+<div class="featureGrid">
+
+<div class="feature">
+
+<div class="name">DD</div>
+
+<div id="ddValue" class="value yellow">
+WAIT
 </div>
+
+<div id="ddInfo" class="desc">
+Double Digits
+</div>
+
+</div>
+
+<div class="feature">
+
+<div class="name">DU</div>
+
+<div id="duValue" class="value yellow">
+WAIT
+</div>
+
+<div id="duInfo" class="desc">
+Double Up Analysis
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- DIGITS -->
+
+<div class="card">
+
+<div class="title">DIGIT FREQUENCY</div>
 
 <div id="digits" class="grid"></div>
 
 </div>
 
-
 <!-- OVER UNDER -->
+
 <div class="card">
 
-<div class="title">
-OVER / UNDER
-</div>
+<div class="title">OVER / UNDER</div>
 
 <table id="ou"></table>
 
 </div>
 
-
 <!-- EVEN ODD -->
+
 <div class="card">
 
-<div class="title">
-EVEN / ODD
-</div>
+<div class="title">EVEN / ODD</div>
 
 <table>
 
@@ -407,13 +367,11 @@ EVEN / ODD
 
 </div>
 
-
 <!-- MATCH DIFF -->
+
 <div class="card">
 
-<div class="title">
-MATCH / DIFF
-</div>
+<div class="title">MATCH / DIFF</div>
 
 <table>
 
@@ -431,123 +389,78 @@ MATCH / DIFF
 
 </div>
 
-
 <div class="card small">
 
 <b>Important:</b>
-This page reads public Deriv market data only.
-It does not place trades automatically and does not guarantee wins.
+This tool reads public Deriv market data only.
+DD and DU are analysis signals only.
+No automatic trades are placed and no result is guaranteed.
 
 </div>
 
 </div>
-
 
 <script>
-
-/* =========================================================
-   BY KA EUNY LIVE DERIV ANALYSIS
-   CURRENT DERIV PUBLIC WEBSOCKET
-   ========================================================= */
 
 const WS_URL =
 "wss://api.derivws.com/trading/v1/options/ws/public";
 
-
 let ws = null;
 let running = false;
-
 let ticks = [];
 
-let historyLoaded = false;
-let liveStarted = false;
+const $ = id => document.getElementById(id);
 
-let reconnectTimer = null;
+/* STATUS */
 
-
-/* =========================================================
-   SHORTCUT
-   ========================================================= */
-
-const $ = id =>
-document.getElementById(id);
-
-
-/* =========================================================
-   STATUS
-   ========================================================= */
-
-function setStatus(text, cls){
+function setStatus(text,cls){
 
   $("status").textContent = text;
-
-  $("status").className =
-    "status " + cls;
+  $("status").className = "status " + cls;
 
 }
 
-
-/* =========================================================
-   ERROR
-   ========================================================= */
+/* ERROR */
 
 function showError(message){
 
-  const box = $("errorBox");
-
-  box.style.display = "block";
-
-  box.textContent =
+  $("errorBox").style.display = "block";
+  $("errorBox").textContent =
     "Deriv: " + message;
 
 }
 
-
 function clearError(){
 
-  const box = $("errorBox");
-
-  box.style.display = "none";
-
-  box.textContent = "";
+  $("errorBox").style.display = "none";
+  $("errorBox").textContent = "";
 
 }
 
+/* DECIMALS */
 
-/* =========================================================
-   DECIMAL PLACES
-   ========================================================= */
-
-function getDecimals(value, pipSize){
+function getDecimals(value,pipSize){
 
   if(
     Number.isInteger(pipSize) &&
     pipSize >= 0 &&
     pipSize <= 10
   ){
-
     return pipSize;
-
   }
 
   const s = String(value);
 
   if(s.includes(".")){
-
     return s.split(".")[1].length;
-
   }
 
   return 2;
-
 }
 
+/* LAST DIGIT */
 
-/* =========================================================
-   LAST DIGIT
-   ========================================================= */
-
-function digitFromQuote(quote, pipSize){
+function digitFromQuote(quote,pipSize){
 
   const n = Number(quote);
 
@@ -566,31 +479,18 @@ function digitFromQuote(quote, pipSize){
   let digit;
 
   if(parts[1]){
-
-    digit =
-      parts[1].slice(-1);
-
+    digit = parts[1].slice(-1);
   }else{
-
-    digit =
-      parts[0].slice(-1);
-
+    digit = parts[0].slice(-1);
   }
 
-  const d =
-    Number(digit);
+  const d = Number(digit);
 
-  if(d < 0 || d > 9)
-    return null;
-
-  return d;
+  return d >= 0 && d <= 9 ? d : null;
 
 }
 
-
-/* =========================================================
-   ADD TICK
-   ========================================================= */
+/* ADD TICK */
 
 function addTick(quote,pipSize){
 
@@ -603,20 +503,11 @@ function addTick(quote,pipSize){
   if(digit === null)
     return;
 
-
   ticks.push(digit);
 
-
-  /*
-    Keep latest 200 ticks
-  */
-
   if(ticks.length > 200){
-
     ticks.shift();
-
   }
-
 
   const decimals =
     getDecimals(
@@ -624,58 +515,252 @@ function addTick(quote,pipSize){
       pipSize
     );
 
-
   $("price").textContent =
     Number(quote).toFixed(decimals);
 
-
-  $("last").textContent =
-    digit;
-
+  $("last").textContent = digit;
 
   $("count").textContent =
     `${ticks.length} / 200`;
 
-
-  $("stream").textContent =
-    "LIVE";
-
+  $("stream").textContent = "LIVE";
 
   renderAnalysis();
 
 }
 
+/* DD ANALYSIS */
 
-/* =========================================================
-   ANALYSIS
-   ========================================================= */
+function analyzeDoubleDigits(){
+
+  if(ticks.length < 2){
+
+    return {
+      count:0,
+      pct:0,
+      digit:null
+    };
+
+  }
+
+  let doubles = 0;
+  let lastDouble = null;
+
+  for(let i=1;i<ticks.length;i++){
+
+    if(ticks[i] === ticks[i-1]){
+
+      doubles++;
+
+      lastDouble =
+        ticks[i];
+
+    }
+
+  }
+
+  const opportunities =
+    ticks.length - 1;
+
+  const pct =
+    opportunities > 0
+      ? (doubles/opportunities)*100
+      : 0;
+
+  return {
+    count:doubles,
+    pct:pct,
+    digit:lastDouble
+  };
+
+}
+
+/* DU ANALYSIS */
+
+function analyzeDoubleUp(){
+
+  if(ticks.length < 20){
+
+    return {
+      signal:"WAIT",
+      confidence:0,
+      reason:"Need more ticks"
+    };
+
+  }
+
+  const recent =
+    ticks.slice(-20);
+
+  const count =
+    Array(10).fill(0);
+
+  recent.forEach(d=>{
+    count[d]++;
+  });
+
+  let topDigit = 0;
+
+  for(let d=1;d<=9;d++){
+
+    if(count[d] > count[topDigit]){
+      topDigit = d;
+    }
+
+  }
+
+  const topPct =
+    count[topDigit] / recent.length * 100;
+
+  const last =
+    recent[recent.length-1];
+
+  let confidence = 50;
+
+  let signal = "WAIT";
+
+  let reason =
+    "No strong Double Up setup";
+
+  /*
+    DU is only an analytical condition.
+    It does NOT place a trade.
+  */
+
+  if(
+    topPct >= 20 &&
+    count[topDigit] >= 4
+  ){
+
+    signal =
+      "DU " + topDigit;
+
+    confidence =
+      Math.min(
+        85,
+        50 + (topPct - 20) * 2
+      );
+
+    reason =
+      "Digit concentration is elevated";
+
+  }
+
+  else if(
+    last === topDigit &&
+    topPct >= 15
+  ){
+
+    signal =
+      "WATCH";
+
+    confidence =
+      55;
+
+    reason =
+      "Last digit matches the recent strongest digit";
+
+  }
+
+  return {
+    signal,
+    confidence,
+    reason
+  };
+
+}
+
+/* RENDER DD DU */
+
+function renderDDDU(){
+
+  const dd =
+    analyzeDoubleDigits();
+
+  const du =
+    analyzeDoubleUp();
+
+  if(ticks.length < 20){
+
+    $("ddValue").textContent = "WAIT";
+    $("ddValue").className = "value yellow";
+
+    $("ddInfo").textContent =
+      "Need more live ticks";
+
+    $("duValue").textContent = "WAIT";
+    $("duValue").className = "value yellow";
+
+    $("duInfo").textContent =
+      "Need more live ticks";
+
+    return;
+
+  }
+
+  if(dd.count > 0){
+
+    $("ddValue").textContent =
+      "DD " + dd.pct.toFixed(1) + "%";
+
+    $("ddValue").className =
+      "value green";
+
+    $("ddInfo").textContent =
+      dd.digit !== null
+      ? `Latest double: ${dd.digit}${dd.digit} • ${dd.count} occurrences`
+      : `${dd.count} double occurrences`;
+
+  }else{
+
+    $("ddValue").textContent =
+      "NO DD";
+
+    $("ddValue").className =
+      "value yellow";
+
+    $("ddInfo").textContent =
+      "No consecutive identical digits yet";
+
+  }
+
+  $("duValue").textContent =
+    du.signal;
+
+  $("duValue").className =
+    du.signal === "WAIT"
+      ? "value yellow"
+      : du.signal.startsWith("DU")
+        ? "value green"
+        : "value yellow";
+
+  $("duInfo").textContent =
+    `${du.reason} • ${du.confidence.toFixed(0)}%`;
+
+}
+
+/* MAIN ANALYSIS */
 
 function renderAnalysis(){
 
   const count =
     Array(10).fill(0);
 
-
-  ticks.forEach(d => {
-
+  ticks.forEach(d=>{
     if(Number.isInteger(d))
       count[d]++;
-
   });
-
 
   const total =
     ticks.length || 1;
 
-
-  /* DIGIT GRID */
+  /* DIGITS */
 
   $("digits").innerHTML =
     count.map((n,d)=>{
 
       const pct =
-        (n / total) * 100;
-
+        n / total * 100;
 
       return `
 
@@ -683,17 +768,13 @@ function renderAnalysis(){
 
         <b>${d}</b>
 
-        <span>
-          ${pct.toFixed(1)}%
-        </span>
+        <span>${pct.toFixed(1)}%</span>
 
         <div class="bar">
-
           <div
             class="fill"
-            style="width:${Math.min(pct,100)}%"
-          ></div>
-
+            style="width:${Math.min(pct,100)}%">
+          </div>
         </div>
 
       </div>
@@ -702,89 +783,63 @@ function renderAnalysis(){
 
     }).join("");
 
-
-  /* EVEN / ODD */
+  /* EVEN ODD */
 
   const even =
     ticks.filter(
       d => d % 2 === 0
     ).length;
 
-
   const odd =
     ticks.length - even;
 
-
   $("even").textContent =
-    ((even / total) * 100).toFixed(1) + "%";
-
+    (even/total*100).toFixed(1) + "%";
 
   $("odd").textContent =
-    ((odd / total) * 100).toFixed(1) + "%";
+    (odd/total*100).toFixed(1) + "%";
 
-
-  /* SORT DIGITS */
+  /* SORT */
 
   const sorted =
     [...count]
-    .map((n,d)=>({
-      d,
-      n
-    }))
-    .sort(
-      (a,b) => b.n - a.n
-    );
+      .map((n,d)=>({d,n}))
+      .sort((a,b)=>b.n-a.n);
 
-
-  const top =
-    sorted[0];
-
+  const top = sorted[0];
 
   if(ticks.length){
 
     $("power").textContent =
-      `${top.d} (${((top.n/total)*100).toFixed(1)}%)`;
-
+      `${top.d} (${(top.n/total*100).toFixed(1)}%)`;
 
     $("match").textContent =
       `${top.d} • ${top.n} times`;
 
-
   }else{
 
-    $("power").textContent =
-      "--";
-
-    $("match").textContent =
-      "--";
+    $("power").textContent = "--";
+    $("match").textContent = "--";
 
   }
-
 
   /* DIFF */
 
   const present =
-    count.filter(
-      x => x > 0
-    ).length;
-
+    count.filter(x=>x>0).length;
 
   $("diff").textContent =
     ticks.length
       ? `${10-present} digits absent`
       : "--";
 
-
-  /* =====================================================
-     OVER / UNDER
-     ===================================================== */
+  /* OVER UNDER */
 
   const ou = [];
 
-
   for(
-    let threshold = 0;
-    threshold <= 8;
+    let threshold=0;
+    threshold<=8;
     threshold++
   ){
 
@@ -793,234 +848,152 @@ function renderAnalysis(){
         d => d > threshold
       ).length;
 
-
     const under =
       ticks.filter(
         d => d < threshold
       ).length;
 
-
     ou.push(`
 
       <tr>
-
-        <td>
-          Over ${threshold}
-        </td>
-
-        <td>
-          ${((over/total)*100).toFixed(1)}%
-        </td>
-
+        <td>Over ${threshold}</td>
+        <td>${(over/total*100).toFixed(1)}%</td>
       </tr>
 
-    `);
-
-
-    ou.push(`
-
       <tr>
-
-        <td>
-          Under ${threshold}
-        </td>
-
-        <td>
-          ${((under/total)*100).toFixed(1)}%
-        </td>
-
+        <td>Under ${threshold}</td>
+        <td>${(under/total*100).toFixed(1)}%</td>
       </tr>
 
     `);
 
   }
 
-
   $("ou").innerHTML =
     ou.join("");
 
+  /* DD DU */
 
-  /* =====================================================
-     WAIT UNTIL 200
-     ===================================================== */
+  renderDDDU();
+
+  /* WAIT */
 
   if(ticks.length < 200){
 
     $("signal").className =
       "signal yellow";
 
-
     $("signal").textContent =
       `COLLECTING ${ticks.length}/200 TICKS`;
 
-
-    $("setup").textContent =
-      "WAIT";
-
-
-    $("confidence").textContent =
-      "--";
-
-
+    $("setup").textContent = "WAIT";
+    $("confidence").textContent = "--";
     $("reason").textContent =
       "Collecting live data";
-
 
     return;
 
   }
 
-
-  /* =====================================================
-     SIGNAL
-     ===================================================== */
+  /* SIGNAL */
 
   const last =
-    ticks[ticks.length - 1];
-
+    ticks[ticks.length-1];
 
   const topPct =
-    (top.n / total) * 100;
-
+    top.n/total*100;
 
   const evenPct =
-    (even / total) * 100;
-
+    even/total*100;
 
   const oddPct =
-    (odd / total) * 100;
+    odd/total*100;
 
-
-  let setup =
-    "WAIT";
-
-
-  let confidence =
-    50;
-
-
+  let setup = "WAIT";
+  let confidence = 50;
   let reason =
     "No strong frequency imbalance";
-
-
-  /*
-     MATCH
-  */
 
   if(topPct >= 15){
 
     setup =
       `MATCH ${top.d}`;
 
-
     confidence =
       Math.min(
         85,
-        55 + ((topPct - 15) * 2)
+        55 + (topPct-15)*2
       );
-
 
     reason =
       `Digit ${top.d} has the highest frequency`;
 
   }
 
-
-  /*
-     EVEN
-  */
-
   else if(evenPct >= 58){
 
-    setup =
-      "EVEN";
-
+    setup = "EVEN";
 
     confidence =
       Math.min(
         80,
-        50 + (evenPct - 50)
+        50+(evenPct-50)
       );
 
-
     reason =
-      "Even digits have a clear sample imbalance";
+      "Even digits have a sample imbalance";
 
   }
-
-
-  /*
-     ODD
-  */
 
   else if(oddPct >= 58){
 
-    setup =
-      "ODD";
-
+    setup = "ODD";
 
     confidence =
       Math.min(
         80,
-        50 + (oddPct - 50)
+        50+(oddPct-50)
       );
 
-
     reason =
-      "Odd digits have a clear sample imbalance";
+      "Odd digits have a sample imbalance";
 
   }
-
-
-  /*
-     OVER 3
-  */
 
   else{
 
     const over3 =
-      ticks.filter(
-        d => d > 3
-      ).length / total * 100;
-
+      ticks.filter(d=>d>3).length /
+      total * 100;
 
     const under6 =
-      ticks.filter(
-        d => d < 6
-      ).length / total * 100;
-
+      ticks.filter(d=>d<6).length /
+      total * 100;
 
     if(over3 >= 60){
 
-      setup =
-        "OVER 3";
-
+      setup = "OVER 3";
 
       confidence =
         Math.min(
           80,
-          50 + (over3 - 50)
+          50+(over3-50)
         );
-
 
       reason =
         "Over 3 frequency is elevated";
 
     }
 
-
     else if(under6 >= 60){
 
-      setup =
-        "UNDER 6";
-
+      setup = "UNDER 6";
 
       confidence =
         Math.min(
           80,
-          50 + (under6 - 50)
+          50+(under6-50)
         );
-
 
       reason =
         "Under 6 frequency is elevated";
@@ -1028,9 +1001,6 @@ function renderAnalysis(){
     }
 
   }
-
-
-  /* SIGNAL COLOR */
 
   if(setup === "WAIT"){
 
@@ -1057,128 +1027,73 @@ function renderAnalysis(){
 
   }
 
-
-  $("signal").textContent =
-    setup;
-
-
-  $("setup").textContent =
-    setup;
-
-
+  $("signal").textContent = setup;
+  $("setup").textContent = setup;
   $("confidence").textContent =
     confidence.toFixed(0) + "%";
-
 
   $("reason").textContent =
     `${reason} • Last digit ${last}`;
 
 }
 
-
-/* =========================================================
-   RESET
-   ========================================================= */
+/* RESET */
 
 function resetAnalysis(){
 
   ticks = [];
 
-
-  $("price").textContent =
-    "--";
-
-
-  $("last").textContent =
-    "--";
-
-
-  $("count").textContent =
-    "0 / 200";
-
-
-  $("stream").textContent =
-    "WAITING";
-
+  $("price").textContent = "--";
+  $("last").textContent = "--";
+  $("count").textContent = "0 / 200";
+  $("stream").textContent = "WAITING";
 
   $("signal").className =
     "signal yellow";
 
-
   $("signal").textContent =
     "COLLECTING 200 TICKS";
 
-
-  $("setup").textContent =
-    "--";
-
-
-  $("confidence").textContent =
-    "--";
-
-
-  $("power").textContent =
-    "--";
-
-
-  $("match").textContent =
-    "--";
-
-
-  $("diff").textContent =
-    "--";
-
-
+  $("setup").textContent = "--";
+  $("confidence").textContent = "--";
+  $("power").textContent = "--";
+  $("match").textContent = "--";
+  $("diff").textContent = "--";
   $("reason").textContent =
     "Collecting live data";
 
+  $("ddValue").textContent = "WAIT";
+  $("ddValue").className = "value yellow";
+  $("ddInfo").textContent =
+    "Double Digits";
+
+  $("duValue").textContent = "WAIT";
+  $("duValue").className = "value yellow";
+  $("duInfo").textContent =
+    "Double Up Analysis";
 
   renderAnalysis();
 
 }
 
-
-/* =========================================================
-   STOP
-   ========================================================= */
+/* STOP */
 
 function stopSocket(){
 
   running = false;
 
-
-  if(reconnectTimer){
-
-    clearTimeout(
-      reconnectTimer
-    );
-
-    reconnectTimer = null;
-
-  }
-
-
   if(ws){
 
     try{
-
       ws.close();
-
     }catch(e){}
 
     ws = null;
 
   }
 
-
-  historyLoaded = false;
-
-  liveStarted = false;
-
-
   $("stream").textContent =
     "STOPPED";
-
 
   setStatus(
     "OFFLINE — press START LIVE",
@@ -1187,10 +1102,7 @@ function stopSocket(){
 
 }
 
-
-/* =========================================================
-   CONNECT
-   ========================================================= */
+/* START */
 
 function startSocket(){
 
@@ -1202,19 +1114,18 @@ function startSocket(){
 
   running = true;
 
-
   setStatus(
-    "CONNECTING TO DERIV…",
+    "CONNECTING TO DERIV...",
     "warn"
   );
 
+  const symbol =
+    $("symbol").value;
 
   try{
 
     ws =
-      new WebSocket(
-        WS_URL
-      );
+      new WebSocket(WS_URL);
 
   }catch(error){
 
@@ -1223,145 +1134,87 @@ function startSocket(){
       "Unable to create WebSocket"
     );
 
-
     setStatus(
       "WEBSOCKET ERROR",
       "offline"
     );
 
-
     return;
 
   }
-
-
-  /* =====================================================
-     OPEN
-     ===================================================== */
 
   ws.onopen = function(){
 
     if(!running)
       return;
 
-
     setStatus(
-      "CONNECTED • LOADING TICKS…",
+      "CONNECTED • LOADING TICKS...",
       "online"
     );
 
-
-    const symbol =
-      $("symbol").value;
-
-
-    /*
-      IMPORTANT:
-      Ask for 200 history ticks.
-    */
+    /* HISTORY */
 
     ws.send(
       JSON.stringify({
-
-        ticks_history:
-          symbol,
-
-        count:
-          200,
-
-        end:
-          "latest",
-
-        style:
-          "ticks",
-
-        req_id:
-          100
-
+        ticks_history:symbol,
+        count:200,
+        end:"latest",
+        style:"ticks",
+        req_id:100
       })
     );
 
-
-    /*
-      Subscribe to live ticks.
-    */
+    /* LIVE */
 
     ws.send(
       JSON.stringify({
-
-        ticks:
-          symbol,
-
-        subscribe:
-          1,
-
-        req_id:
-          200
-
+        ticks:symbol,
+        subscribe:1,
+        req_id:200
       })
     );
 
   };
 
-
-  /* =====================================================
-     MESSAGE
-     ===================================================== */
-
   ws.onmessage = function(event){
 
     let data;
 
-
     try{
 
       data =
-        JSON.parse(
-          event.data
-        );
+        JSON.parse(event.data);
 
-    }catch(error){
+    }catch(e){
 
       return;
 
     }
-
 
     console.log(
       "DERIV DATA:",
       data
     );
 
-
-    /* ERROR */
-
     if(data.error){
 
-      const message =
+      showError(
         data.error.message ||
         data.error.code ||
-        "Unknown Deriv error";
-
-
-      showError(
-        message
+        "Deriv error"
       );
-
 
       setStatus(
         "DERIV ERROR",
         "offline"
       );
 
-
       return;
 
     }
 
-
-    /* ===================================================
-       HISTORY
-       =================================================== */
+    /* HISTORY */
 
     if(
       data.msg_type === "history" &&
@@ -1375,30 +1228,17 @@ function startSocket(){
         ? data.history.prices
         : [];
 
-
-      const pip =
-        data.pip_size;
-
-
-      /*
-        Clear before loading history
-        so we don't duplicate data.
-      */
-
       ticks = [];
 
-
-      prices.forEach(
-        q => addTick(q,pip)
-      );
-
-
-      historyLoaded = true;
-
+      prices.forEach(q=>{
+        addTick(
+          q,
+          data.pip_size
+        );
+      });
 
       $("stream").textContent =
         "LIVE";
-
 
       setStatus(
         "LIVE • DERIV CONNECTED",
@@ -1407,27 +1247,15 @@ function startSocket(){
 
     }
 
-
-    /* ===================================================
-       LIVE TICK
-       =================================================== */
+    /* LIVE TICK */
 
     if(
       data.msg_type === "tick" &&
       data.tick
     ){
 
-      const tick =
-        data.tick;
-
-
       const quote =
-        tick.quote;
-
-
-      const pip =
-        tick.pip_size;
-
+        data.tick.quote;
 
       if(
         quote !== undefined &&
@@ -1436,39 +1264,28 @@ function startSocket(){
 
         addTick(
           quote,
-          pip
+          data.tick.pip_size
         );
 
       }
 
-
-      liveStarted = true;
-
+      $("stream").textContent =
+        "LIVE";
 
       setStatus(
         "LIVE • DERIV CONNECTED",
         "online"
       );
 
-
-      $("stream").textContent =
-        "LIVE";
-
     }
 
   };
 
-
-  /* =====================================================
-     ERROR
-     ===================================================== */
-
   ws.onerror = function(){
 
     showError(
-      "WebSocket connection failed. Check your internet connection or try START LIVE again."
+      "WebSocket connection failed. Press START LIVE again."
     );
-
 
     setStatus(
       "CONNECTION ERROR",
@@ -1477,22 +1294,15 @@ function startSocket(){
 
   };
 
-
-  /* =====================================================
-     CLOSE
-     ===================================================== */
-
   ws.onclose = function(){
 
     if(!running)
       return;
 
-
     setStatus(
       "CONNECTION CLOSED",
       "offline"
     );
-
 
     $("stream").textContent =
       "STOPPED";
@@ -1501,44 +1311,31 @@ function startSocket(){
 
 }
 
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
+/* BUTTONS */
 
 $("start").onclick =
   startSocket;
 
-
 $("stop").onclick =
   stopSocket;
-
 
 $("reset").onclick =
   resetAnalysis;
 
-
-/* =========================================================
-   SYMBOL CHANGE
-   ========================================================= */
+/* CHANGE VOLATILITY */
 
 $("symbol").addEventListener(
   "change",
   function(){
 
     if(running){
-
       startSocket();
-
     }
 
   }
 );
 
-
-/* =========================================================
-   INITIAL UI
-   ========================================================= */
+/* INITIAL */
 
 resetAnalysis();
 
